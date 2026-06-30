@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReviewSpace Studio Ultra</title>
+    <title>ReviewSpace Studio Ultra - Multi-Project Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: IBM Plex Sans Thai & JetBrains Mono -->
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -70,7 +70,7 @@
 </head>
 <body class="bg-[#040711] text-slate-100 h-screen flex flex-col overflow-hidden selection:bg-indigo-600/40 selection:text-indigo-200">
 
-    <!-- Top Navigation -->
+    <!-- Top Navigation (Always Visible) -->
     <header class="no-print bg-[#080c18]/90 border-b border-slate-800/60 px-6 py-2.5 flex justify-between items-center z-10 backdrop-blur-md">
         <div class="flex items-center gap-3">
             <div class="bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 p-2 rounded-xl shadow-lg shadow-indigo-600/20">
@@ -83,17 +83,21 @@
                     <h1 class="text-base font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">REVIEWSPACE</h1>
                     <span class="text-[9px] uppercase font-bold tracking-widest bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full">STUDIO ULTRA</span>
                 </div>
-                <p class="text-[11px] text-slate-500 font-medium" id="current-file-name">ไฟล์: วิดีโอภาพยนตร์ทดสอบ (Cinematic Sample.mp4)</p>
+                <p class="text-[11px] text-slate-500 font-medium" id="current-file-name">แดชบอร์ดจัดการหลายโครงการ</p>
             </div>
         </div>
 
-        <!-- Custom Reviewer settings (Direct text input, no complex configuration) -->
+        <!-- Back to projects view and User Identity -->
         <div class="flex items-center gap-4">
+            <button id="back-to-dashboard-btn" class="hidden text-xs bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-300 px-3.5 py-1.5 rounded-xl transition duration-150 flex items-center gap-2">
+                🏠 กลับหน้าแดชบอร์ดโครงการ
+            </button>
+
             <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-1 px-2.5 flex items-center gap-2 shadow-inner">
                 <span class="text-[11px] text-slate-400 font-medium select-none">👤 ผู้รีวิว:</span>
                 <input type="text" id="reviewer-name-input" value="กิตติพงษ์" placeholder="ระบุชื่อของคุณ..." class="bg-slate-950 text-xs text-slate-200 border border-slate-800 outline-none focus:border-indigo-500 rounded-lg px-2.5 py-1 w-44 transition-all duration-150">
                 
-                <span class="text-slate-850">|</span>
+                <span class="text-slate-800">|</span>
                 
                 <select id="user-avatar-select" class="bg-transparent text-xs text-slate-300 border-none outline-none focus:ring-0 cursor-pointer" title="เลือกไอคอนจำลองสถานะ">
                     <option value="🎬" selected>🎬 Director</option>
@@ -103,23 +107,85 @@
                     <option value="👤">👤 Guest</option>
                 </select>
             </div>
-
-            <!-- Upload Custom Video Button -->
-            <div>
-                <input type="file" id="video-upload" accept="video/*" class="hidden">
-                <label for="video-upload" class="bg-indigo-650 hover:bg-indigo-600 text-white px-3.5 py-1.5 rounded-xl cursor-pointer text-xs font-semibold transition duration-150 flex items-center gap-2 shadow-lg shadow-indigo-600/15 border border-indigo-500/30">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    อัปโหลดวิดีโอใหม่
-                </label>
-            </div>
         </div>
     </header>
 
     <!-- Toast Notification Area -->
     <div id="toast-container" class="no-print fixed top-16 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- Main Studio Workspace -->
-    <main class="flex flex-1 overflow-hidden">
+    <!-- VIEW 1: Projects Manager Dashboard -->
+    <section id="dashboard-view" class="flex-1 overflow-y-auto bg-[#04060e] p-8 flex flex-col justify-start">
+        <div class="max-w-6xl mx-auto w-full">
+            
+            <!-- Dashboard Hero / Stats -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold bg-gradient-to-r from-white via-slate-200 to-indigo-400 bg-clip-text text-transparent">สเปซงานของคุณ (Workspace)</h2>
+                    <p class="text-xs text-slate-400 mt-1">อัปโหลดวิดีโอหลายโครงการ จัดเก็บแบ่งกลุ่มประวัติความคิดเห็น สเก็ตช์ภาพ และจัดการ EDL แยกไฟล์ได้อย่างอิสระ</p>
+                </div>
+                
+                <!-- Create Project Actions -->
+                <div class="flex gap-2.5">
+                    <input type="file" id="dashboard-video-upload" accept="video/*" class="hidden">
+                    <label for="dashboard-video-upload" class="bg-indigo-650 hover:bg-indigo-600 text-white px-4 py-2.5 rounded-xl cursor-pointer text-xs font-semibold transition duration-150 flex items-center gap-2 shadow-lg shadow-indigo-600/15 border border-indigo-500/30">
+                        ➕ สร้างโปรเจกต์ใหม่ (อัปวิดีโอ)
+                    </label>
+                    
+                    <button id="add-url-project-btn" class="bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 px-4 py-2.5 rounded-xl text-xs font-semibold transition">
+                        🔗 ลิงก์จาก URL
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div class="bg-slate-950/60 border border-slate-900 p-4 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">วิดีโอโครงการทั้งหมด</p>
+                        <h3 class="text-xl font-bold text-slate-200 mt-1" id="stat-total-projects">0</h3>
+                    </div>
+                    <span class="text-2xl bg-indigo-500/10 p-2.5 rounded-xl text-indigo-400">🎥</span>
+                </div>
+                <div class="bg-slate-950/60 border border-slate-900 p-4 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">รายการคอมเมนต์ค้างแก้</p>
+                        <h3 class="text-xl font-bold text-slate-200 mt-1" id="stat-pending-comments">0</h3>
+                    </div>
+                    <span class="text-2xl bg-amber-500/10 p-2.5 rounded-xl text-amber-400">🔴</span>
+                </div>
+                <div class="bg-slate-950/60 border border-slate-900 p-4 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">รีวิวเสร็จสิ้นแล้ว</p>
+                        <h3 class="text-xl font-bold text-slate-200 mt-1" id="stat-resolved-comments">0</h3>
+                    </div>
+                    <span class="text-2xl bg-emerald-500/10 p-2.5 rounded-xl text-emerald-400">🟢</span>
+                </div>
+            </div>
+
+            <!-- Search projects -->
+            <div class="flex items-center gap-3 mb-6">
+                <div class="relative flex-1">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500 text-xs">🔍</span>
+                    <input type="text" id="search-projects-input" placeholder="ค้นหาชื่อโปรเจกต์งานวิดีโอ..." class="w-full bg-slate-950 border border-slate-900 rounded-xl pl-9 pr-4 py-2.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 transition-colors">
+                </div>
+                
+                <select id="sort-projects-select" class="bg-slate-950 border border-slate-900 rounded-xl px-3 py-2.5 text-xs text-slate-400 focus:outline-none cursor-pointer">
+                    <option value="recent">สร้างขึ้นล่าสุด</option>
+                    <option value="name">เรียงตามอักษร ก-ฮ / A-Z</option>
+                    <option value="comments">มีคอมเมนต์เยอะที่สุด</option>
+                </select>
+            </div>
+
+            <!-- Projects Grid Container -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="projects-grid">
+                <!-- Injected via JavaScript Dynamic Project loader -->
+            </div>
+
+        </div>
+    </section>
+
+    <!-- VIEW 2: Studio Video Annotation Workspace -->
+    <main id="studio-view" class="hidden flex-1 overflow-hidden">
         
         <!-- Left Side: Interactive Player & Annotation Workspace -->
         <section class="no-print flex-1 p-5 flex flex-col justify-between bg-[#04060e] overflow-y-auto">
@@ -132,7 +198,7 @@
                     
                     <!-- Standard Video Element -->
                     <video id="main-video" class="w-full h-full pointer-events-none" preload="auto">
-                        <source id="video-source" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+                        <source id="video-source" src="" type="video/mp4">
                         เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
                     </video>
 
@@ -157,20 +223,6 @@
                     <!-- Overlay for Rendered Snapshot display during seek jump -->
                     <div id="snapshot-overlay" class="absolute inset-0 pointer-events-none z-10 hidden bg-black/10">
                         <img id="snapshot-img" class="w-full h-full object-cover" alt="Annotation Graphic Frame">
-                    </div>
-
-                    <!-- Upload Initial Overlay -->
-                    <div id="upload-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/95 text-slate-400 p-6 z-30 transition-all duration-300">
-                        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 mb-4 animate-pulse">
-                            <svg class="w-10 h-10 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
-                        <h3 class="text-base font-bold text-slate-100 mb-1">ยินดีต้อนรับสู่ REVIEWSPACE STUDIO ULTRA</h3>
-                        <p class="text-xs text-slate-500 mb-4 max-w-sm text-center">เรากำลังนำเข้าวิดีโอตัวอย่างมาทดสอบการสเก็ตช์แก้ไขแบบโปร่งใส หรือคุณสามารถเปลี่ยนอัปโหลดงานได้ทันทีครับ</p>
-                        <button id="upload-trigger-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs px-4 py-2 rounded-xl transition">
-                            กดที่นี่เพื่ออัปโหลดวิดีโอของตนเอง
-                        </button>
                     </div>
                 </div>
 
@@ -199,7 +251,7 @@
                     <!-- Color, Brush sizes, and Control stack -->
                     <div class="flex items-center gap-3">
                         
-                        <!-- Color Palette selection (Modified with data-attributes for direct binding) -->
+                        <!-- Color Palette selection -->
                         <div class="flex items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-xl border border-slate-800/80">
                             <button data-brush-color="#ef4444" class="w-4 h-4 rounded-full bg-red-500 border border-white/20 hover:scale-125 transition-all" title="สีแดง"></button>
                             <button data-brush-color="#eab308" class="w-4 h-4 rounded-full bg-yellow-500 border border-white/20 hover:scale-125 transition-all" title="สีเหลือง"></button>
@@ -250,13 +302,13 @@
                         <div id="range-drag-highlight" class="absolute top-1.5 h-2 bg-indigo-500/40 rounded pointer-events-none"></div>
                         
                         <!-- Drag Handle - In Point -->
-                        <div id="range-drag-handle-in" class="absolute top-0 h-5 w-4 -ml-2 cursor-ew-resize pointer-events-auto flex flex-col items-center justify-between group/in" title="ลากปรับจุดเวลาเริ่มต้น (In-Point)">
+                        <div id="range-drag-handle-in" class="absolute top-0 h-5 w-4 -ml-2 cursor-ew-resize pointer-events-auto flex flex-col items-center justify-between group/in" title="ลากปรับจุดเวลาเริ่มต้น (In-Point) | ปุ่มลัด: I">
                             <span class="text-[9px] font-bold bg-indigo-500 text-white px-1 py-0.5 rounded shadow-lg scale-90 group-hover/in:scale-110 transition-transform">I</span>
                             <div class="w-[2px] h-2 bg-indigo-400"></div>
                         </div>
 
                         <!-- Drag Handle - Out Point -->
-                        <div id="range-drag-handle-out" class="absolute top-0 h-5 w-4 -ml-2 cursor-ew-resize pointer-events-auto flex flex-col items-center justify-between group/out" title="ลากปรับจุดเวลาสิ้นสุด (Out-Point)">
+                        <div id="range-drag-handle-out" class="absolute top-0 h-5 w-4 -ml-2 cursor-ew-resize pointer-events-auto flex flex-col items-center justify-between group/out" title="ลากปรับจุดเวลาสิ้นสุด (Out-Point) | ปุ่มลัด: O">
                             <span class="text-[9px] font-bold bg-violet-500 text-white px-1 py-0.5 rounded shadow-lg scale-90 group-hover/out:scale-110 transition-transform">O</span>
                             <div class="w-[2px] h-2 bg-violet-400"></div>
                         </div>
@@ -346,7 +398,7 @@
             <div class="p-4 border-b border-slate-900/80 bg-slate-950/20">
                 <div class="flex justify-between items-center mb-3">
                     <h2 class="font-bold text-xs tracking-wider text-slate-200 uppercase flex items-center gap-1.5">
-                        💬 บันทึกจุดรีวิวทั้งหมด
+                        💬 บันทึกจุดรีวิวโครงการ
                         <span id="comment-count-badge" class="bg-indigo-600/30 text-indigo-300 font-mono text-[11px] font-bold px-2 py-0.5 rounded-lg border border-indigo-500/20">0</span>
                     </h2>
 
@@ -482,12 +534,36 @@
     <section class="print-only hidden p-10 bg-white text-black min-h-screen">
         <div class="border-b-2 border-slate-800 pb-5 mb-6">
             <h1 class="text-2xl font-bold uppercase tracking-tight text-slate-900">REVIEWSPACE EDIT DECISION LIST (EDL)</h1>
-            <p class="text-sm text-slate-600 mt-1">เอกสารส่งต่อทีมงานเพื่อนำไปใช้แก้ไขปรับปรุงตัดต่อวิดีโออย่างเป็นทางการ</p>
+            <p class="text-sm text-slate-600 mt-1" id="print-project-title">เอกสารส่งต่อทีมงานเพื่อนำไปใช้แก้ไขปรับปรุงตัดต่อวิดีโออย่างเป็นทางการ</p>
         </div>
         <div id="print-comments-list" class="space-y-6">
             <!-- Injected via Print rendering -->
         </div>
     </section>
+
+    <!-- Custom URL Project Modal -->
+    <div id="url-project-modal" class="no-print fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm">
+        <div class="bg-[#0b0f19] border border-slate-850 p-6 rounded-2xl max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl">🔗</span>
+                <h3 class="text-sm font-bold text-slate-100">สร้างโปรเจกต์จาก URL วิดีโอ</h3>
+            </div>
+            <div class="space-y-3 mb-6">
+                <div>
+                    <label class="block text-[10px] text-slate-400 font-bold uppercase mb-1">ชื่อโครงการ</label>
+                    <input type="text" id="url-project-title" placeholder="เช่น ตัวอย่างโฆษณาฉบับแก้ไข..." class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 outline-none focus:border-indigo-500 rounded-lg px-2.5 py-2">
+                </div>
+                <div>
+                    <label class="block text-[10px] text-slate-400 font-bold uppercase mb-1">ที่อยู่วิดีโอ Direct URL (.mp4)</label>
+                    <input type="text" id="url-project-src" placeholder="https://..." class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 outline-none focus:border-indigo-500 rounded-lg px-2.5 py-2">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2.5">
+                <button id="url-project-cancel" class="bg-slate-900 hover:bg-slate-850 border border-slate-800 px-4 py-2 rounded-xl text-xs font-bold text-slate-300 transition">ยกเลิก</button>
+                <button id="url-project-submit" class="bg-indigo-650 hover:bg-indigo-600 px-4 py-2 rounded-xl text-xs font-bold text-white transition shadow-lg shadow-indigo-600/10">สร้างโครงการ</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Premium custom alert/confirm Modal (Rule compliant replacement of standard alert/confirm) -->
     <div id="custom-confirm-modal" class="no-print fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm">
@@ -551,11 +627,14 @@
             console.warn("Firebase config elements are not active in current session. Standard mockup link returns applied.");
         }
 
-        // DOM Handles
+        // DOM Handles - View Switcher
+        const dashboardView = document.getElementById('dashboard-view');
+        const studioView = document.getElementById('studio-view');
+        const backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
+
+        // DOM Handles - Studio Elements
         const video = document.getElementById('main-video');
         const videoSource = document.getElementById('video-source');
-        const videoUpload = document.getElementById('video-upload');
-        const uploadPlaceholder = document.getElementById('upload-placeholder');
         const currentFileDisplay = document.getElementById('current-file-name');
         
         const playPauseBtn = document.getElementById('play-pause-btn');
@@ -605,8 +684,10 @@
         const rangePreviewText = document.getElementById('range-preview-text');
         const toggleRangeBtn = document.getElementById('toggle-range-btn');
 
-        // Advanced state stores
-        let comments = [];
+        // Advanced State Stores - Projects & Workspace Management
+        let projects = [];
+        let currentProjectId = null;
+
         let canvasDrawingActive = false;
         let isDrawing = false;
         let brushColor = '#ef4444'; 
@@ -658,9 +739,8 @@
             setupCanvasDrawing();
             setupHoverTooltipSeeker();
             setupTimelineRangeDragHandlers();
-            renderComments();
-            updateSeekbarProgress();
             bindActionListeners();
+            renderDashboard();
 
             const user = await authenticateUser();
             
@@ -677,59 +757,27 @@
                     
                     if (shareSnapshot.exists()) {
                         const sharedData = shareSnapshot.data();
-                        if (sharedData.comments) comments = sharedData.comments;
-                        if (sharedData.videoSrc) {
-                            videoSource.src = sharedData.videoSrc;
-                            video.load();
-                        }
-                        if (sharedData.fileName) {
-                            currentFileDisplay.textContent = sharedData.fileName;
-                        }
-                        renderComments();
-                        renderTimelineMarkers();
+                        
+                        // Create a temporary project for the shared content
+                        const sharedProj = {
+                            id: 'shared-' + Date.now(),
+                            title: sharedData.fileName || 'วิดีโอที่มีผู้แบ่งปันสิทธิ์การตรวจรีวิว',
+                            videoUrl: sharedData.videoSrc || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                            fileName: sharedData.fileName || 'Cinematic Sample Shared.mp4',
+                            createdAt: Date.now(),
+                            comments: sharedData.comments || []
+                        };
+                        
+                        projects.push(sharedProj);
+                        saveToLocalStorage();
+                        openProject(sharedProj.id);
                         showToast("โหลดวิดีโอและรายการรีวิวที่แชร์เรียบร้อยแล้ว!", "success");
                     } else {
-                        showToast("ไม่พบโครงการแบ่งปันนี้ในระบบ", "danger");
+                        showToast("ไม่พบโครงการแบ่งปันนี้ในระบบ คืนค่ากลับแดชบอร์ดโครงการปกติ", "danger");
                     }
                 } catch (e) {
                     console.error("Fetch share fail", e);
                     showToast("การโหลดข้อมูลจากคลาวด์ล้มเหลว", "danger");
-                }
-            } else {
-                // Populate default demo values if local is clean
-                if (comments.length === 0) {
-                    comments = [
-                        {
-                            id: 1,
-                            avatar: '🎬',
-                            userName: 'ณัฐพงศ์',
-                            seconds: 2.12,
-                            timeText: '00:00:02',
-                            text: 'ช่วงคัตซีนตรงกองไฟนี้มีโทนแสงที่จ้าเกินไป รบกวนช่วยดึงเงา (Shadows) ลงเพิ่มรายละเอียดหน่อยครับ',
-                            status: 'open',
-                            drawing: null,
-                            isRange: false,
-                            replies: []
-                        },
-                        {
-                            id: 2,
-                            avatar: '💼',
-                            userName: 'สิรินทร์',
-                            seconds: 5.0,
-                            timeText: '00:00:05 - 00:00:08',
-                            text: 'ในช่วงนี้อยากให้ใส่ดนตรีประกอบที่ตื่นเต้นท้าทาย เพื่อกระตุ้นสติอารมณ์คนดู',
-                            status: 'progress',
-                            drawing: null,
-                            isRange: true,
-                            rangeStart: 5.0,
-                            rangeEnd: 8.2,
-                            replies: [
-                                { userName: 'ธวัชชัย', text: 'กำลังจัดหาซาวด์เพิ่มเพื่อส่งตัวเลือกชุดที่สองบ่ายวันนี้ครับ', time: Date.now() - 3600000 }
-                            ]
-                        }
-                    ];
-                    saveToLocalStorage();
-                    renderComments();
                 }
             }
 
@@ -788,7 +836,7 @@
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl shadow-2xl border text-xs font-semibold transition-all duration-300 transform translate-y-2 opacity-0 select-none pointer-events-auto max-w-xs ${
+            toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl shadow-2xl border text-xs font-semibold transition-all duration-300 transform translate-y-2 opacity-0 select-none pointer-events-auto max-w-xs z-50 ${
                 type === 'success' ? 'bg-[#0f1b2b] text-indigo-300 border-indigo-500/20' : 
                 type === 'danger' ? 'bg-[#2b0f19] text-rose-300 border-rose-500/20' : 
                 'bg-slate-900 text-slate-200 border-slate-800'
@@ -810,43 +858,353 @@
             }, 3000);
         }
 
-        // Local Storage triggers
+        // Local Storage triggers for multi-project scope
         function saveToLocalStorage() {
-            localStorage.setItem('reviewspace_mvp_comments', JSON.stringify(comments));
+            localStorage.setItem('reviewspace_projects_list', JSON.stringify(projects));
             localStorage.setItem('reviewspace_reviewer_name_ultra', reviewerNameInput.value);
             localStorage.setItem('reviewspace_reviewer_avatar_ultra', userAvatarSelect.value);
         }
 
         function initLocalStorage() {
-            const data = localStorage.getItem('reviewspace_mvp_comments');
-            if (data) {
-                try {
-                    comments = JSON.parse(data);
-                } catch(e) {
-                    comments = [];
-                }
-            }
             const savedName = localStorage.getItem('reviewspace_reviewer_name_ultra');
             const savedAvatar = localStorage.getItem('reviewspace_reviewer_avatar_ultra');
             if (savedName) reviewerNameInput.value = savedName;
             if (savedAvatar) userAvatarSelect.value = savedAvatar;
+
+            const projectsData = localStorage.getItem('reviewspace_projects_list');
+            if (projectsData) {
+                try {
+                    projects = JSON.parse(projectsData);
+                } catch(e) {
+                    projects = [];
+                }
+            }
+
+            // Populate mock project data if the database is clean
+            if (projects.length === 0) {
+                projects = [
+                    {
+                        id: 'demo-1',
+                        title: 'วิดีโอโปรเจกต์กองไฟ (Cinematic Fire Teaser)',
+                        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                        fileName: 'ForBiggerBlazes.mp4',
+                        createdAt: Date.now() - 86400000, // 1 day ago
+                        comments: [
+                            {
+                                id: 1,
+                                avatar: '🎬',
+                                userName: 'ณัฐพงศ์',
+                                seconds: 2.12,
+                                timeText: '00:00:02',
+                                text: 'ช่วงคัตซีนตรงกองไฟนี้มีโทนแสงที่จ้าเกินไป รบกวนช่วยดึงเงา (Shadows) ลงเพิ่มรายละเอียดหน่อยครับ',
+                                status: 'open',
+                                drawing: null,
+                                isRange: false,
+                                replies: []
+                            },
+                            {
+                                id: 2,
+                                avatar: '💼',
+                                userName: 'สิรินทร์',
+                                seconds: 5.0,
+                                timeText: '00:00:05 - 00:00:08',
+                                text: 'ในช่วงนี้อยากให้ใส่ดนตรีประกอบที่ตื่นเต้นท้าทาย เพื่อกระตุ้นสติอารมณ์คนดู',
+                                status: 'progress',
+                                drawing: null,
+                                isRange: true,
+                                rangeStart: 5.0,
+                                rangeEnd: 8.2,
+                                replies: [
+                                    { userName: 'ธวัชชัย', text: 'กำลังจัดหาซาวด์เพิ่มเพื่อส่งตัวเลือกชุดที่สองบ่ายวันนี้ครับ', time: Date.now() - 3600000 }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'demo-2',
+                        title: 'โฆษณาระดับพรีเมียม (For Bigger Escapes Commercial)',
+                        videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+                        fileName: 'ForBiggerEscapes.mp4',
+                        createdAt: Date.now() - 172800000, // 2 days ago
+                        comments: [
+                            {
+                                id: 3,
+                                avatar: '🎥',
+                                userName: 'วิทยา ตากล้อง',
+                                seconds: 1.5,
+                                timeText: '00:00:01',
+                                text: 'ต้องการสีสันที่อบอุ่นและวินเทจเพิ่มขึ้น คัลเลอร์เกรดดิ้งโทนสีส้มน้ำเงินได้ไหมครับ',
+                                status: 'open',
+                                drawing: null,
+                                isRange: false,
+                                replies: []
+                            }
+                        ]
+                    }
+                ];
+                saveToLocalStorage();
+            }
         }
 
-        function triggerClearAllData() {
-            toggleExportMenu();
+        // Render Dashboard UI
+        function renderDashboard() {
+            const projectsGrid = document.getElementById('projects-grid');
+            if (!projectsGrid) return;
+
+            projectsGrid.innerHTML = '';
+
+            // Calculate overall workspace stats
+            let totalProjects = projects.length;
+            let pendingCount = 0;
+            let resolvedCount = 0;
+
+            projects.forEach(p => {
+                if (p.comments) {
+                    p.comments.forEach(c => {
+                        if (c.status === 'open' || c.status === 'progress') pendingCount++;
+                        if (c.status === 'resolved') resolvedCount++;
+                    });
+                }
+            });
+
+            document.getElementById('stat-total-projects').textContent = totalProjects;
+            document.getElementById('stat-pending-comments').textContent = pendingCount;
+            document.getElementById('stat-resolved-comments').textContent = resolvedCount;
+
+            // Search Filter
+            let filteredProjects = [...projects];
+            const searchQuery = document.getElementById('search-projects-input').value.toLowerCase().trim();
+            if (searchQuery) {
+                filteredProjects = filteredProjects.filter(p => 
+                    p.title.toLowerCase().includes(searchQuery) || 
+                    p.fileName.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // Sorter
+            const sortVal = document.getElementById('sort-projects-select').value;
+            if (sortVal === 'name') {
+                filteredProjects.sort((a, b) => a.title.localeCompare(b.title, 'th'));
+            } else if (sortVal === 'comments') {
+                filteredProjects.sort((a, b) => (b.comments?.length || 0) - (a.comments?.length || 0));
+            } else {
+                // Default: recent
+                filteredProjects.sort((a, b) => b.createdAt - a.createdAt);
+            }
+
+            if (filteredProjects.length === 0) {
+                projectsGrid.innerHTML = `
+                    <div class="col-span-full flex flex-col items-center justify-center p-12 text-center bg-slate-950/20 rounded-3xl border border-dashed border-slate-900/80">
+                        <span class="text-3xl mb-3">🎬</span>
+                        <h4 class="text-sm font-bold text-slate-300">ไม่พบคอมเมนต์หรือโครงการที่คุณตามหา</h4>
+                        <p class="text-xs text-slate-500 mt-1">ลองอัปโหลดวิดีโอใหม่หรือใช้คำค้นหาที่สั้นลง</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredProjects.forEach(proj => {
+                const totalComments = proj.comments?.length || 0;
+                const formattedDate = new Date(proj.createdAt).toLocaleDateString('th-TH', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+
+                const projectCard = document.createElement('div');
+                projectCard.className = "bg-[#090d16] border border-slate-900 hover:border-slate-800 rounded-3xl p-5 flex flex-col justify-between hover:scale-[1.01] transition duration-200 group shadow-lg";
+                
+                projectCard.innerHTML = `
+                    <div class="cursor-pointer" data-project-action-id="${proj.id}">
+                        <!-- Top header card -->
+                        <div class="flex justify-between items-start gap-2 mb-3">
+                            <span class="text-xs uppercase tracking-widest bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full font-bold">VIDEO</span>
+                            <span class="text-[10px] text-slate-500 font-mono font-medium">${formattedDate}</span>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h3 class="text-sm font-bold text-slate-200 group-hover:text-indigo-400 transition mb-1 leading-snug line-clamp-2">${proj.title}</h3>
+                        <p class="text-[10px] text-slate-500 font-mono select-none break-all line-clamp-1 mb-4">📂 ${proj.fileName}</p>
+                    </div>
+
+                    <!-- Footer Details -->
+                    <div class="flex justify-between items-center border-t border-slate-900/60 pt-4 mt-2">
+                        <div class="flex items-center gap-1.5 text-xs text-slate-400">
+                            <span>💬 บรีฟทั้งหมด:</span>
+                            <span class="font-mono bg-indigo-500/10 text-indigo-400 font-bold px-2 py-0.5 rounded-md text-[10px]">${totalComments}</span>
+                        </div>
+                        
+                        <div class="flex gap-2">
+                            <!-- Open Project Button -->
+                            <button class="bg-indigo-650 hover:bg-indigo-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1" data-project-action-id="${proj.id}">
+                                รีวิวบรีฟ ➔
+                            </button>
+                            
+                            <!-- Delete Project button -->
+                            <button class="bg-red-500/5 hover:bg-red-500/15 text-red-400 border border-red-500/10 p-1.5 rounded-xl transition" data-project-delete-id="${proj.id}" title="ลบโครงการนี้">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                // Bind custom workspace load triggers
+                projectCard.querySelectorAll('[data-project-action-id]').forEach(trigger => {
+                    trigger.addEventListener('click', () => {
+                        openProject(proj.id);
+                    });
+                });
+
+                projectCard.querySelector('[data-project-delete-id]').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    triggerDeleteProject(proj.id);
+                });
+
+                projectsGrid.appendChild(projectCard);
+            });
+        }
+
+        // Switch into Workspace View mode
+        function openProject(projId) {
+            const project = projects.find(p => p.id === projId);
+            if (!project) return;
+
+            currentProjectId = projId;
+            comments = project.comments || [];
+
+            // Set source and load
+            videoSource.src = project.videoUrl;
+            video.load();
+
+            // Set navigation meta title
+            currentFileDisplay.textContent = `โครงการ: ${project.title}`;
+            
+            // Render specific components
+            clearCanvas();
+            renderComments();
+            renderTimelineMarkers();
+
+            // Toggle screens
+            dashboardView.classList.add('hidden');
+            studioView.classList.remove('hidden');
+            backToDashboardBtn.classList.remove('hidden');
+
+            showToast(`เข้าสู่ห้องตรวจแก้วิดีโอ "${project.title}" เรียบร้อย`, "success");
+        }
+
+        // Return to main Project list dashboard
+        function closeWorkspaceAndReturn() {
+            video.pause();
+            currentProjectId = null;
+            comments = [];
+
+            dashboardView.classList.remove('hidden');
+            studioView.classList.add('hidden');
+            backToDashboardBtn.classList.add('hidden');
+            currentFileDisplay.textContent = "แดชบอร์ดจัดการหลายโครงการ";
+
+            renderDashboard();
+        }
+
+        // Delete project workflow
+        function triggerDeleteProject(projId) {
+            const project = projects.find(p => p.id === projId);
+            if (!project) return;
+
             showCustomConfirm(
-                "ต้องการล้างคอมเมนต์ทั้งหมด?", 
-                "ข้อมูลการสเก็ตช์ภาพวาดและสรุปรีวิวทั้งหมดจะถูกลบออกอย่างถาวรโดยไม่สามารถกู้คืนกลับมาได้อีกครั้ง", 
-                "🗑️", 
+                "ลบโครงการนี้?",
+                `คุณต้องการที่จะนำข้อมูลวิดีโอและรายการรีวิวที่บันทึกของโครงการ "${project.title}" ออกจากระบบถาวรหรือไม่?`,
+                "🗑️",
                 () => {
-                    comments = [];
+                    projects = projects.filter(p => p.id !== projId);
                     saveToLocalStorage();
-                    renderComments();
-                    clearCanvas();
-                    renderTimelineMarkers();
-                    showToast("ล้างประวัติคอมเมนต์และสเก็ตช์เรียบร้อยแล้ว", "danger");
+                    renderDashboard();
+                    showToast("ลบโครงการเรียบร้อยแล้ว", "danger");
                 }
             );
+        }
+
+        // Create Project URL handler
+        function openUrlProjectModal() {
+            const modal = document.getElementById('url-project-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeUrlProjectModal() {
+            const modal = document.getElementById('url-project-modal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function submitUrlProject() {
+            const titleInput = document.getElementById('url-project-title');
+            const srcInput = document.getElementById('url-project-src');
+
+            const title = titleInput.value.trim();
+            const src = srcInput.value.trim();
+
+            if (!title || !src) {
+                showToast("กรุณากรอกข้อมูลให้ครบถ้วนก่อนส่ง!", "danger");
+                return;
+            }
+
+            // Simple URL checking
+            if (!src.startsWith('http://') && !src.startsWith('https://')) {
+                showToast("Direct URL วิดีโอจะต้องขึ้นต้นด้วย http:// หรือ https://", "danger");
+                return;
+            }
+
+            const newProj = {
+                id: 'proj-' + Date.now(),
+                title: title,
+                videoUrl: src,
+                fileName: src.substring(src.lastIndexOf('/') + 1) || 'video.mp4',
+                createdAt: Date.now(),
+                comments: []
+            };
+
+            projects.push(newProj);
+            saveToLocalStorage();
+            renderDashboard();
+            closeUrlProjectModal();
+
+            titleInput.value = '';
+            srcInput.value = '';
+
+            showToast("เพิ่มโครงการวิดีโอแบบลิงก์ URL เรียบร้อย!", "success");
+            openProject(newProj.id);
+        }
+
+        // Handle direct video file upload from uploader triggers
+        function handleDashboardVideoUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const fileURL = URL.createObjectURL(file);
+                
+                const newProj = {
+                    id: 'proj-' + Date.now(),
+                    title: file.name.substring(0, file.name.lastIndexOf('.')) || file.name,
+                    videoUrl: fileURL,
+                    fileName: file.name,
+                    createdAt: Date.now(),
+                    comments: []
+                };
+
+                projects.push(newProj);
+                saveToLocalStorage();
+                renderDashboard();
+                showToast(`โหลดวิดีโอโครงการ "${file.name}" เรียบร้อย`, "success");
+                
+                // Open workspace automatically
+                openProject(newProj.id);
+            }
         }
 
         // Play pause control engines
@@ -899,38 +1257,6 @@
             }, 500);
         }
 
-        videoUpload.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const fileURL = URL.createObjectURL(file);
-                videoSource.src = fileURL;
-                video.load();
-                uploadPlaceholder.classList.add('hidden');
-                currentFileDisplay.textContent = `ไฟล์: ${file.name}`;
-                showToast(`โหลดวิดีโอ "${file.name}" เรียบร้อย`, "success");
-                clearCanvas();
-                video.addEventListener('loadedmetadata', () => {
-                    videoSeek.max = video.duration;
-                    rangeInInput.max = video.duration;
-                    rangeOutInput.max = video.duration;
-                    rangeOutInput.value = Math.min(video.duration, 5);
-                    durationTimestamp.textContent = formatTimeCode(video.duration);
-                    renderTimelineMarkers();
-                    updateRangeSelectionValues();
-                });
-            }
-        });
-
-        video.addEventListener('loadedmetadata', () => {
-            videoSeek.max = video.duration;
-            rangeInInput.max = video.duration;
-            rangeOutInput.max = video.duration;
-            rangeOutInput.value = Math.min(video.duration, 5);
-            durationTimestamp.textContent = formatTimeCode(video.duration);
-            renderTimelineMarkers();
-            updateRangeSelectionValues();
-        });
-
         videoSeek.addEventListener('input', () => {
             video.currentTime = videoSeek.value;
             currentTimestamp.textContent = formatTimeCode(video.currentTime);
@@ -945,6 +1271,9 @@
         });
 
         function updateSeekbarProgress() {
+            // หากเปิดใช้งานโหมดระบุช่วงเวลาอยู่ จะไม่เขียนข้อความแสดงแสตมป์เวลาทับค่า Brackets ที่ผู้ใช้เซ็ตไว้
+            if (isRangeMode) return;
+
             const formatted = formatTimeCode(video.currentTime);
             if (document.activeElement !== commentInput) {
                 stampIndicator.textContent = `📌 แก้จุดเวลา: ${formatted}`;
@@ -973,7 +1302,6 @@
                     const nextHeight = Math.floor(entry.contentRect.height);
                     
                     // CRITICAL FIX: Only resize coordinate system if CSS dimensions actually shifted.
-                    // This blocks ResizeObserver from firing and clearing our canvas drawings on micro-interactions.
                     if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
                         canvas.width = nextWidth;
                         canvas.height = nextHeight;
@@ -1256,7 +1584,7 @@
                 updateRangeSelectionValues();
             } else {
                 rangePickerContainer.classList.add('hidden');
-                toggleRangeBtn.textContent = "⏱️ บรีฟแบบเป็นช่วงเวลา: ปิดอยู่";
+                toggleRangeBtn.textContent = "⏱️ บรีฟแบบเป็นช่วงช่วงเวลา: ปิดอยู่";
                 toggleRangeBtn.className = "text-[10px] bg-slate-900 hover:bg-slate-800 text-slate-400 font-semibold px-2 py-1 rounded-lg border border-slate-850 transition";
                 stampIndicator.textContent = `📌 แก้จุดเวลา: ${formatTimeCode(video.currentTime)}`;
                 rangeHandlesContainer.classList.add('hidden');
@@ -1393,7 +1721,10 @@
         // Auto pause on edit target focusing
         commentInput.addEventListener('focus', () => {
             video.pause();
-            lockCurrentTime();
+            // ป้องกันการเขียนพิกัดทับในกรณีที่ผู้ใช้กำลังระบุช่วงเวลา (Range Mode)
+            if (!isRangeMode) {
+                lockCurrentTime();
+            }
         });
 
         // Submit comment workflow
@@ -1444,6 +1775,13 @@
             };
 
             comments.push(newComment);
+            
+            // Sync with parent project
+            const project = projects.find(p => p.id === currentProjectId);
+            if (project) {
+                project.comments = comments;
+            }
+
             saveToLocalStorage();
             clearCanvas();
             commentInput.value = '';
@@ -1477,7 +1815,7 @@
             renderComments();
         }
 
-        // Render Comment List Panel UI (Completely removed reactions system)
+        // Render Comment List Panel UI
         function renderComments() {
             commentsContainer.innerHTML = '';
             let filtered = [...comments];
@@ -1540,7 +1878,6 @@
                     renderComments();
                 });
 
-                // Render replies and inputs (Reactions HTML completely removed for cleaner look)
                 commentEl.innerHTML = `
                     <div class="flex justify-between items-start gap-2 mb-2 interactive-control">
                         <div class="flex items-center gap-2">
@@ -1593,7 +1930,7 @@
                 commentsContainer.appendChild(commentEl);
             });
 
-            // Bind Event Listeners dynamically to newly rendered comment nodes to avoid global modular bugs
+            // Bind Event Listeners dynamically to newly rendered comment nodes
             commentsContainer.querySelectorAll('.comment-status-select').forEach(sel => {
                 sel.addEventListener('change', (e) => {
                     updateCommentStatus(parseInt(sel.getAttribute('data-id')), e.target.value);
@@ -1624,17 +1961,27 @@
             renderPrintReport();
         }
 
-        // Bind dynamic JS listeners securely avoiding scoping gaps of modular code
+        // Bind dynamic JS listeners securely
         function bindActionListeners() {
+            // Dashboard Events
+            document.getElementById('dashboard-video-upload').addEventListener('change', handleDashboardVideoUpload);
+            document.getElementById('add-url-project-btn').addEventListener('click', openUrlProjectModal);
+            document.getElementById('url-project-cancel').addEventListener('click', closeUrlProjectModal);
+            document.getElementById('url-project-submit').addEventListener('click', submitUrlProject);
+            document.getElementById('search-projects-input').addEventListener('input', renderDashboard);
+            document.getElementById('sort-projects-select').addEventListener('change', renderDashboard);
+
+            // Workspace Back Toggle
+            backToDashboardBtn.addEventListener('click', closeWorkspaceAndReturn);
+
+            // Canvas Toolbar Actions
             document.getElementById('toggle-drawing-mode-btn').addEventListener('click', toggleDrawingMode);
-            
-            // Tool selector toolbox buttons
             document.getElementById('tool-brush').addEventListener('click', () => setDrawingTool('brush'));
             document.getElementById('tool-arrow').addEventListener('click', () => setDrawingTool('arrow'));
             document.getElementById('tool-rect').addEventListener('click', () => setDrawingTool('rect'));
             document.getElementById('tool-circle').addEventListener('click', () => setDrawingTool('circle'));
             
-            // Data attribute based brush color assignments
+            // Brush colors
             document.querySelectorAll('[data-brush-color]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const color = btn.getAttribute('data-brush-color');
@@ -1645,13 +1992,12 @@
             document.getElementById('canvas-undo-btn').addEventListener('click', undoLastStroke);
             document.getElementById('canvas-clear-btn').addEventListener('click', () => clearCanvas(true));
             document.getElementById('discard-drawing-btn').addEventListener('click', () => clearCanvas(true));
-            document.getElementById('upload-trigger-btn').addEventListener('click', () => document.getElementById('video-upload').click());
             
-            // Seeker frame steppers
+            // Frame Steppers
             document.getElementById('step-back-btn').addEventListener('click', () => stepFrame(-1));
             document.getElementById('step-forward-btn').addEventListener('click', () => stepFrame(1));
 
-            // Export events
+            // Exports Events
             document.getElementById('export-toggle-btn').addEventListener('click', toggleExportMenu);
             document.getElementById('export-txt-btn').addEventListener('click', () => exportComments('txt'));
             document.getElementById('export-json-btn').addEventListener('click', () => exportComments('json'));
@@ -1665,29 +2011,30 @@
             document.getElementById('filter-btn-resolved').addEventListener('click', () => setFilterStatus('resolved'));
             document.getElementById('sort-select').addEventListener('change', renderComments);
 
-            // Sub elements
+            // Selection Sub elements
             document.getElementById('toggle-range-btn').addEventListener('click', toggleRangeComment);
             document.getElementById('range-in').addEventListener('input', updateRangeSelectionValues);
             document.getElementById('range-out').addEventListener('input', updateRangeSelectionValues);
             document.getElementById('ai-mic-btn').addEventListener('click', toggleSpeechRecognition);
             document.getElementById('stamp-indicator').addEventListener('click', lockCurrentTime);
             
-            // File input name watcher
+            // Name Identity storage watchers
             reviewerNameInput.addEventListener('input', saveToLocalStorage);
             userAvatarSelect.addEventListener('change', saveToLocalStorage);
-
-            // Seeker mouse updates
-            videoSeek.addEventListener('input', () => {
-                video.currentTime = videoSeek.value;
-                currentTimestamp.textContent = formatTimeCode(video.currentTime);
-            });
         }
 
         // Render Print layout for offline audit
         function renderPrintReport() {
             const printList = document.getElementById('print-comments-list');
+            const printTitle = document.getElementById('print-project-title');
             if (!printList) return;
             printList.innerHTML = '';
+
+            const currentProj = projects.find(p => p.id === currentProjectId);
+            if (currentProj) {
+                printTitle.textContent = `บรีฟของโครงการ: ${currentProj.title} (เอกสารสำหรับส่งต่อทีมโปรดักชันเพื่อแก้ไขปรับปรุงวิดีโอ)`;
+            }
+
             comments.forEach((c, index) => {
                 const card = document.createElement('div');
                 card.className = "print-card";
@@ -1736,6 +2083,13 @@
                     text: val,
                     time: Date.now()
                 });
+                
+                // Sync to parent project
+                const project = projects.find(p => p.id === currentProjectId);
+                if (project) {
+                    project.comments = comments;
+                }
+
                 saveToLocalStorage();
                 renderComments();
                 showToast("เพิ่มความเห็นตอบกลับแล้ว", "success");
@@ -1747,6 +2101,13 @@
             const comment = comments.find(c => c.id === commentId);
             if (comment) {
                 comment.status = newStatus;
+
+                // Sync to parent project
+                const project = projects.find(p => p.id === currentProjectId);
+                if (project) {
+                    project.comments = comments;
+                }
+
                 saveToLocalStorage();
                 renderComments();
                 showToast("อัปเดตสถานะการบรีฟเสร็จสิ้น", "success");
@@ -1760,11 +2121,42 @@
                 "🗑️",
                 () => {
                     comments = comments.filter(c => c.id !== commentId);
+
+                    // Sync to parent project
+                    const project = projects.find(p => p.id === currentProjectId);
+                    if (project) {
+                        project.comments = comments;
+                    }
+
                     saveToLocalStorage();
                     renderComments();
                     renderTimelineMarkers();
                     clearCanvas();
                     showToast("ลบข้อมูลสำเร็จ", "danger");
+                }
+            );
+        }
+
+        function triggerClearAllData() {
+            toggleExportMenu();
+            showCustomConfirm(
+                "ต้องการล้างคอมเมนต์ของโครงการนี้ทั้งหมด?", 
+                "ข้อมูลการสเก็ตช์ภาพวาดและสรุปรีวิวทั้งหมดของวิดีโอโครงการนี้จะถูกลบออกอย่างถาวร", 
+                "🗑️", 
+                () => {
+                    comments = [];
+
+                    // Sync to parent project
+                    const project = projects.find(p => p.id === currentProjectId);
+                    if (project) {
+                        project.comments = [];
+                    }
+
+                    saveToLocalStorage();
+                    renderComments();
+                    clearCanvas();
+                    renderTimelineMarkers();
+                    showToast("ล้างประวัติคอมเมนต์และสเก็ตช์ของโครงการนี้เรียบร้อยแล้ว", "danger");
                 }
             );
         }
@@ -1935,6 +2327,9 @@
             if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
                 return;
             }
+
+            // Only run workspace keyboard hotkeys if workspace is currently active
+            if (currentProjectId === null) return;
 
             switch (e.key) {
                 case ' ': 
