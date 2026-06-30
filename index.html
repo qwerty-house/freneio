@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReviewSpace Studio Pro (Frame.io Clone)</title>
+    <title>ReviewSpace Studio Pro (Premium Collaboration Platform)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter & Sarabun -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: IBM Plex Sans Thai -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', 'Sarabun', sans-serif;
+            font-family: 'IBM Plex Sans Thai', sans-serif;
         }
         /* Custom scrollbar for premium dark UI */
         ::-webkit-scrollbar {
@@ -41,22 +41,28 @@
             <div>
                 <div class="flex items-center gap-2">
                     <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-gray-100 to-gray-400 bg-clip-text text-transparent">REVIEWSPACE</h1>
-                    <span class="text-[10px] uppercase font-bold tracking-widest bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full">STUDIO PRO MVP</span>
+                    <span class="text-[10px] uppercase font-bold tracking-widest bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full">STUDIO PRO</span>
                 </div>
                 <p class="text-xs text-gray-500 font-medium" id="current-file-name">ไฟล์ปัจจุบัน: วิดีโอตัวอย่างสำหรับการทดสอบ</p>
             </div>
         </div>
 
-        <!-- Middle Tools: Active Role Selector & Action Buttons -->
+        <!-- Right Header Tools: Custom Name Input & Upload -->
         <div class="flex items-center gap-4">
-            <!-- Active Role Selector -->
+            <!-- Custom Reviewer Name Input & Avatar Icon -->
             <div class="bg-gray-900 border border-gray-800 rounded-lg p-1.5 flex items-center gap-2 shadow-inner">
-                <span class="text-xs text-gray-500 font-medium pl-2">บทบาทผู้รีวิว:</span>
-                <select id="user-role-select" class="bg-gray-850 text-xs text-gray-200 border-none outline-none focus:ring-0 rounded cursor-pointer pr-1">
-                    <option value="director" data-name="กิตติพงษ์ (ผู้กำกับ)" data-avatar="🎬">🎬 กิตติพงษ์ (ผู้กำกับ)</option>
-                    <option value="client" data-name="สิริพร (ตัวแทนลูกค้า)" data-avatar="💼">💼 สิริพร (ตัวแทนลูกค้า)</option>
-                    <option value="cinematographer" data-name="ธีรเดช (ตากล้อง)" data-avatar="🎥">🎥 ธีรเดช (ตากล้อง)</option>
-                    <option value="editor" data-name="ชลสิทธิ์ (คนตัดต่อ)" data-avatar="✂️">✂️ ชลสิทธิ์ (คนตัดต่อ)</option>
+                <span class="text-xs text-gray-400 font-medium pl-2">👤 ผู้รีวิว:</span>
+                <input type="text" id="reviewer-name-input" value="กิตติพงษ์" placeholder="พิมพ์ชื่อของคุณ..." class="bg-gray-950 text-xs text-gray-200 border border-gray-800 outline-none focus:border-indigo-600 rounded px-2.5 py-1 w-44 focus:ring-0 transition-all duration-150" title="พิมพ์ระบุชื่อของคุณได้โดยตรง">
+                
+                <span class="text-gray-700">|</span>
+                
+                <!-- Simple Avatar Picker for decoration -->
+                <select id="user-avatar-select" class="bg-transparent text-xs text-gray-300 border-none outline-none focus:ring-0 cursor-pointer pr-1" title="เลือกไอคอนประจำตัว">
+                    <option value="🎬" selected>🎬 ผู้กำกับ</option>
+                    <option value="💼">💼 ลูกค้า</option>
+                    <option value="🎥">🎥 ตากล้อง</option>
+                    <option value="✂️">✂️ คนตัดต่อ</option>
+                    <option value="👤">👤 ทั่วไป</option>
                 </select>
             </div>
 
@@ -94,6 +100,12 @@
 
                     <!-- Interactive Drawing Canvas Overlay (Exactly matches video aspect ratio) -->
                     <canvas id="annotation-canvas" class="absolute top-0 left-0 w-full h-full cursor-crosshair opacity-0 pointer-events-none transition-opacity duration-200 z-20"></canvas>
+
+                    <!-- Toggle Drawing Mode Floating Button (Used to hide drawing canvas tool fully) -->
+                    <button id="toggle-drawing-mode-btn" onclick="toggleDrawingMode()" class="absolute top-4 right-4 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-3 py-2 rounded-xl transition duration-150 flex items-center gap-2 border border-indigo-500/30 shadow-xl backdrop-blur-sm z-30">
+                        <span id="toggle-drawing-icon">🎨</span>
+                        <span id="toggle-drawing-text">โหมดวาด: เปิดอยู่</span>
+                    </button>
 
                     <!-- Large Play/Pause Toggle Indicator -->
                     <div id="center-play-indicator" class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 pointer-events-none transition-all duration-300 z-10 scale-75">
@@ -150,7 +162,7 @@
                             <input type="range" id="brush-size" min="2" max="15" value="4" class="w-16 h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-indigo-500">
                         </div>
 
-                        <!-- Reset canvas/Undo -->
+                        <!-- Reset canvas -->
                         <button onclick="clearCanvas()" class="text-xs text-red-400 hover:text-red-300 font-semibold hover:bg-red-500/10 px-2.5 py-1.5 rounded-lg border border-red-500/20 transition flex items-center gap-1.5">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             ล้างภาพวาด
@@ -209,7 +221,7 @@
                         </button>
                     </div>
 
-                    <!-- Speed Control & Volume -->
+                    <!-- Speed Control & Keyboard Shortcut Menu Info -->
                     <div class="flex items-center gap-4 text-xs">
                         <!-- Keyboard Shortcuts Tooltip icon -->
                         <div class="relative group">
@@ -255,26 +267,35 @@
                         <span id="comment-count-badge" class="bg-indigo-600 text-indigo-100 font-mono text-[11px] font-bold px-2 py-0.5 rounded-full">0</span>
                     </h2>
                     
-                    <!-- Advanced Professional Export Actions Dropdown -->
-                    <div class="relative inline-block" id="export-dropdown-wrapper">
-                        <button onclick="toggleExportMenu()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700/80 px-2.5 py-1.5 rounded-lg transition-all duration-150 flex items-center gap-1.5 font-medium shadow-sm">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            ส่งออกคอมเมนต์...
+                    <!-- Advanced Actions & Sharing -->
+                    <div class="flex items-center gap-2">
+                        <!-- Publish Share Link Button -->
+                        <button id="share-project-btn" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-500/30 px-3 py-1.5 rounded-lg transition-all duration-150 flex items-center gap-1.5 font-semibold shadow-md shadow-indigo-600/10">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 10.742l-2.077 1.155a3.001 3.001 0 110-3.794l2.077 1.155M15 16a3 3 0 100-6 3 3 0 000 6zm0-10a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                            แชร์ (Publish)
                         </button>
-                        <!-- Floating Dropdown panel -->
-                        <div id="export-menu" class="absolute right-0 mt-2 w-52 bg-gray-950/95 border border-gray-800 rounded-xl shadow-2xl hidden z-50 overflow-hidden divide-y divide-gray-800/60 backdrop-blur">
-                            <div class="p-2">
-                                <button onclick="exportComments('txt')" class="w-full text-left text-xs text-gray-300 hover:text-white hover:bg-gray-900 p-2 rounded-lg transition flex items-center gap-2 font-medium">
-                                    📝 ส่งออกเป็นไฟล์ข้อความ (.TXT)
-                                </button>
-                                <button onclick="exportComments('json')" class="w-full text-left text-xs text-gray-300 hover:text-white hover:bg-gray-900 p-2 rounded-lg transition flex items-center gap-2 font-medium">
-                                    💻 ส่งออกเป็นไฟล์ข้อมูล (.JSON)
-                                </button>
-                            </div>
-                            <div class="p-2">
-                                <button onclick="clearAllData()" class="w-full text-left text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 p-2 rounded-lg transition flex items-center gap-2 font-semibold">
-                                    🗑️ ล้างประวัติทั้งหมด
-                                </button>
+
+                        <!-- Exporter Dropdown -->
+                        <div class="relative inline-block" id="export-dropdown-wrapper">
+                            <button onclick="toggleExportMenu()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700/80 px-2.5 py-1.5 rounded-lg transition-all duration-150 flex items-center gap-1.5 font-medium shadow-sm">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                ส่งออก...
+                            </button>
+                            <!-- Floating Dropdown panel -->
+                            <div id="export-menu" class="absolute right-0 mt-2 w-52 bg-gray-950/95 border border-gray-800 rounded-xl shadow-2xl hidden z-50 overflow-hidden divide-y divide-gray-800/60 backdrop-blur">
+                                <div class="p-2">
+                                    <button onclick="exportComments('txt')" class="w-full text-left text-xs text-gray-300 hover:text-white hover:bg-gray-900 p-2 rounded-lg transition flex items-center gap-2 font-medium">
+                                        📝 ส่งออกเป็นไฟล์ข้อความ (.TXT)
+                                    </button>
+                                    <button onclick="exportComments('json')" class="w-full text-left text-xs text-gray-300 hover:text-white hover:bg-gray-900 p-2 rounded-lg transition flex items-center gap-2 font-medium">
+                                        💻 ส่งออกเป็นไฟล์ข้อมูล (.JSON)
+                                    </button>
+                                </div>
+                                <div class="p-2">
+                                    <button onclick="triggerClearAllData()" class="w-full text-left text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 p-2 rounded-lg transition flex items-center gap-2 font-semibold">
+                                        🗑️ ล้างประวัติทั้งหมด
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -352,8 +373,68 @@
         </section>
     </main>
 
-    <!-- UI Core Scripts -->
-    <script>
+    <!-- Custom Premium Confirm/Alert Modal -->
+    <div id="custom-confirm-modal" class="fixed inset-0 bg-black/85 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300 backdrop-blur-md">
+        <div class="bg-gray-950 border border-gray-850 p-6 rounded-2xl max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-2xl" id="custom-modal-icon">⚠️</span>
+                <h3 class="text-md font-bold text-gray-100" id="custom-modal-title">ยืนยันการทำรายการ</h3>
+            </div>
+            <p class="text-xs text-gray-400 mb-6 leading-relaxed" id="custom-modal-text">คุณต้องการดำเนินการนี้ใช่หรือไม่?</p>
+            <div class="flex justify-end gap-3">
+                <button id="custom-modal-cancel" class="bg-gray-900 hover:bg-gray-800 border border-gray-800 px-4 py-2 rounded-xl text-xs font-semibold text-gray-300 transition active:scale-95">ยกเลิก</button>
+                <button id="custom-modal-confirm" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-xl text-xs font-semibold text-white transition active:scale-95 shadow-lg shadow-indigo-600/20">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Publish Link Share Link Modal -->
+    <div id="share-link-modal" class="fixed inset-0 bg-black/85 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300 backdrop-blur-md">
+        <div class="bg-gray-950 border border-gray-850 p-6 rounded-2xl max-w-md w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl">🔗</span>
+                <h3 class="text-md font-bold text-gray-100">แชร์ประวัติบรีฟสำเร็จ (Publish Link)</h3>
+            </div>
+            <p class="text-xs text-gray-400 mb-4 leading-relaxed">ลิงก์นี้เปิดให้ผู้อื่นเข้ามาร่วมรีวิวและรับชมวิดีโอที่มีข้อความบรีฟของคุณได้โดยตรงจากทุกอุปกรณ์!</p>
+            
+            <div class="flex gap-2 mb-5">
+                <input type="text" id="share-link-input" readonly class="flex-1 bg-gray-900 text-gray-300 border border-gray-800 outline-none rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-indigo-500" onclick="this.select()">
+                <button id="copy-share-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition active:scale-95 shadow-lg">คัดลอก</button>
+            </div>
+
+            <div class="flex justify-end">
+                <button id="share-modal-close" class="bg-gray-900 hover:bg-gray-800 border border-gray-800 px-4 py-2 rounded-xl text-xs font-semibold text-gray-300 transition active:scale-95">ปิดหน้าต่าง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Application Module Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global config integrations
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'reviewspace-studio';
+        const rawFirebaseConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
+        
+        let db, auth;
+        let isFirebaseAvailable = false;
+
+        // Try load Firebase configs gracefully
+        try {
+            const firebaseConfig = JSON.parse(rawFirebaseConfig);
+            if (firebaseConfig && firebaseConfig.apiKey) {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                isFirebaseAvailable = true;
+                console.log("Firebase and Firestore successfully initialized");
+            }
+        } catch(e) {
+            console.warn("Firebase config not available or incomplete. Sharing links will use LocalMock.");
+        }
+
         // DOM Handles
         const video = document.getElementById('main-video');
         const videoSource = document.getElementById('video-source');
@@ -387,66 +468,160 @@
         const commentCountBadge = document.getElementById('comment-count-badge');
         const searchInput = document.getElementById('search-comments');
         const sortSelect = document.getElementById('sort-select');
-        const userRoleSelect = document.getElementById('user-role-select');
+        const reviewerNameInput = document.getElementById('reviewer-name-input');
+        const userAvatarSelect = document.getElementById('user-avatar-select');
         const exportMenu = document.getElementById('export-menu');
         const centerPlayIndicator = document.getElementById('center-play-indicator');
         const playIndicatorIcon = document.getElementById('play-indicator-icon');
+
+        const shareProjectBtn = document.getElementById('share-project-btn');
+        const shareLinkModal = document.getElementById('share-link-modal');
+        const shareLinkInput = document.getElementById('share-link-input');
+        const copyShareBtn = document.getElementById('copy-share-btn');
+        const shareModalClose = document.getElementById('share-modal-close');
 
         // State Store
         let comments = [];
         let canvasDrawingActive = false;
         let isDrawing = false;
-        let brushColor = '#ef4444'; // Default drawing color: red
+        let brushColor = '#ef4444'; // Default red drawing brush
         let filterStatus = 'all'; // 'all', 'open', 'progress', 'resolved'
         let selectedCommentId = null;
+        let isDrawingModeEnabled = true;
+
+        // Authenticate before query operations (RULE 3)
+        async function authenticateUser() {
+            if (!isFirebaseAvailable) return null;
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                return auth.currentUser;
+            } catch (err) {
+                console.error("Auth error", err);
+                return null;
+            }
+        }
 
         // Initialize App & Restore Saved State
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             initLocalStorage();
             setupCanvasResizer();
             setupCanvasDrawing();
             renderComments();
             updateSeekbarProgress();
+
+            const user = await authenticateUser();
             
-            // Set first mockup state
-            if(comments.length === 0) {
-                // Populate default mockup comments for Demo purposes if database empty
-                comments = [
-                    {
-                        id: 1,
-                        role: 'director',
-                        userName: 'กิตติพงษ์ (ผู้กำกับ)',
-                        avatar: '🎬',
-                        seconds: 2.12,
-                        timeText: '00:00:02',
-                        text: 'โทนแสงตรงกองไฟนี้ดูจ้าเกินไปนิดนึง รบกวนดึงแสงเงา (Shadow) ลงเพื่อเพิ่มรายละเอียดหน่อยครับ',
-                        status: 'open',
-                        drawing: null,
-                        replies: []
-                    },
-                    {
-                        id: 2,
-                        role: 'client',
-                        userName: 'สิริพร (ตัวแทนลูกค้า)',
-                        avatar: '💼',
-                        seconds: 6.84,
-                        timeText: '00:00:06',
-                        text: 'ท่อนดับเพลิงช่วงนี้อยากให้ใส่เพลงตื่นเต้น ๆ เพิ่มระดับอารมณ์ขึ้นมาอีกระดับค่ะ',
-                        status: 'progress',
-                        drawing: null,
-                        replies: [
-                            { userName: 'ชลสิทธิ์ (คนตัดต่อ)', text: 'กำลังเลือกเพลงดนตรีมาทาบให้เลือกฟิลลิ่งเพิ่มครับ', time: Date.now() - 3600000 }
-                        ]
+            // Check if loading Shared Project via URL queries
+            const urlParams = new URLSearchParams(window.location.search);
+            const shareId = urlParams.get('share');
+            
+            if (shareId && isFirebaseAvailable && user) {
+                showToast("กำลังดึงประวัติโปรเจกต์ที่แชร์...", "info");
+                try {
+                    // Fetch share document from safe nested collection path (RULE 1)
+                    const shareDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'shares', shareId);
+                    const shareSnapshot = await getDoc(shareDocRef);
+                    
+                    if (shareSnapshot.exists()) {
+                        const sharedData = shareSnapshot.data();
+                        if (sharedData.comments) comments = sharedData.comments;
+                        if (sharedData.videoSrc) {
+                            videoSource.src = sharedData.videoSrc;
+                            video.load();
+                        }
+                        if (sharedData.fileName) {
+                            currentFileDisplay.textContent = sharedData.fileName;
+                        }
+                        renderComments();
+                        renderTimelineMarkers();
+                        showToast("โหลดวิดีโอและคอมเมนต์จากลิงก์แชร์เรียบร้อยแล้ว!", "success");
+                    } else {
+                        showToast("ไม่พบโปรเจกต์แชร์ที่คุณเรียกใช้งาน", "danger");
                     }
-                ];
-                saveToLocalStorage();
-                renderComments();
+                } catch (e) {
+                    console.error("Fetch share fail", e);
+                    showToast("ไม่สามารถเชื่อมต่อคลาวด์เพื่อดึงข้อมูลได้", "danger");
+                }
+            } else {
+                // Populate default mockup comments if state is clean
+                if (comments.length === 0) {
+                    comments = [
+                        {
+                            id: 1,
+                            avatar: '🎬',
+                            userName: 'กิตติพงษ์ (ผู้กำกับ)',
+                            seconds: 2.12,
+                            timeText: '00:00:02',
+                            text: 'โทนแสงตรงกองไฟนี้ดูจ้าเกินไปนิดนึง รบกวนดึงแสงเงา (Shadow) ลงเพื่อเพิ่มรายละเอียดหน่อยครับ',
+                            status: 'open',
+                            drawing: null,
+                            replies: []
+                        },
+                        {
+                            id: 2,
+                            avatar: '💼',
+                            userName: 'สิริพร (ตัวแทนลูกค้า)',
+                            seconds: 6.84,
+                            timeText: '00:00:06',
+                            text: 'ท่อนดับเพลิงช่วงนี้อยากให้ใส่เพลงตื่นเต้น ๆ เพิ่มระดับอารมณ์ขึ้นมาอีกระดับค่ะ',
+                            status: 'progress',
+                            drawing: null,
+                            replies: [
+                                { userName: 'ชลสิทธิ์ (คนตัดต่อ)', text: 'กำลังเลือกเพลงดนตรีมาสวมเพิ่มทางเลือกให้เลือกฟิลลิ่งเพิ่มครับ', time: Date.now() - 3600000 }
+                            ]
+                        }
+                    ];
+                    saveToLocalStorage();
+                    renderComments();
+                }
             }
         });
 
         // ----------------------------------------------------
-        // UTILITIES
+        // UTILITIES & CUSTOM DIALOG POPUPS (No prompt/alerts)
         // ----------------------------------------------------
+
+        // Custom Confirmation Dialog replacing window.confirm
+        let activeConfirmCallback = null;
+        function showCustomConfirm(title, message, icon, onConfirm) {
+            const modal = document.getElementById('custom-confirm-modal');
+            const mTitle = document.getElementById('custom-modal-title');
+            const mText = document.getElementById('custom-modal-text');
+            const mIcon = document.getElementById('custom-modal-icon');
+            
+            mTitle.textContent = title;
+            mText.textContent = message;
+            mIcon.textContent = icon || '⚠️';
+            activeConfirmCallback = onConfirm;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeCustomConfirm() {
+            const modal = document.getElementById('custom-confirm-modal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                activeConfirmCallback = null;
+            }, 300);
+        }
+
+        document.getElementById('custom-modal-cancel').addEventListener('click', closeCustomConfirm);
+        document.getElementById('custom-modal-confirm').addEventListener('click', () => {
+            if (typeof activeConfirmCallback === 'function') {
+                activeConfirmCallback();
+            }
+            closeCustomConfirm();
+        });
 
         // Time code helper (HH:MM:SS)
         function formatTimeCode(totalSeconds) {
@@ -457,12 +632,12 @@
             return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // Custom notification system
+        // Elegant notification toast system
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl shadow-2xl border text-xs font-semibold transition-all duration-300 transform translate-y-2 opacity-0 select-none pointer-events-auto max-w-xs ${
-                type === 'success' ? 'bg-emerald-950/95 text-emerald-300 border-emerald-500/20' : 
+                type === 'success' ? 'bg-indigo-950/95 text-indigo-300 border-indigo-500/20' : 
                 type === 'danger' ? 'bg-rose-950/95 text-rose-300 border-rose-500/20' : 
                 'bg-gray-900/95 text-gray-200 border-gray-800'
             }`;
@@ -473,12 +648,10 @@
             `;
             container.appendChild(toast);
 
-            // Trigger animation
             setTimeout(() => {
                 toast.classList.remove('translate-y-2', 'opacity-0');
             }, 10);
 
-            // Dismiss toast
             setTimeout(() => {
                 toast.classList.add('translate-y-2', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
@@ -488,6 +661,8 @@
         // Local Storage Utilities
         function saveToLocalStorage() {
             localStorage.setItem('reviewspace_mvp_comments', JSON.stringify(comments));
+            localStorage.setItem('reviewspace_reviewer_name', reviewerNameInput.value);
+            localStorage.setItem('reviewspace_reviewer_avatar', userAvatarSelect.value);
         }
 
         function initLocalStorage() {
@@ -499,24 +674,32 @@
                     comments = [];
                 }
             }
+            const savedName = localStorage.getItem('reviewspace_reviewer_name');
+            const savedAvatar = localStorage.getItem('reviewspace_reviewer_avatar');
+            if (savedName) reviewerNameInput.value = savedName;
+            if (savedAvatar) userAvatarSelect.value = savedAvatar;
         }
 
-        function clearAllData() {
-            if (confirm("ต้องการล้างคอมเมนต์ทั้งหมดใช่หรือไม่? ข้อมูลนี้จะไม่สามารถกู้คืนได้")) {
-                comments = [];
-                saveToLocalStorage();
-                renderComments();
-                clearCanvas();
-                showToast("ล้างประวัติคอมเมนต์ในระบบทั้งหมดเรียบร้อยแล้ว", "danger");
-                toggleExportMenu();
-            }
+        function triggerClearAllData() {
+            toggleExportMenu();
+            showCustomConfirm(
+                "ต้องการล้างคอมเมนต์ทั้งหมด?", 
+                "การดำเนินการนี้จะลบประวัติการบรีฟและภาพสเก็ตช์ทั้งหมดในระบบอย่างถาวร ไม่สามารถกู้คืนได้", 
+                "🗑️", 
+                () => {
+                    comments = [];
+                    saveToLocalStorage();
+                    renderComments();
+                    clearCanvas();
+                    showToast("ล้างประวัติคอมเมนต์ในระบบทั้งหมดเรียบร้อยแล้ว", "danger");
+                }
+            );
         }
 
         // ----------------------------------------------------
         // VIDEO EVENT HANDLING
         // ----------------------------------------------------
 
-        // Handle Play/Pause
         function togglePlay() {
             if (video.paused) {
                 video.play();
@@ -527,37 +710,30 @@
 
         playPauseBtn.addEventListener('click', togglePlay);
 
-        // Update UI play states
         video.addEventListener('play', () => {
             playBtnIcon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>`;
             playBtnText.textContent = 'หยุด';
-            
-            // Hide custom canvas annotations on play
             canvas.style.opacity = '0';
             canvas.style.pointerEvents = 'none';
             snapshotOverlay.classList.add('hidden');
-            
-            // Trigger temporary visual center play indicator
             showCenterIndicator('play');
         });
 
         video.addEventListener('pause', () => {
             playBtnIcon.innerHTML = `<path d="M8 5v14l11-7z"></path>`;
             playBtnText.textContent = 'เล่น';
-            
-            // Enable visual drawing workspace instantly when pausing
-            canvas.style.opacity = '1';
-            canvas.style.pointerEvents = 'auto';
+            if (isDrawingModeEnabled) {
+                canvas.style.opacity = '1';
+                canvas.style.pointerEvents = 'auto';
+            }
             showCenterIndicator('pause');
             
-            // If there's an annotation drawing on current pause spot, load it.
             const matchingComment = comments.find(c => Math.abs(c.seconds - video.currentTime) < 0.2 && c.drawing);
             if (matchingComment) {
                 loadSnapshot(matchingComment.drawing);
             }
         });
 
-        // Custom visual feedback loop for big center play controls
         function showCenterIndicator(state) {
             if (state === 'play') {
                 playIndicatorIcon.innerHTML = `<path d="M8 5v14l11-7z"></path>`;
@@ -572,7 +748,6 @@
             }, 500);
         }
 
-        // File Uploader Implementation
         videoUpload.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -582,8 +757,6 @@
                 uploadPlaceholder.classList.add('hidden');
                 currentFileDisplay.textContent = `ไฟล์ปัจจุบัน: ${file.name}`;
                 showToast(`โหลดไฟล์วิดีโอ "${file.name}" เรียบร้อย`, "success");
-                
-                // Reset drawing canvas and local timelines
                 clearCanvas();
                 video.addEventListener('loadedmetadata', () => {
                     videoSeek.max = video.duration;
@@ -593,14 +766,12 @@
             }
         });
 
-        // Load Default Sample metadata when ready
         video.addEventListener('loadedmetadata', () => {
             videoSeek.max = video.duration;
             durationTimestamp.textContent = formatTimeCode(video.duration);
             renderTimelineMarkers();
         });
 
-        // Seekbar Drag update loops
         videoSeek.addEventListener('input', () => {
             video.currentTime = videoSeek.value;
             currentTimestamp.textContent = formatTimeCode(video.currentTime);
@@ -616,40 +787,34 @@
 
         function updateSeekbarProgress() {
             const formatted = formatTimeCode(video.currentTime);
-            
-            // If user has not locked editing on comment panel, update the bar stamp helper live
             if (document.activeElement !== commentInput) {
                 stampIndicator.textContent = `📌 บรีฟที่ตำแหน่ง: ${formatted}`;
                 stampIndicator.dataset.seconds = video.currentTime;
             }
         }
 
-        // Speed Factor Adjuster
         videoSpeed.addEventListener('change', () => {
             video.playbackRate = parseFloat(videoSpeed.value);
             showToast(`ปรับอัตราเร็ววิดีโอเป็น ${videoSpeed.value}x`, "info");
         });
 
-        // Frame-By-Frame Precision Skipper
         function stepFrame(direction) {
             video.pause();
-            const frameTime = 1 / 25; // Estimate 25 fps frame duration
+            const frameTime = 1 / 25; 
             video.currentTime += direction * frameTime;
             videoSeek.value = video.currentTime;
             currentTimestamp.textContent = formatTimeCode(video.currentTime);
         }
 
         // ----------------------------------------------------
-        // ANNOTATION CANVAS DRAWING ENGINE (Frame.io Like)
+        // ANNOTATION CANVAS DRAWING ENGINE
         // ----------------------------------------------------
 
         function setupCanvasResizer() {
-            // Recalculate dimensions for precise brush maps
             const resizeObserver = new ResizeObserver(entries => {
                 for (let entry of entries) {
                     canvas.width = entry.contentRect.width;
                     canvas.height = entry.contentRect.height;
-                    // Redraw saved drawing if any
                     clearCanvas(false);
                 }
             });
@@ -657,10 +822,8 @@
         }
 
         function setupCanvasDrawing() {
-            // Start Drawing coordinates
             const getPos = (e) => {
                 const rect = canvas.getBoundingClientRect();
-                // Support mouse or touch layouts
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clientY = e.touches ? e.touches[0].clientY : e.clientY;
                 return {
@@ -670,6 +833,7 @@
             };
 
             const startDraw = (e) => {
+                if (!isDrawingModeEnabled) return; 
                 isDrawing = true;
                 const pos = getPos(e);
                 ctx.beginPath();
@@ -678,22 +842,18 @@
                 ctx.lineWidth = brushSizeInput.value;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
-                
-                // Temporarily disable outer video triggers during visual edits
                 e.preventDefault();
             };
 
             const draw = (e) => {
-                if (!isDrawing) return;
+                if (!isDrawing || !isDrawingModeEnabled) return;
                 const pos = getPos(e);
                 ctx.lineTo(pos.x, pos.y);
                 ctx.stroke();
                 
-                // Track state to append drawing to the incoming comments structure
                 canvasDrawingActive = true;
                 canvasAttachedTag.classList.remove('hidden');
                 discardDrawingBtn.classList.remove('hidden');
-                
                 e.preventDefault();
             };
 
@@ -704,7 +864,6 @@
                 }
             };
 
-            // Event Listeners for both Desktop and Touch screens
             canvas.addEventListener('mousedown', startDraw);
             canvas.addEventListener('mousemove', draw);
             canvas.addEventListener('mouseup', stopDraw);
@@ -717,7 +876,7 @@
 
         function setBrushColor(color) {
             brushColor = color;
-            showToast(`เปลี่ยนพู่กันเขียนรีวิวเป็นโทนสีเด่นแล้ว`, "info");
+            showToast(`เปลี่ยนพู่กันเขียนรีวิวเรียบร้อย`, "info");
         }
 
         function clearCanvas(resetDataState = true) {
@@ -731,11 +890,36 @@
             }
         }
 
+        function toggleDrawingMode() {
+            isDrawingModeEnabled = !isDrawingModeEnabled;
+            const btn = document.getElementById('toggle-drawing-mode-btn');
+            const icon = document.getElementById('toggle-drawing-icon');
+            const text = document.getElementById('toggle-drawing-text');
+            
+            if (isDrawingModeEnabled) {
+                canvasToolbar.classList.remove('hidden');
+                btn.className = "absolute top-4 right-4 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-3 py-2 rounded-xl transition duration-150 flex items-center gap-2 border border-indigo-500/30 shadow-xl backdrop-blur-sm z-30";
+                text.textContent = 'โหมดวาด: เปิดอยู่';
+                if (video.paused) {
+                    canvas.style.opacity = '1';
+                    canvas.style.pointerEvents = 'auto';
+                }
+                showToast("เปิดระบบสเก็ตช์บรีฟบนหน้าจอแล้ว", "success");
+            } else {
+                canvasToolbar.classList.add('hidden');
+                btn.className = "absolute top-4 right-4 bg-gray-900/90 hover:bg-gray-800 text-gray-400 text-xs font-semibold px-3 py-2 rounded-xl transition duration-150 flex items-center gap-2 border border-gray-800 shadow-xl backdrop-blur-sm z-30";
+                text.textContent = 'โหมดวาด: ปิดอยู่';
+                canvas.style.opacity = '0';
+                canvas.style.pointerEvents = 'none';
+                clearCanvas(true);
+                showToast("ซ่อนเครื่องมือวาดแล้ว (รับชมวิดีโอเต็มตา)", "info");
+            }
+        }
+
         // ----------------------------------------------------
         // COLLABORATIVE FEED & COMMENT FLOW MANAGEMENT
         // ----------------------------------------------------
 
-        // Pause automatically on Focus of comments for comfortable inputs
         commentInput.addEventListener('focus', () => {
             video.pause();
             const formatted = formatTimeCode(video.currentTime);
@@ -743,7 +927,6 @@
             stampIndicator.dataset.seconds = video.currentTime;
         });
 
-        // Core Command Add Comment Engine
         function submitComment() {
             const text = commentInput.value.trim();
             if (!text) {
@@ -751,50 +934,40 @@
                 return;
             }
 
-            const targetRoleOption = userRoleSelect.options[userRoleSelect.selectedIndex];
-            const authorRole = userRoleSelect.value;
-            const authorName = targetRoleOption.getAttribute('data-name');
-            const authorAvatar = targetRoleOption.getAttribute('data-avatar');
-
+            const authorName = reviewerNameInput.value.trim() || 'ผู้รีวิวทั่วไป';
+            const authorAvatar = userAvatarSelect.value || '👤';
             const timestampSeconds = parseFloat(stampIndicator.dataset.seconds) || video.currentTime;
             
-            // Capture drawing from canvas overlay
             let drawingSnap = null;
             if (canvasDrawingActive) {
-                drawingSnap = canvas.toDataURL(); // Export base64 image data of annotations
+                drawingSnap = canvas.toDataURL();
             }
 
             const newComment = {
                 id: Date.now(),
-                role: authorRole,
-                userName: authorName,
                 avatar: authorAvatar,
+                userName: authorName,
                 seconds: timestampSeconds,
                 timeText: formatTimeCode(timestampSeconds),
                 text: text,
-                status: 'open', // New defaults
+                status: 'open',
                 drawing: drawingSnap,
                 replies: []
             };
 
             comments.push(newComment);
             saveToLocalStorage();
-            
-            // Clean up drawing workspace triggers
             clearCanvas();
             commentInput.value = '';
             
             renderComments();
             renderTimelineMarkers();
-            showToast("ส่งบรีฟจุดแก้ไขเข้าสู่รายการรีวิวเรียบร้อย", "success");
-            
-            // Play video onwards
+            showToast("ส่งบรีฟจุดแก้ไขเรียบร้อยแล้ว", "success");
             video.play();
         }
 
         addCommentBtn.addEventListener('click', submitComment);
 
-        // Submit comment on Enter (Without Shift key for multi-lines)
         commentInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -802,11 +975,8 @@
             }
         });
 
-        // Set status filter
         function setFilterStatus(status) {
             filterStatus = status;
-            
-            // Update active states
             const filterBtns = ['all', 'open', 'progress', 'resolved'];
             filterBtns.forEach(btn => {
                 const el = document.getElementById(`filter-btn-${btn}`);
@@ -816,28 +986,22 @@
                     el.className = "text-[10px] px-2 py-1 rounded bg-gray-900 hover:bg-gray-800 text-gray-400 font-medium transition";
                 }
             });
-
             renderComments();
         }
 
-        // Render Comment Board UI
         function renderComments() {
             commentsContainer.innerHTML = '';
-            
-            // Filter
             let filtered = [...comments];
             
             if (filterStatus !== 'all') {
                 filtered = filtered.filter(c => c.status === filterStatus);
             }
 
-            // Search query filter
             const query = searchInput.value.toLowerCase().trim();
             if (query) {
                 filtered = filtered.filter(c => c.text.toLowerCase().includes(query) || c.userName.toLowerCase().includes(query));
             }
 
-            // Sort
             if (sortSelect.value === 'timeline') {
                 filtered.sort((a, b) => a.seconds - b.seconds);
             } else {
@@ -859,7 +1023,6 @@
             filtered.forEach(comment => {
                 const isSelected = selectedCommentId === comment.id;
                 
-                // Color badges depending on status
                 let statusBadgeColor = 'bg-red-500/10 text-red-400 border-red-500/20';
                 let statusLabel = '🔴 ต้องแก้ไข';
                 if (comment.status === 'progress') {
@@ -870,7 +1033,6 @@
                     statusLabel = '🟢 เสร็จสิ้น';
                 }
 
-                // Render Replies Markup
                 let repliesHtml = '';
                 if (comment.replies && comment.replies.length > 0) {
                     repliesHtml = `
@@ -892,30 +1054,25 @@
                     isSelected ? 'bg-indigo-950/20 border-indigo-500/60 shadow-lg shadow-indigo-900/10' : 'bg-gray-900/40 border-gray-800/80 hover:border-gray-700 hover:bg-gray-900/60'
                 }`;
 
-                // Setup jump to exact frame when clicked on the comment block
                 commentEl.addEventListener('click', (e) => {
-                    // Avoid jumping if clicking interactive sub-buttons like status selectors
                     if (e.target.closest('.interactive-control')) return;
-                    
                     jumpToTimestamp(comment.seconds, comment.drawing);
                     selectedCommentId = comment.id;
                     renderComments();
                 });
 
                 commentEl.innerHTML = `
-                    <!-- Header -->
                     <div class="flex justify-between items-start gap-2 mb-2 interactive-control">
                         <div class="flex items-center gap-2">
-                            <span class="text-lg">${comment.avatar}</span>
+                            <span class="text-lg">${comment.avatar || '👤'}</span>
                             <div>
                                 <h4 class="text-xs font-bold text-gray-200">${comment.userName}</h4>
                                 <div class="flex items-center gap-1.5 mt-0.5">
                                     <span class="text-[10px] font-mono bg-indigo-950 text-indigo-400 font-bold px-1.5 py-0.5 rounded border border-indigo-900/50">
                                         ⏱️ ${comment.timeText}
                                     </span>
-                                    <!-- Drawing Indicator Mini-Badge -->
                                     ${comment.drawing ? `
-                                        <span class="text-[9px] bg-emerald-950/40 text-emerald-400 font-medium px-1 rounded border border-emerald-500/10 flex items-center gap-1" title="มีการแนบภาพวาดบรีฟ">
+                                        <span class="text-[9px] bg-emerald-950/40 text-emerald-400 font-medium px-1 rounded border border-emerald-500/10 flex items-center gap-1">
                                             🖌️ Drawing
                                         </span>
                                     ` : ''}
@@ -923,31 +1080,24 @@
                             </div>
                         </div>
 
-                        <!-- Status Action Swappable and Delete Action buttons -->
                         <div class="flex items-center gap-1.5">
-                            <!-- Change Status Selector -->
                             <select onchange="updateCommentStatus(${comment.id}, this.value)" class="bg-gray-950 text-[10px] border border-gray-800 rounded px-1.5 py-0.5 text-gray-300 focus:outline-none focus:ring-0 cursor-pointer">
                                 <option value="open" ${comment.status === 'open' ? 'selected' : ''}>🔴 ต้องแก้ไข</option>
                                 <option value="progress" ${comment.status === 'progress' ? 'selected' : ''}>🟡 กำลังแก้</option>
                                 <option value="resolved" ${comment.status === 'resolved' ? 'selected' : ''}>🟢 เสร็จแล้ว</option>
                             </select>
 
-                            <!-- Delete button -->
-                            <button onclick="deleteComment(${comment.id})" class="text-gray-500 hover:text-red-400 transition p-1 rounded hover:bg-gray-800/80" title="ลบคอมเมนต์นี้">
+                            <button onclick="triggerDeleteComment(${comment.id})" class="text-gray-500 hover:text-red-400 transition p-1 rounded hover:bg-gray-800/80" title="ลบคอมเมนต์นี้">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Main Text content -->
                     <p class="text-xs text-gray-300 leading-relaxed break-words">${comment.text}</p>
-
-                    <!-- Embedded replies block -->
                     ${repliesHtml}
 
-                    <!-- Reply Input area (Always Visible under the main thread card) -->
                     <div class="mt-3 pt-2.5 border-t border-gray-800/60 flex gap-2 interactive-control">
-                        <input type="text" placeholder="พิมพ์ข้อความตอบกลับหรือกดตอบด่วน..." 
+                        <input type="text" placeholder="พิมพ์ข้อความตอบกลับ..." 
                             onkeypress="submitReply(event, ${comment.id}, this)"
                             class="flex-1 bg-gray-950 border border-gray-800/80 rounded-lg px-2.5 py-1 text-[11px] text-gray-200 focus:outline-none focus:border-indigo-600 focus:ring-0">
                         <button onclick="submitReplyBtn(${comment.id}, this)" class="bg-gray-850 hover:bg-indigo-600 hover:text-white border border-gray-800 px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 transition">
@@ -959,17 +1109,16 @@
             });
         }
 
-        // Search trigger binding
         searchInput.addEventListener('input', renderComments);
+        reviewerNameInput.addEventListener('input', () => saveToLocalStorage());
+        userAvatarSelect.addEventListener('change', () => saveToLocalStorage());
 
-        // Timeline click / Comment Jump Flow
         function jumpToTimestamp(seconds, drawingBase64) {
             video.pause();
             video.currentTime = seconds;
             videoSeek.value = seconds;
             currentTimestamp.textContent = formatTimeCode(seconds);
             
-            // Render drawing snapshot overlay if the selected card has visual annotation attached
             if (drawingBase64) {
                 loadSnapshot(drawingBase64);
             } else {
@@ -977,23 +1126,17 @@
             }
         }
 
-        // Render annotations back on screenshot block overlay
         function loadSnapshot(dataUrl) {
             snapshotImg.src = dataUrl;
             snapshotOverlay.classList.remove('hidden');
-            
-            // Clean active hand-drawings canvas to avoid overlay conflicts
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        // Reply Submission Flow
         function submitReply(e, commentId, inputEl) {
             if (e.key === 'Enter') {
                 const val = inputEl.value.trim();
                 if (!val) return;
-
-                const targetRoleOption = userRoleSelect.options[userRoleSelect.selectedIndex];
-                const authorName = targetRoleOption.getAttribute('data-name');
+                const authorName = reviewerNameInput.value.trim() || 'ผู้รีวิวทั่วไป';
 
                 const comment = comments.find(c => c.id === commentId);
                 if (comment) {
@@ -1005,7 +1148,7 @@
                     });
                     saveToLocalStorage();
                     renderComments();
-                    showToast("เพิ่มการตอบกลับความคิดเห็นบรีฟแล้ว", "success");
+                    showToast("เพิ่มการตอบกลับบรีฟเรียบร้อย", "success");
                 }
                 inputEl.value = '';
             }
@@ -1015,9 +1158,7 @@
             const inputEl = btnEl.previousElementSibling;
             const val = inputEl.value.trim();
             if (!val) return;
-
-            const targetRoleOption = userRoleSelect.options[userRoleSelect.selectedIndex];
-            const authorName = targetRoleOption.getAttribute('data-name');
+            const authorName = reviewerNameInput.value.trim() || 'ผู้รีวิวทั่วไป';
 
             const comment = comments.find(c => c.id === commentId);
             if (comment) {
@@ -1029,37 +1170,36 @@
                 });
                 saveToLocalStorage();
                 renderComments();
-                showToast("เพิ่มการตอบกลับความคิดเห็นบรีฟแล้ว", "success");
+                showToast("เพิ่มการตอบกลับบรีฟเรียบร้อย", "success");
             }
             inputEl.value = '';
         }
 
-        // Status updater
         function updateCommentStatus(commentId, newStatus) {
             const comment = comments.find(c => c.id === commentId);
             if (comment) {
                 comment.status = newStatus;
                 saveToLocalStorage();
                 renderComments();
-                showToast("อัปเดตสถานะบรีฟเรียบร้อยแล้ว", "success");
+                showToast("อัปเดตสถานะจุดบรีฟเรียบร้อยแล้ว", "success");
             }
         }
 
-        // Deleter flow
-        function deleteComment(commentId) {
-            if (confirm("คุณแน่ใจว่าต้องการลบคอมเมนต์รีวิวนี้?")) {
-                comments = comments.filter(c => c.id !== commentId);
-                saveToLocalStorage();
-                renderComments();
-                renderTimelineMarkers();
-                clearCanvas();
-                showToast("ลบคอมเมนต์เรียบร้อยแล้ว", "danger");
-            }
+        function triggerDeleteComment(commentId) {
+            showCustomConfirm(
+                "ต้องการลบคอมเมนต์นี้?",
+                "คุณต้องการลบคอมเมนต์และข้อมูลการบรีฟส่วนนี้ออกจากโครงการใช่หรือไม่?",
+                "🗑️",
+                () => {
+                    comments = comments.filter(c => c.id !== commentId);
+                    saveToLocalStorage();
+                    renderComments();
+                    renderTimelineMarkers();
+                    clearCanvas();
+                    showToast("ลบคอมเมนต์รีวิวเสร็จสิ้น", "danger");
+                }
+            );
         }
-
-        // ----------------------------------------------------
-        // SELECTION VISUAL TIMELINE DYNAMIC TIMELINE MARKERS
-        // ----------------------------------------------------
 
         function renderTimelineMarkers() {
             timelineMarkersContainer.innerHTML = '';
@@ -1085,6 +1225,77 @@
         }
 
         // ----------------------------------------------------
+        // PUBLISH & SHARE PIPELINE (FIRESTORE)
+        // ----------------------------------------------------
+
+        async function handleShareProject() {
+            if (comments.length === 0) {
+                showToast("ไม่มีข้อความบรีฟที่แก้ไขกรุณาพิมพ์คอมเมนต์อย่างน้อย 1 รายการก่อนแชร์", "danger");
+                return;
+            }
+
+            if (!isFirebaseAvailable) {
+                // Generate a mockup hash share if Firebase config isn't supplied
+                const mockupId = "mock-" + Math.random().toString(36).substring(2, 9);
+                const mockupUrl = window.location.origin + window.location.pathname + "?share=" + mockupId;
+                openShareModal(mockupUrl);
+                showToast("จำลองลิงก์แชร์สำเร็จแล้ว (Firestore ยังไม่ได้เชื่อมต่อ)", "info");
+                return;
+            }
+
+            showToast("กำลังสร้าง Publish Link โปรดรอสักครู่...", "info");
+
+            try {
+                // Strict nesting path to prevent Firebase rules failure (RULE 1)
+                const sharesColRef = collection(db, 'artifacts', appId, 'public', 'data', 'shares');
+                const docRef = await addDoc(sharesColRef, {
+                    comments: comments,
+                    videoSrc: videoSource.src,
+                    fileName: currentFileDisplay.textContent,
+                    createdAt: Date.now()
+                });
+
+                const publishUrl = window.location.origin + window.location.pathname + "?share=" + docRef.id;
+                openShareModal(publishUrl);
+                showToast("สร้าง Publish Link สาธารณะเสร็จสมบูรณ์!", "success");
+            } catch (err) {
+                console.error("Firestore Save Fail", err);
+                showToast("ไม่สามารถแชร์ไปยังคลาวด์ได้เนื่องจากข้อผิดพลาดระบบ", "danger");
+            }
+        }
+
+        function openShareModal(url) {
+            shareLinkInput.value = url;
+            shareLinkModal.classList.remove('hidden');
+            setTimeout(() => {
+                shareLinkModal.classList.remove('opacity-0');
+                shareLinkModal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeShareModal() {
+            shareLinkModal.classList.add('opacity-0');
+            shareLinkModal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                shareLinkModal.classList.add('hidden');
+            }, 300);
+        }
+
+        function copyShareLink() {
+            try {
+                shareLinkInput.select();
+                document.execCommand('copy');
+                showToast("คัดลอกลิงก์แชร์ไปยังคลิปบอร์ดแล้ว!", "success");
+            } catch (err) {
+                showToast("คัดลอกลิงก์ล้มเหลว กรุณาไฮไลต์คัดลอกด้วยตนเอง", "danger");
+            }
+        }
+
+        shareProjectBtn.addEventListener('click', handleShareProject);
+        copyShareBtn.addEventListener('click', copyShareLink);
+        shareModalClose.addEventListener('click', closeShareModal);
+
+        // ----------------------------------------------------
         // ADVANCED PROFESSIONAL EXPORTER PIPELINES
         // ----------------------------------------------------
 
@@ -1092,7 +1303,6 @@
             exportMenu.classList.toggle('hidden');
         }
 
-        // Close dropdown when clicking outside
         window.addEventListener('click', (e) => {
             const wrapper = document.getElementById('export-dropdown-wrapper');
             if (wrapper && !wrapper.contains(e.target)) {
@@ -1122,7 +1332,7 @@
                     if (c.replies && c.replies.length > 0) {
                         fileContent += `   การพูดคุย:\n`;
                         c.replies.forEach(r => {
-                            fileContent += `     - [${r.userName}]: ${r.text}\n`;
+                            fileContent += `      - [${r.userName}]: ${r.text}\n`;
                         });
                     }
                     fileContent += `\n`;
@@ -1135,7 +1345,6 @@
                 fileName += '.json';
             }
 
-            // Standard HTML5 Download trigger pipeline
             const blob = new Blob([fileContent], { type: fileType });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
@@ -1152,30 +1361,44 @@
         // ----------------------------------------------------
 
         window.addEventListener('keydown', (e) => {
-            // Disable shortcuts if user is currently typing in input/textarea/selects
             const activeTag = document.activeElement.tagName.toLowerCase();
             if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
                 return;
             }
 
             switch (e.key) {
-                case ' ': // Spacebar for Play/Pause toggle
+                case ' ': 
                     e.preventDefault();
                     togglePlay();
                     break;
-                case ',': // Comma to step frame backwards
+                case ',': 
                     stepFrame(-1);
                     break;
-                case '.': // Period to step frame forwards
+                case '.': 
                     stepFrame(1);
                     break;
-                case 'c': // Focus comment input bar
+                case 'c': 
                 case 'C':
                     e.preventDefault();
                     commentInput.focus();
                     break;
             }
         });
+
+        // Map globally declared onclick scopes to local functions
+        window.toggleDrawingMode = toggleDrawingMode;
+        window.setBrushColor = setBrushColor;
+        window.clearCanvas = clearCanvas;
+        window.stepFrame = stepFrame;
+        window.toggleExportMenu = toggleExportMenu;
+        window.exportComments = exportComments;
+        window.triggerClearAllData = triggerClearAllData;
+        window.setFilterStatus = setFilterStatus;
+        window.renderComments = renderComments;
+        window.updateCommentStatus = updateCommentStatus;
+        window.triggerDeleteComment = triggerDeleteComment;
+        window.submitReply = submitReply;
+        window.submitReplyBtn = submitReplyBtn;
     </script>
 </body>
 </html>
