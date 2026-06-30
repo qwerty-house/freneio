@@ -3,74 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReviewSpace Studio Pro (Premium Collaboration Platform)</title>
+    <title>ReviewSpace Studio Ultra</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: IBM Plex Sans Thai -->
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: IBM Plex Sans Thai & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'IBM Plex Sans Thai', sans-serif;
         }
-        /* Custom scrollbar for premium dark UI */
+        .font-mono {
+            font-family: 'JetBrains Mono', 'IBM Plex Sans Thai', monospace;
+        }
+        /* Custom scrollbar for cinema dark UI */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
-            background: #0f172a;
+            background: #090d16;
         }
         ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
+            background: #1e293b;
+            border-radius: 99px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #4f46e5;
+            background: #6366f1;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        /* Waveform simulation animation */
+        @keyframes pulse-wave {
+            0%, 100% { transform: scaleY(0.4); }
+            50% { transform: scaleY(1.1); }
+        }
+        .wave-bar {
+            transform-origin: bottom;
+            animation: pulse-wave 1.2s ease-in-out infinite alternate;
+        }
+        /* Print layout style for elegant PDF export */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                overflow: visible !important;
+                height: auto !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-card {
+                page-break-inside: avoid;
+                border: 1px solid #ccc !important;
+                color: black !important;
+                background: white !important;
+                margin-bottom: 20px;
+                padding: 15px;
+            }
         }
     </style>
 </head>
-<body class="bg-[#0b0f19] text-gray-100 h-screen flex flex-col overflow-hidden selection:bg-indigo-500/30 selection:text-indigo-200">
+<body class="bg-[#040711] text-slate-100 h-screen flex flex-col overflow-hidden selection:bg-indigo-600/40 selection:text-indigo-200">
 
     <!-- Top Navigation -->
-    <header class="bg-[#111827]/90 border-b border-gray-800/80 px-6 py-3 flex justify-between items-center z-10 backdrop-blur-md">
+    <header class="no-print bg-[#080c18]/90 border-b border-slate-800/60 px-6 py-2.5 flex justify-between items-center z-10 backdrop-blur-md">
         <div class="flex items-center gap-3">
-            <div class="bg-gradient-to-tr from-indigo-600 to-violet-500 p-2 rounded-xl shadow-lg shadow-indigo-500/20">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            <div class="bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 p-2 rounded-xl shadow-lg shadow-indigo-600/20">
+                <svg class="w-5.5 h-5.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                 </svg>
             </div>
             <div>
                 <div class="flex items-center gap-2">
-                    <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-gray-100 to-gray-400 bg-clip-text text-transparent">REVIEWSPACE</h1>
-                    <span class="text-[10px] uppercase font-bold tracking-widest bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full">STUDIO PRO</span>
+                    <h1 class="text-base font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">REVIEWSPACE</h1>
+                    <span class="text-[9px] uppercase font-bold tracking-widest bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full">STUDIO ULTRA</span>
                 </div>
-                <p class="text-xs text-gray-500 font-medium" id="current-file-name">ไฟล์ปัจจุบัน: วิดีโอตัวอย่างสำหรับการทดสอบ</p>
+                <p class="text-[11px] text-slate-500 font-medium" id="current-file-name">ไฟล์: วิดีโอภาพยนตร์ทดสอบ (Cinematic Sample.mp4)</p>
             </div>
         </div>
 
-        <!-- Right Header Tools: Custom Name Input & Upload -->
+        <!-- Custom Reviewer settings (Direct text input, no complex configuration) -->
         <div class="flex items-center gap-4">
-            <!-- Custom Reviewer Name Input & Avatar Icon -->
-            <div class="bg-gray-900 border border-gray-800 rounded-lg p-1.5 flex items-center gap-2 shadow-inner">
-                <span class="text-xs text-gray-400 font-medium pl-2">👤 ผู้รีวิว:</span>
-                <input type="text" id="reviewer-name-input" value="กิตติพงษ์" placeholder="พิมพ์ชื่อของคุณ..." class="bg-gray-950 text-xs text-gray-200 border border-gray-800 outline-none focus:border-indigo-600 rounded px-2.5 py-1 w-44 focus:ring-0 transition-all duration-150" title="พิมพ์ระบุชื่อของคุณได้โดยตรง">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-1 px-2.5 flex items-center gap-2 shadow-inner">
+                <span class="text-[11px] text-slate-400 font-medium select-none">👤 ผู้รีวิว:</span>
+                <input type="text" id="reviewer-name-input" value="กิตติพงษ์" placeholder="ระบุชื่อของคุณ..." class="bg-slate-950 text-xs text-slate-200 border border-slate-800 outline-none focus:border-indigo-500 rounded-lg px-2.5 py-1 w-44 transition-all duration-150">
                 
-                <span class="text-gray-700">|</span>
+                <span class="text-slate-850">|</span>
                 
-                <!-- Simple Avatar Picker for decoration -->
-                <select id="user-avatar-select" class="bg-transparent text-xs text-gray-300 border-none outline-none focus:ring-0 cursor-pointer pr-1" title="เลือกไอคอนประจำตัว">
-                    <option value="🎬" selected>🎬 ผู้กำกับ</option>
-                    <option value="💼">💼 ลูกค้า</option>
-                    <option value="🎥">🎥 ตากล้อง</option>
-                    <option value="✂️">✂️ คนตัดต่อ</option>
-                    <option value="👤">👤 ทั่วไป</option>
+                <select id="user-avatar-select" class="bg-transparent text-xs text-slate-300 border-none outline-none focus:ring-0 cursor-pointer" title="เลือกไอคอนจำลองสถานะ">
+                    <option value="🎬" selected>🎬 Director</option>
+                    <option value="💼">💼 Client</option>
+                    <option value="🎥">🎥 DP / Camera</option>
+                    <option value="✂️">✂️ Editor</option>
+                    <option value="👤">👤 Guest</option>
                 </select>
             </div>
 
-            <!-- Upload New Video Button -->
+            <!-- Upload Custom Video Button -->
             <div>
                 <input type="file" id="video-upload" accept="video/*" class="hidden">
-                <label for="video-upload" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg cursor-pointer text-sm font-semibold transition-all duration-200 flex items-center gap-2 shadow-md shadow-indigo-600/10 hover:shadow-indigo-600/20 border border-indigo-500/30">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                <label for="video-upload" class="bg-indigo-650 hover:bg-indigo-600 text-white px-3.5 py-1.5 rounded-xl cursor-pointer text-xs font-semibold transition duration-150 flex items-center gap-2 shadow-lg shadow-indigo-600/15 border border-indigo-500/30">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                     อัปโหลดวิดีโอใหม่
                 </label>
             </div>
@@ -78,172 +116,217 @@
     </header>
 
     <!-- Toast Notification Area -->
-    <div id="toast-container" class="fixed top-20 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <div id="toast-container" class="no-print fixed top-16 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- Main Studio Workspace -->
     <main class="flex flex-1 overflow-hidden">
         
         <!-- Left Side: Interactive Player & Annotation Workspace -->
-        <section class="flex-1 p-6 flex flex-col justify-between bg-[#080b13] overflow-y-auto">
+        <section class="no-print flex-1 p-5 flex flex-col justify-between bg-[#04060e] overflow-y-auto">
             
             <!-- Video Player Workspace & Canvas Overlay Wrapper -->
-            <div class="relative flex-1 flex flex-col justify-center items-center bg-black/40 rounded-2xl border border-gray-800/60 p-4 shadow-2xl backdrop-blur-sm min-h-[400px]">
+            <div class="relative flex-1 flex flex-col justify-center items-center bg-black/60 rounded-2xl border border-slate-900/80 p-4 shadow-2xl backdrop-blur-sm min-h-[380px]">
                 
                 <!-- Video Container -->
-                <div id="player-container" class="relative w-full max-w-[1000px] aspect-video bg-black rounded-xl overflow-hidden shadow-2xl group">
+                <div id="player-container" class="relative w-full max-w-[1000px] aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl group border border-slate-900">
                     
                     <!-- Standard Video Element -->
                     <video id="main-video" class="w-full h-full pointer-events-none" preload="auto">
                         <source id="video-source" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
-                        เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
+                        เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
                     </video>
 
-                    <!-- Interactive Drawing Canvas Overlay (Exactly matches video aspect ratio) -->
+                    <!-- Interactive Drawing Canvas Overlay -->
                     <canvas id="annotation-canvas" class="absolute top-0 left-0 w-full h-full cursor-crosshair opacity-0 pointer-events-none transition-opacity duration-200 z-20"></canvas>
 
-                    <!-- Toggle Drawing Mode Floating Button (Used to hide drawing canvas tool fully) -->
-                    <button id="toggle-drawing-mode-btn" onclick="toggleDrawingMode()" class="absolute top-4 right-4 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-3 py-2 rounded-xl transition duration-150 flex items-center gap-2 border border-indigo-500/30 shadow-xl backdrop-blur-sm z-30">
+                    <!-- Toggle Drawing Mode Floating Switch -->
+                    <button id="toggle-drawing-mode-btn" class="absolute top-4 right-4 bg-indigo-650 hover:bg-indigo-600 text-white text-[11px] font-bold px-3 py-2 rounded-xl transition duration-150 flex items-center gap-2 border border-indigo-500/40 shadow-xl z-30">
                         <span id="toggle-drawing-icon">🎨</span>
-                        <span id="toggle-drawing-text">โหมดวาด: เปิดอยู่</span>
+                        <span id="toggle-drawing-text">โหมดวาด: เปิด</span>
                     </button>
 
-                    <!-- Large Play/Pause Toggle Indicator -->
+                    <!-- Center Play/Pause Large Feedback Icon -->
                     <div id="center-play-indicator" class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 pointer-events-none transition-all duration-300 z-10 scale-75">
-                        <div class="bg-indigo-600/90 text-white p-5 rounded-full shadow-lg shadow-indigo-600/30">
+                        <div class="bg-indigo-600/90 text-white p-5 rounded-full shadow-xl shadow-indigo-600/30">
                             <svg id="play-indicator-icon" class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M8 5v14l11-7z"></path>
                             </svg>
                         </div>
                     </div>
 
-                    <!-- Overlay for Saved Drawing Display (Interactive playback render) -->
-                    <div id="snapshot-overlay" class="absolute inset-0 pointer-events-none z-10 hidden">
-                        <img id="snapshot-img" class="w-full h-full object-cover" alt="Saved Frame Annotation">
+                    <!-- Overlay for Rendered Snapshot display during seek jump -->
+                    <div id="snapshot-overlay" class="absolute inset-0 pointer-events-none z-10 hidden bg-black/10">
+                        <img id="snapshot-img" class="w-full h-full object-cover" alt="Annotation Graphic Frame">
                     </div>
 
-                    <!-- Video Upload Initial Placeholder -->
-                    <div id="upload-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-gray-950/95 text-gray-400 p-6 z-30 transition-all duration-300">
-                        <div class="bg-gray-900/80 p-5 rounded-2xl border border-gray-800 mb-4 animate-bounce">
-                            <svg class="w-12 h-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Upload Initial Overlay -->
+                    <div id="upload-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/95 text-slate-400 p-6 z-30 transition-all duration-300">
+                        <div class="bg-slate-900 p-5 rounded-2xl border border-slate-800 mb-4 animate-pulse">
+                            <svg class="w-10 h-10 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-100 mb-1">ยินดีต้อนรับสู่ REVIEWSPACE</h3>
-                        <p class="text-sm text-gray-500 mb-4 max-w-sm text-center">เรากำลังโหลดวิดีโอตัวอย่าง หรือคุณสามารถเริ่มบรีฟด้วยการอัปโหลดไฟล์วิดีโอของคุณเองได้เลยครับ</p>
-                        <button onclick="document.getElementById('video-upload').click()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs px-4 py-2 rounded-lg transition">
-                            อัปโหลดวิดีโอของคุณ
+                        <h3 class="text-base font-bold text-slate-100 mb-1">ยินดีต้อนรับสู่ REVIEWSPACE STUDIO ULTRA</h3>
+                        <p class="text-xs text-slate-500 mb-4 max-w-sm text-center">เรากำลังนำเข้าวิดีโอตัวอย่างมาทดสอบการสเก็ตช์แก้ไขแบบโปร่งใส หรือคุณสามารถเปลี่ยนอัปโหลดงานได้ทันทีครับ</p>
+                        <button id="upload-trigger-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs px-4 py-2 rounded-xl transition">
+                            กดที่นี่เพื่ออัปโหลดวิดีโอของตนเอง
                         </button>
                     </div>
                 </div>
 
-                <!-- Canvas Annotation Floating Toolbar -->
-                <div id="canvas-toolbar" class="mt-4 flex items-center justify-between bg-gray-900/90 border border-indigo-500/20 px-4 py-2.5 rounded-xl w-full max-w-[1000px] shadow-lg backdrop-blur-sm transition-all duration-300">
+                <!-- Rich Shape and Color Canvas Toolbar -->
+                <div id="canvas-toolbar" class="mt-3.5 flex items-center justify-between bg-slate-950/90 border border-indigo-500/10 px-4 py-2.5 rounded-2xl w-full max-w-[1000px] shadow-2xl backdrop-blur">
                     <div class="flex items-center gap-3">
-                        <div class="flex items-center gap-1.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">
-                            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span> Mode: วาดบรีฟตรงจุดแก้
+                        <span class="text-[10px] font-bold uppercase tracking-wider bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-1 rounded-lg">Toolbox</span>
+                        
+                        <!-- Tool Selectors (Brush, Arrow, Rectangle, Circle) -->
+                        <div class="flex items-center gap-1 bg-slate-900 p-0.5 rounded-xl border border-slate-800">
+                            <button id="tool-brush" class="p-1.5 rounded-lg text-indigo-400 bg-slate-950 border border-slate-800 transition" title="พู่กันวาดอิสระ">
+                                🖌️ <span class="text-[10px] font-bold">พู่กัน</span>
+                            </button>
+                            <button id="tool-arrow" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition" title="ลูกศรชี้นำจุดแก้ไข (ลากวาง)">
+                                ➡️ <span class="text-[10px] font-bold">ลูกศร</span>
+                            </button>
+                            <button id="tool-rect" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition" title="วาดสี่เหลี่ยมคลุมบริเวณ (ลากวาง)">
+                                ⬜ <span class="text-[10px] font-bold">กล่อง</span>
+                            </button>
+                            <button id="tool-circle" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition" title="วาดวงกลมวงรอบเป้าหมาย (ลากวาง)">
+                                ⭕ <span class="text-[10px] font-bold">วงกลม</span>
+                            </button>
                         </div>
-                        <p class="text-xs text-gray-400">หยุดวิดีโอชั่วคราวแล้วลากวาดบนจอเพื่อชี้จุดแก้ไขได้เลย!</p>
                     </div>
 
-                    <!-- Canvas Settings Controls -->
+                    <!-- Color, Brush sizes, and Control stack -->
                     <div class="flex items-center gap-3">
-                        <!-- Color Selectors -->
-                        <div class="flex items-center gap-1.5 bg-gray-950/60 p-1 rounded-lg border border-gray-800">
-                            <button onclick="setBrushColor('#ef4444')" class="w-5 h-5 rounded-full bg-red-500 border border-white/20 hover:scale-110 active:scale-95 transition-transform" title="สีแดง"></button>
-                            <button onclick="setBrushColor('#f59e0b')" class="w-5 h-5 rounded-full bg-amber-500 border border-white/20 hover:scale-110 active:scale-95 transition-transform" title="สีส้ม/เหลือง"></button>
-                            <button onclick="setBrushColor('#10b981')" class="w-5 h-5 rounded-full bg-emerald-500 border border-white/20 hover:scale-110 active:scale-95 transition-transform" title="สีเขียว"></button>
-                            <button onclick="setBrushColor('#06b6d4')" class="w-5 h-5 rounded-full bg-cyan-500 border border-white/20 hover:scale-110 active:scale-95 transition-transform" title="สีฟ้า"></button>
-                            <button onclick="setBrushColor('#ffffff')" class="w-5 h-5 rounded-full bg-white border border-white/20 hover:scale-110 active:scale-95 transition-transform" title="สีขาว"></button>
+                        
+                        <!-- Color Palette selection (Modified with data-attributes for direct binding) -->
+                        <div class="flex items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-xl border border-slate-800/80">
+                            <button data-brush-color="#ef4444" class="w-4 h-4 rounded-full bg-red-500 border border-white/20 hover:scale-125 transition-all" title="สีแดง"></button>
+                            <button data-brush-color="#eab308" class="w-4 h-4 rounded-full bg-yellow-500 border border-white/20 hover:scale-125 transition-all" title="สีเหลือง"></button>
+                            <button data-brush-color="#10b981" class="w-4 h-4 rounded-full bg-emerald-500 border border-white/20 hover:scale-125 transition-all" title="สีเขียว"></button>
+                            <button data-brush-color="#06b6d4" class="w-4 h-4 rounded-full bg-cyan-500 border border-white/20 hover:scale-125 transition-all" title="สีฟ้า"></button>
+                            <button data-brush-color="#ffffff" class="w-4 h-4 rounded-full bg-white border border-white/20 hover:scale-125 transition-all" title="สีขาว"></button>
                         </div>
 
-                        <!-- Brush Size Selector -->
-                        <div class="flex items-center gap-2 bg-gray-950/60 p-1 px-2 rounded-lg border border-gray-800 text-xs">
-                            <span class="text-gray-400 font-medium">ขนาด:</span>
-                            <input type="range" id="brush-size" min="2" max="15" value="4" class="w-16 h-1 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+                        <div class="flex items-center gap-2 text-xs text-slate-400">
+                            <span>ความหนา:</span>
+                            <input type="range" id="brush-size" min="2" max="15" value="4" class="w-16 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500">
                         </div>
 
-                        <!-- Reset canvas -->
-                        <button onclick="clearCanvas()" class="text-xs text-red-400 hover:text-red-300 font-semibold hover:bg-red-500/10 px-2.5 py-1.5 rounded-lg border border-red-500/20 transition flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            ล้างภาพวาด
-                        </button>
+                        <span class="text-slate-800">|</span>
+
+                        <!-- Draw actions (Undo, Clear) -->
+                        <div class="flex items-center gap-1.5">
+                            <button id="canvas-undo-btn" class="text-[11px] text-slate-300 bg-slate-900 hover:bg-slate-850 border border-slate-850 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                                ↩️ ย้อนกลับ
+                            </button>
+                            <button id="canvas-clear-btn" class="text-[11px] text-red-400 hover:text-red-300 bg-red-500/5 hover:bg-red-500/15 border border-red-500/10 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                                🗑️ ล้างหน้าจอ
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Custom Seekbar & Timeline with Marker indicators -->
-            <div class="mt-4 bg-gray-900/60 border border-gray-800/80 p-4 rounded-xl shadow-xl flex flex-col gap-3">
+            <!-- Custom Dynamic Timeline & Seekbar wrapper -->
+            <div class="mt-4 bg-[#090e1b] border border-slate-900 p-4 rounded-2xl shadow-xl flex flex-col gap-3">
                 
-                <!-- Seek Timeline slider & Visual Comment Markers Container -->
-                <div class="relative w-full group">
-                    <!-- Standard Range input serving as Seekbar -->
-                    <input type="range" id="video-seek" min="0" max="100" step="0.01" value="0" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-indigo-600 focus:outline-none focus:ring-0 relative z-10 transition-colors duration-200">
+                <!-- Seek Timeline Slider & Marker Highlights Overlay -->
+                <div class="relative w-full group py-2" id="seekbar-wrapper">
+                    <input type="range" id="video-seek" min="0" max="100" step="0.01" value="0" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-600 focus:outline-none relative z-10">
                     
-                    <!-- Dynamic comment marker overlay container -->
-                    <div id="timeline-markers-container" class="absolute top-0 left-0 w-full h-2 pointer-events-none z-0 rounded-lg overflow-visible">
-                        <!-- Markers will be injected dynamically via JS -->
+                    <!-- Hover timeline timecode preview card -->
+                    <div id="timeline-hover-tooltip" class="absolute -top-6 bg-indigo-600 text-[10px] font-mono text-white px-2 py-0.5 rounded shadow-lg pointer-events-none opacity-0 transition-opacity duration-150 z-30">00:00:00</div>
+                    
+                    <!-- Dynamic comment marker overlays -->
+                    <div id="timeline-markers-container" class="absolute top-2.5 left-0 w-full h-2 pointer-events-none z-0 rounded-lg overflow-visible"></div>
+                    
+                    <!-- Dynamic range highlights -->
+                    <div id="timeline-ranges-container" class="absolute top-2.5 left-0 w-full h-2 pointer-events-none z-0 rounded-lg overflow-hidden"></div>
+
+                    <!-- Draggable Brackets Overlay for direct range selection -->
+                    <div id="range-handles-container" class="absolute inset-x-0 top-1 h-5 pointer-events-none hidden z-25">
+                        <!-- Drag highlight range bar -->
+                        <div id="range-drag-highlight" class="absolute top-1.5 h-2 bg-indigo-500/40 rounded pointer-events-none"></div>
+                        
+                        <!-- Drag Handle - In Point -->
+                        <div id="range-drag-handle-in" class="absolute top-0 h-5 w-4 -ml-2 cursor-ew-resize pointer-events-auto flex flex-col items-center justify-between group/in" title="ลากปรับจุดเวลาเริ่มต้น (In-Point)">
+                            <span class="text-[9px] font-bold bg-indigo-500 text-white px-1 py-0.5 rounded shadow-lg scale-90 group-hover/in:scale-110 transition-transform">I</span>
+                            <div class="w-[2px] h-2 bg-indigo-400"></div>
+                        </div>
+
+                        <!-- Drag Handle - Out Point -->
+                        <div id="range-drag-handle-out" class="absolute top-0 h-5 w-4 -ml-2 cursor-ew-resize pointer-events-auto flex flex-col items-center justify-between group/out" title="ลากปรับจุดเวลาสิ้นสุด (Out-Point)">
+                            <span class="text-[9px] font-bold bg-violet-500 text-white px-1 py-0.5 rounded shadow-lg scale-90 group-hover/out:scale-110 transition-transform">O</span>
+                            <div class="w-[2px] h-2 bg-violet-400"></div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Custom Precision Media Controller Panel -->
+                <!-- Custom Precision Media Controller Panel with audio visuals -->
                 <div class="flex items-center justify-between">
-                    <!-- Timeline Timecodes -->
-                    <div class="flex items-center gap-2 font-mono text-xs">
-                        <span id="current-timestamp" class="text-indigo-400 font-bold text-sm">00:00:00</span>
-                        <span class="text-gray-600">/</span>
-                        <span id="duration-timestamp" class="text-gray-400">00:00:00</span>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-1.5 font-mono text-xs">
+                            <span id="current-timestamp" class="text-indigo-400 font-bold text-sm">00:00:00</span>
+                            <span class="text-slate-600">/</span>
+                            <span id="duration-timestamp" class="text-slate-500">00:00:00</span>
+                        </div>
+                        
+                        <!-- Mini Simulated interactive Audio Waves -->
+                        <div class="flex items-end gap-0.5 h-4 w-12 opacity-80" id="audio-waveform-decor">
+                            <span class="wave-bar w-[2px] bg-indigo-500 h-[60%]"></span>
+                            <span class="wave-bar w-[2px] bg-violet-400 h-[30%]" style="animation-delay: 0.2s"></span>
+                            <span class="wave-bar w-[2px] bg-fuchsia-400 h-[90%]" style="animation-delay: 0.4s"></span>
+                            <span class="wave-bar w-[2px] bg-indigo-500 h-[40%]" style="animation-delay: 0.1s"></span>
+                            <span class="wave-bar w-[2px] bg-violet-400 h-[75%]" style="animation-delay: 0.3s"></span>
+                        </div>
                     </div>
 
-                    <!-- Playback Controls -->
-                    <div class="flex items-center gap-4">
-                        <!-- Step Back Frame -->
-                        <button onclick="stepFrame(-1)" class="p-2 text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-750 border border-gray-700/50 rounded-lg transition active:scale-95 flex items-center justify-center" title="ถอยหลังทีละเฟรม (แป้นพิมพ์ลัด: ,)">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
-                            </svg>
-                            <span class="text-[9px] font-bold uppercase tracking-wider pr-1">Frame</span>
+                    <!-- Playback controls -->
+                    <div class="flex items-center gap-3">
+                        <!-- Step Frame Backwards -->
+                        <button id="step-back-btn" class="p-2 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-xl transition active:scale-95 flex items-center gap-1" title="ย้อนกลับ 1 เฟรม (แป้นลัด: ,)">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
+                            <span class="text-[9px] font-bold tracking-widest uppercase">Frame</span>
                         </button>
 
-                        <!-- Main Play/Pause Button -->
-                        <button id="play-pause-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-xl font-semibold transition active:scale-95 shadow-md shadow-indigo-600/10 hover:shadow-indigo-600/20 flex items-center gap-2">
-                            <svg id="play-btn-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8 5v14l11-7z"></path>
-                            </svg>
+                        <!-- Main Play Pause btn -->
+                        <button id="play-pause-btn" class="bg-indigo-650 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-2xl font-semibold transition active:scale-95 shadow-lg shadow-indigo-650/20 flex items-center gap-2 text-xs">
+                            <svg id="play-btn-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
                             <span id="play-btn-text">เล่น</span>
                         </button>
 
-                        <!-- Step Forward Frame -->
-                        <button onclick="stepFrame(1)" class="p-2 text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-750 border border-gray-700/50 rounded-lg transition active:scale-95 flex items-center justify-center" title="เดินหน้าทีละเฟรม (แป้นพิมพ์ลัด: .)">
-                            <span class="text-[9px] font-bold uppercase tracking-wider pl-1">Frame</span>
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
-                            </svg>
+                        <!-- Step Frame Forwards -->
+                        <button id="step-forward-btn" class="p-2 text-slate-400 hover:text-white bg-slate-900 border border-slate-800 rounded-xl transition active:scale-95 flex items-center gap-1" title="ไปข้างหน้า 1 เฟรม (แป้นลัด: .)">
+                            <span class="text-[9px] font-bold tracking-widest uppercase">Frame</span>
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
                         </button>
                     </div>
 
-                    <!-- Speed Control & Keyboard Shortcut Menu Info -->
+                    <!-- Keyboard and speed shortcuts -->
                     <div class="flex items-center gap-4 text-xs">
-                        <!-- Keyboard Shortcuts Tooltip icon -->
                         <div class="relative group">
-                            <span class="cursor-help text-gray-500 hover:text-gray-300 bg-gray-800 px-2.5 py-1.5 rounded-lg border border-gray-700 transition flex items-center gap-1.5">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                แป้นพิมพ์ลัด
+                            <span class="cursor-help text-slate-500 hover:text-slate-300 bg-slate-900/80 px-2.5 py-1.5 rounded-xl border border-slate-800 transition flex items-center gap-1.5">
+                                💡 แป้นพิมพ์ลัด
                             </span>
-                            <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block bg-gray-950/95 border border-gray-800 p-3 rounded-lg w-64 text-xs text-gray-300 leading-relaxed shadow-xl pointer-events-none z-50 backdrop-blur">
-                                <p class="font-semibold text-white mb-2 pb-1 border-b border-gray-800">⌨️ Keyboard Shortcuts</p>
-                                <div class="grid grid-cols-2 gap-y-1 text-[11px] font-mono">
-                                    <span class="text-gray-400">Spacebar</span> <span class="text-right text-indigo-400">เล่น/หยุดวิดีโอ</span>
-                                    <span class="text-gray-400">ปุ่ม , (Comma)</span> <span class="text-right text-indigo-400">ย้อนกลับ 1 เฟรม</span>
-                                    <span class="text-gray-400">ปุ่ม . (Period)</span> <span class="text-right text-indigo-400">ไปข้างหน้า 1 เฟรม</span>
-                                    <span class="text-gray-400">ปุ่ม c</span> <span class="text-right text-indigo-400">เน้นช่องส่งคำสั่ง</span>
+                            <div class="absolute bottom-full right-0 mb-2 hidden group-hover:block bg-slate-950 border border-slate-850 p-4 rounded-xl w-64 text-slate-300 shadow-2xl z-50 backdrop-blur">
+                                <p class="font-bold text-white mb-2 pb-1 border-b border-slate-800 text-xs">⌨️ คีย์ลัดด่วน (Editor Hotkeys)</p>
+                                <div class="grid grid-cols-2 gap-y-1.5 text-[11px] font-mono">
+                                    <span class="text-slate-500">Spacebar</span> <span class="text-right text-indigo-400">เล่น/หยุดคลิป</span>
+                                    <span class="text-slate-500">ปุ่ม , (Comma)</span> <span class="text-right text-indigo-400">ถอยหลัง 1 เฟรม</span>
+                                    <span class="text-slate-500">ปุ่ม . (Period)</span> <span class="text-right text-indigo-400">เดินหน้า 1 เฟรม</span>
+                                    <span class="text-slate-500">ปุ่ม c / C</span> <span class="text-right text-indigo-400">ย้ายไปช่องพิมพ์</span>
+                                    <span class="text-slate-500">ปุ่ม I / i</span> <span class="text-right text-indigo-400">เซ็ตช่วงเวลาเริ่ม (In)</span>
+                                    <span class="text-slate-500">ปุ่ม O / o</span> <span class="text-right text-indigo-400">เซ็ตช่วงเวลาจบ (Out)</span>
+                                    <span class="text-slate-500">ปุ่ม R / r</span> <span class="text-right text-indigo-400">สลับโหมดช่วงเวลา</span>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Speed Dropdown -->
-                        <div class="flex items-center gap-1 bg-gray-800 border border-gray-700/80 p-1.5 rounded-lg">
-                            <span class="text-gray-500 pl-1 font-medium">สปีด:</span>
-                            <select id="video-speed" class="bg-transparent text-gray-200 outline-none border-none cursor-pointer focus:ring-0">
+                        <!-- Speed multiplier select -->
+                        <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 p-1.5 rounded-xl">
+                            <span class="text-[11px] text-slate-500 pl-1">สปีด:</span>
+                            <select id="video-speed" class="bg-transparent text-slate-200 outline-none cursor-pointer focus:ring-0 text-xs">
                                 <option value="0.25">0.25x</option>
                                 <option value="0.5">0.5x</option>
                                 <option value="1" selected>1.0x</option>
@@ -257,42 +340,41 @@
         </section>
 
         <!-- Right Side: Collaboration Sidebar (Filter, Comments & Exporting) -->
-        <section class="w-[450px] bg-[#0c101b] border-l border-gray-800/80 flex flex-col justify-between overflow-hidden">
+        <section class="no-print w-[420px] bg-[#070b14] border-l border-slate-900/80 flex flex-col justify-between overflow-hidden">
             
-            <!-- Collaborative Panel Info & Filtering Header -->
-            <div class="p-4 border-b border-gray-800/80 bg-gray-900/40">
+            <!-- Collaborative panel and export engines -->
+            <div class="p-4 border-b border-slate-900/80 bg-slate-950/20">
                 <div class="flex justify-between items-center mb-3">
-                    <h2 class="font-bold text-sm tracking-wide text-gray-100 flex items-center gap-2">
-                        💬 บันทึกจุดแก้ไขทั้งหมด
-                        <span id="comment-count-badge" class="bg-indigo-600 text-indigo-100 font-mono text-[11px] font-bold px-2 py-0.5 rounded-full">0</span>
+                    <h2 class="font-bold text-xs tracking-wider text-slate-200 uppercase flex items-center gap-1.5">
+                        💬 บันทึกจุดรีวิวทั้งหมด
+                        <span id="comment-count-badge" class="bg-indigo-600/30 text-indigo-300 font-mono text-[11px] font-bold px-2 py-0.5 rounded-lg border border-indigo-500/20">0</span>
                     </h2>
-                    
-                    <!-- Advanced Actions & Sharing -->
-                    <div class="flex items-center gap-2">
-                        <!-- Publish Share Link Button -->
-                        <button id="share-project-btn" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-500/30 px-3 py-1.5 rounded-lg transition-all duration-150 flex items-center gap-1.5 font-semibold shadow-md shadow-indigo-600/10">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 10.742l-2.077 1.155a3.001 3.001 0 110-3.794l2.077 1.155M15 16a3 3 0 100-6 3 3 0 000 6zm0-10a3 3 0 100-6 3 3 0 000 6z"></path></svg>
-                            แชร์ (Publish)
+
+                    <!-- Main Publish & Exporters Actions panel -->
+                    <div class="flex items-center gap-1.5">
+                        <button id="share-project-btn" class="text-[11px] bg-indigo-650 hover:bg-indigo-600 text-white border border-indigo-500/20 px-3 py-1.5 rounded-lg transition font-semibold shadow-md flex items-center gap-1.5">
+                            🌐 แชร์ (Publish Link)
                         </button>
 
-                        <!-- Exporter Dropdown -->
                         <div class="relative inline-block" id="export-dropdown-wrapper">
-                            <button onclick="toggleExportMenu()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700/80 px-2.5 py-1.5 rounded-lg transition-all duration-150 flex items-center gap-1.5 font-medium shadow-sm">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                ส่งออก...
+                            <button id="export-toggle-btn" class="text-[11px] bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                                📤 ส่งออก...
                             </button>
-                            <!-- Floating Dropdown panel -->
-                            <div id="export-menu" class="absolute right-0 mt-2 w-52 bg-gray-950/95 border border-gray-800 rounded-xl shadow-2xl hidden z-50 overflow-hidden divide-y divide-gray-800/60 backdrop-blur">
+                            <!-- Export floating dropdown -->
+                            <div id="export-menu" class="absolute right-0 mt-2 w-52 bg-slate-950 border border-slate-850 rounded-xl shadow-2xl hidden z-50 overflow-hidden divide-y divide-slate-900/60 backdrop-blur">
                                 <div class="p-2">
-                                    <button onclick="exportComments('txt')" class="w-full text-left text-xs text-gray-300 hover:text-white hover:bg-gray-900 p-2 rounded-lg transition flex items-center gap-2 font-medium">
+                                    <button id="export-txt-btn" class="w-full text-left text-xs text-slate-300 hover:text-white hover:bg-slate-900 p-2 rounded-lg transition flex items-center gap-2">
                                         📝 ส่งออกเป็นไฟล์ข้อความ (.TXT)
                                     </button>
-                                    <button onclick="exportComments('json')" class="w-full text-left text-xs text-gray-300 hover:text-white hover:bg-gray-900 p-2 rounded-lg transition flex items-center gap-2 font-medium">
+                                    <button id="export-json-btn" class="w-full text-left text-xs text-slate-300 hover:text-white hover:bg-slate-900 p-2 rounded-lg transition flex items-center gap-2">
                                         💻 ส่งออกเป็นไฟล์ข้อมูล (.JSON)
+                                    </button>
+                                    <button id="export-print-btn" class="w-full text-left text-xs text-slate-300 hover:text-white hover:bg-slate-900 p-2 rounded-lg transition flex items-center gap-2">
+                                        🖨️ พิมพ์รายงานสรุป (Print/PDF)
                                     </button>
                                 </div>
                                 <div class="p-2">
-                                    <button onclick="triggerClearAllData()" class="w-full text-left text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 p-2 rounded-lg transition flex items-center gap-2 font-semibold">
+                                    <button id="clear-all-data-btn" class="w-full text-left text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 p-2 rounded-lg transition flex items-center gap-2 font-semibold">
                                         🗑️ ล้างประวัติทั้งหมด
                                     </button>
                                 </div>
@@ -301,71 +383,94 @@
                     </div>
                 </div>
 
-                <!-- Custom Advanced Search, Tag Filtering & Sorters -->
+                <!-- Custom search filters and tag selectors -->
                 <div class="flex flex-col gap-2">
-                    <!-- Search Inputs -->
                     <div class="relative">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500">
+                            🔍
                         </span>
-                        <input type="text" id="search-comments" placeholder="ค้นหาตามข้อความบรีฟ..." class="w-full bg-gray-950/80 border border-gray-800 rounded-lg pl-9 pr-3 py-1.5 text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:border-indigo-600">
+                        <input type="text" id="search-comments" placeholder="พิมพ์คำเพื่อเสิร์ชเจาะจงบรีฟ..." class="w-full bg-slate-950/80 border border-slate-850 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-300 placeholder-slate-600 focus:outline-none focus:border-indigo-600">
                     </div>
 
-                    <!-- Filter Status Buttons -->
+                    <!-- Filter badges row -->
                     <div class="flex items-center justify-between gap-1 mt-1">
                         <div class="flex items-center gap-1">
-                            <button onclick="setFilterStatus('all')" id="filter-btn-all" class="text-[10px] px-2 py-1 rounded bg-indigo-600 text-white font-medium transition">ทั้งหมด</button>
-                            <button onclick="setFilterStatus('open')" id="filter-btn-open" class="text-[10px] px-2 py-1 rounded bg-gray-900 hover:bg-gray-800 text-gray-400 font-medium transition">ต้องแก้</button>
-                            <button onclick="setFilterStatus('progress')" id="filter-btn-progress" class="text-[10px] px-2 py-1 rounded bg-gray-900 hover:bg-gray-800 text-gray-400 font-medium transition">กำลังแก้</button>
-                            <button onclick="setFilterStatus('resolved')" id="filter-btn-resolved" class="text-[10px] px-2 py-1 rounded bg-gray-900 hover:bg-gray-800 text-gray-400 font-medium transition">เสร็จแล้ว</button>
+                            <button id="filter-btn-all" class="text-[10px] px-2 py-1 rounded bg-indigo-650 text-white font-medium transition">ทั้งหมด</button>
+                            <button id="filter-btn-open" class="text-[10px] px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 font-medium transition">ต้องแก้</button>
+                            <button id="filter-btn-progress" class="text-[10px] px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 font-medium transition">กำลังแก้</button>
+                            <button id="filter-btn-resolved" class="text-[10px] px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 font-medium transition">เสร็จแล้ว</button>
                         </div>
 
-                        <!-- Sort Sorter -->
-                        <select id="sort-select" onchange="renderComments()" class="bg-transparent text-[10px] text-gray-400 font-medium border-none outline-none focus:ring-0 cursor-pointer">
-                            <option value="timeline" selected>เรียงตามแถบเวลา</option>
-                            <option value="latest">เรียงจากล่าสุด</option>
+                        <!-- Sorter -->
+                        <select id="sort-select" class="bg-transparent text-[10px] text-slate-400 font-medium border-none outline-none cursor-pointer">
+                            <option value="timeline" selected>เรียงตามช่วงเวลา</option>
+                            <option value="latest">เรียงส่งล่าสุด</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <!-- List container for Comments (Scrollable) -->
-            <div id="comments-container" class="flex-1 p-4 overflow-y-auto space-y-3 bg-gradient-to-b from-[#0b0f19] to-gray-950/50">
-                <!-- Injected via JavaScript dynamically -->
+            <!-- Comments Container list -->
+            <div id="comments-container" class="flex-1 p-4 overflow-y-auto space-y-3 bg-gradient-to-b from-[#060a12] to-[#04060b]">
+                <!-- Injected via javascript dynamic modules -->
             </div>
 
-            <!-- Input Comment Area with Attached canvas snapshot toggle -->
-            <div class="p-4 border-t border-gray-800 bg-[#111622]/90 backdrop-blur-md">
+            <!-- Rich Collaboration comment editor with range & AI dictation features -->
+            <div class="p-4 border-t border-slate-900 bg-slate-950/90 backdrop-blur-md">
                 
-                <div class="flex items-center justify-between gap-2 mb-2">
-                    <div class="flex items-center gap-2">
-                        <!-- Auto Lock Timestamp indicator -->
-                        <span class="text-[11px] bg-indigo-900/30 text-indigo-400 font-bold px-2 py-1 rounded-lg border border-indigo-500/20 font-mono cursor-pointer" id="stamp-indicator" title="คลิกเพื่อล็อกเวลานี้">
-                            📌 บรีฟที่ตำแหน่ง: 00:00:00
+                <div class="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <!-- Precise location tracker badge -->
+                        <span class="text-[10px] bg-indigo-900/30 text-indigo-400 font-bold px-2 py-1 rounded-lg border border-indigo-500/20 font-mono cursor-pointer" id="stamp-indicator" title="คลิกเพื่อล็อกเวลานี้เพื่อเริ่มบรีฟ">
+                            📌 แก้จุดเวลา: 00:00:00
                         </span>
+
+                        <!-- Range Comment Toggle Button -->
+                        <button id="toggle-range-btn" class="text-[10px] bg-slate-900 hover:bg-slate-800 text-slate-400 font-semibold px-2 py-1 rounded-lg border border-slate-850 transition" title="สลับมาบรีฟวิดีโอแบบระบุช่วงวินาทีเริ่มต้นและวินาทีสุดท้าย">
+                            ⏱️ บรีฟแบบเป็นช่วงช่วงเวลา: ปิดอยู่
+                        </button>
                         
-                        <!-- Drawing Attached Flag Notification indicator -->
-                        <span id="canvas-attached-tag" class="text-[10px] bg-emerald-950/40 text-emerald-400 font-semibold px-2 py-1 rounded-lg border border-emerald-500/10 flex items-center gap-1 hidden">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> แนบภาพวาดบรีฟแล้ว
+                        <span id="canvas-attached-tag" class="text-[9px] bg-emerald-950/40 text-emerald-400 font-bold px-2 py-1 rounded-lg border border-emerald-500/15 flex items-center gap-1 hidden">
+                            🎨 แนบรูปวาดแล้ว
                         </span>
                     </div>
 
-                    <!-- Custom Clear drawing button inside input bar -->
-                    <button id="discard-drawing-btn" onclick="clearCanvas()" class="text-[10px] text-gray-500 hover:text-red-400 transition hidden">
-                        ลบรูปที่วาดออก
+                    <button id="discard-drawing-btn" class="text-[10px] text-slate-500 hover:text-red-400 transition hidden">
+                        ลบรูปวาดทิ้ง
                     </button>
                 </div>
 
-                <!-- Rich Comment input area -->
+                <!-- Custom Range selectors slider (Visible only when range mode is toggled) -->
+                <div id="range-picker-container" class="hidden mb-3 bg-slate-900/50 p-2.5 rounded-xl border border-slate-850 flex flex-col gap-2">
+                    <div class="flex justify-between items-center text-[11px] text-slate-400">
+                        <span>ระบุขอบเขตช่วงที่เกิดปัญหา (วินาที):</span>
+                        <span class="font-mono text-indigo-400" id="range-preview-text">0.00s - 5.00s</span>
+                    </div>
+                    <div class="flex gap-2 items-center">
+                        <span class="text-[10px] text-slate-500 font-mono">In</span>
+                        <input type="range" id="range-in" min="0" max="100" step="0.1" value="0" class="flex-1 h-1 bg-slate-800 rounded appearance-none accent-indigo-500">
+                        <span class="text-[10px] text-slate-500 font-mono">Out</span>
+                        <input type="range" id="range-out" min="0" max="100" step="0.1" value="5" class="flex-1 h-1 bg-slate-800 rounded appearance-none accent-indigo-500">
+                    </div>
+                </div>
+
+                <!-- Dictation Input text area with micro support -->
                 <div class="flex flex-col gap-2">
-                    <textarea id="comment-input" rows="2" placeholder="ระบุรายละเอียดบรีฟที่ต้องการให้ปรับปรุงแก้ในส่วนนี้..." class="w-full bg-gray-950/95 border border-gray-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 resize-none"></textarea>
+                    <div class="relative">
+                        <textarea id="comment-input" rows="2" placeholder="ระบุบรีฟ หรือกดปุ่มไมค์เพื่อใช้คำสั่งเสียงพูดคุยแทนการพิมพ์..." class="w-full bg-slate-950 border border-slate-850 rounded-xl pl-3.5 pr-10 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 resize-none"></textarea>
+                        
+                        <!-- AI Speech dictation mic button -->
+                        <button id="ai-mic-btn" class="absolute right-2.5 top-2.5 p-1.5 rounded-lg bg-slate-900 hover:bg-indigo-650 text-slate-400 hover:text-white transition-all duration-150" title="กดพูดบรีฟเพื่อใช้เสียงแปลเป็นตัวหนังสือไทยอัตโนมัติ">
+                            🎙️
+                        </button>
+                    </div>
                     
                     <div class="flex justify-between items-center">
-                        <p class="text-[10px] text-gray-500">
-                            💡 พิมพ์แล้วกด <kbd class="bg-gray-850 px-1 py-0.5 rounded text-[9px] border border-gray-800">Enter</kbd> หรือคลิกปุ่ม "ส่งงาน" เพื่อบันทึกคอมเมนต์
+                        <p class="text-[9px] text-slate-500 leading-normal">
+                            💡 กด <kbd class="bg-slate-900 px-1 py-0.5 rounded border border-slate-800">Enter</kbd> หรือคลิก 'ส่งงาน' เพื่อเก็บบันทึกข้อมูล
                         </p>
-                        <button id="add-comment-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-5 py-2 rounded-xl transition active:scale-95 shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 border border-indigo-500/30">
-                            ส่งงานบรีฟ
+                        <button id="add-comment-btn" class="bg-indigo-650 hover:bg-indigo-600 text-white text-xs font-bold px-4.5 py-2 rounded-xl transition active:scale-95 shadow-lg shadow-indigo-600/10 border border-indigo-500/20">
+                            ส่งรายการบรีฟ
                         </button>
                     </div>
                 </div>
@@ -373,37 +478,48 @@
         </section>
     </main>
 
-    <!-- Custom Premium Confirm/Alert Modal -->
-    <div id="custom-confirm-modal" class="fixed inset-0 bg-black/85 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300 backdrop-blur-md">
-        <div class="bg-gray-950 border border-gray-850 p-6 rounded-2xl max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
+    <!-- Offline Print/PDF Report Layout (Hidden during standard web display) -->
+    <section class="print-only hidden p-10 bg-white text-black min-h-screen">
+        <div class="border-b-2 border-slate-800 pb-5 mb-6">
+            <h1 class="text-2xl font-bold uppercase tracking-tight text-slate-900">REVIEWSPACE EDIT DECISION LIST (EDL)</h1>
+            <p class="text-sm text-slate-600 mt-1">เอกสารส่งต่อทีมงานเพื่อนำไปใช้แก้ไขปรับปรุงตัดต่อวิดีโออย่างเป็นทางการ</p>
+        </div>
+        <div id="print-comments-list" class="space-y-6">
+            <!-- Injected via Print rendering -->
+        </div>
+    </section>
+
+    <!-- Premium custom alert/confirm Modal (Rule compliant replacement of standard alert/confirm) -->
+    <div id="custom-confirm-modal" class="no-print fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm">
+        <div class="bg-[#0b0f19] border border-slate-850 p-6 rounded-2xl max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-4">
                 <span class="text-2xl" id="custom-modal-icon">⚠️</span>
-                <h3 class="text-md font-bold text-gray-100" id="custom-modal-title">ยืนยันการทำรายการ</h3>
+                <h3 class="text-sm font-bold text-slate-100" id="custom-modal-title">ยืนยันรายการ</h3>
             </div>
-            <p class="text-xs text-gray-400 mb-6 leading-relaxed" id="custom-modal-text">คุณต้องการดำเนินการนี้ใช่หรือไม่?</p>
-            <div class="flex justify-end gap-3">
-                <button id="custom-modal-cancel" class="bg-gray-900 hover:bg-gray-800 border border-gray-800 px-4 py-2 rounded-xl text-xs font-semibold text-gray-300 transition active:scale-95">ยกเลิก</button>
-                <button id="custom-modal-confirm" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-xl text-xs font-semibold text-white transition active:scale-95 shadow-lg shadow-indigo-600/20">ยืนยัน</button>
+            <p class="text-xs text-slate-400 mb-6 leading-relaxed" id="custom-modal-text">คุณต้องการดำเนินการต่อหรือไม่?</p>
+            <div class="flex justify-end gap-2.5">
+                <button id="custom-modal-cancel" class="bg-slate-900 hover:bg-slate-850 border border-slate-800 px-4 py-2 rounded-xl text-xs font-bold text-slate-300 transition active:scale-95">ยกเลิก</button>
+                <button id="custom-modal-confirm" class="bg-indigo-650 hover:bg-indigo-600 px-4 py-2 rounded-xl text-xs font-bold text-white transition active:scale-95 shadow-lg shadow-indigo-600/10 border border-indigo-500/20">ตกลง</button>
             </div>
         </div>
     </div>
 
-    <!-- Publish Link Share Link Modal -->
-    <div id="share-link-modal" class="fixed inset-0 bg-black/85 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300 backdrop-blur-md">
-        <div class="bg-gray-950 border border-gray-850 p-6 rounded-2xl max-w-md w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
+    <!-- Share Link Modal -->
+    <div id="share-link-modal" class="no-print fixed inset-0 bg-black/85 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300 backdrop-blur-md">
+        <div class="bg-[#0b0f19] border border-slate-850 p-6 rounded-2xl max-w-md w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-3">
-                <span class="text-2xl">🔗</span>
-                <h3 class="text-md font-bold text-gray-100">แชร์ประวัติบรีฟสำเร็จ (Publish Link)</h3>
+                <span class="text-2xl">🌐</span>
+                <h3 class="text-sm font-bold text-slate-100">แชร์โครงการสรุปเสร็จสิ้น (Publish Link)</h3>
             </div>
-            <p class="text-xs text-gray-400 mb-4 leading-relaxed">ลิงก์นี้เปิดให้ผู้อื่นเข้ามาร่วมรีวิวและรับชมวิดีโอที่มีข้อความบรีฟของคุณได้โดยตรงจากทุกอุปกรณ์!</p>
+            <p class="text-xs text-slate-400 mb-4 leading-relaxed">ลิงก์สาธารณะนี้เปิดโอกาสให้ผู้อื่นเข้ามาตรวจสอบสเตตัส หรือปรับความเห็นย้อนกลับเพื่อทำงานแบบไร้รอยต่อ</p>
             
             <div class="flex gap-2 mb-5">
-                <input type="text" id="share-link-input" readonly class="flex-1 bg-gray-900 text-gray-300 border border-gray-800 outline-none rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-indigo-500" onclick="this.select()">
-                <button id="copy-share-btn" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition active:scale-95 shadow-lg">คัดลอก</button>
+                <input type="text" id="share-link-input" readonly class="flex-1 bg-slate-950 text-slate-300 border border-slate-850 outline-none rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-indigo-500" onclick="this.select()">
+                <button id="copy-share-btn" class="bg-indigo-650 hover:bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition active:scale-95 shadow-lg">คัดลอก</button>
             </div>
 
             <div class="flex justify-end">
-                <button id="share-modal-close" class="bg-gray-900 hover:bg-gray-800 border border-gray-800 px-4 py-2 rounded-xl text-xs font-semibold text-gray-300 transition active:scale-95">ปิดหน้าต่าง</button>
+                <button id="share-modal-close" class="bg-slate-900 hover:bg-slate-850 border border-slate-800 px-4 py-2 rounded-xl text-xs font-bold text-slate-300 transition active:scale-95">ปิดหน้าต่าง</button>
             </div>
         </div>
     </div>
@@ -414,7 +530,7 @@
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global config integrations
+        // Global safe fallback configurations
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'reviewspace-studio';
         const rawFirebaseConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
         
@@ -429,10 +545,10 @@
                 db = getFirestore(app);
                 auth = getAuth(app);
                 isFirebaseAvailable = true;
-                console.log("Firebase and Firestore successfully initialized");
+                console.log("Firebase/Firestore successfully loaded for Publish pipelines");
             }
         } catch(e) {
-            console.warn("Firebase config not available or incomplete. Sharing links will use LocalMock.");
+            console.warn("Firebase config elements are not active in current session. Standard mockup link returns applied.");
         }
 
         // DOM Handles
@@ -450,6 +566,8 @@
         const currentTimestamp = document.getElementById('current-timestamp');
         const durationTimestamp = document.getElementById('duration-timestamp');
         const timelineMarkersContainer = document.getElementById('timeline-markers-container');
+        const timelineRangesContainer = document.getElementById('timeline-ranges-container');
+        const timelineHoverTooltip = document.getElementById('timeline-hover-tooltip');
         const videoSpeed = document.getElementById('video-speed');
         
         const canvas = document.getElementById('annotation-canvas');
@@ -480,16 +598,44 @@
         const copyShareBtn = document.getElementById('copy-share-btn');
         const shareModalClose = document.getElementById('share-modal-close');
 
-        // State Store
+        // Range commentaries elements
+        const rangePickerContainer = document.getElementById('range-picker-container');
+        const rangeInInput = document.getElementById('range-in');
+        const rangeOutInput = document.getElementById('range-out');
+        const rangePreviewText = document.getElementById('range-preview-text');
+        const toggleRangeBtn = document.getElementById('toggle-range-btn');
+
+        // Advanced state stores
         let comments = [];
         let canvasDrawingActive = false;
         let isDrawing = false;
-        let brushColor = '#ef4444'; // Default red drawing brush
-        let filterStatus = 'all'; // 'all', 'open', 'progress', 'resolved'
+        let brushColor = '#ef4444'; 
+        let filterStatus = 'all'; 
         let selectedCommentId = null;
         let isDrawingModeEnabled = true;
 
-        // Authenticate before query operations (RULE 3)
+        // Custom drawing tools elements ('brush' | 'arrow' | 'rect' | 'circle')
+        let activeDrawingTool = 'brush';
+        let startX = 0;
+        let startY = 0;
+        let savedCanvasDataUrl = null; 
+        let undoStack = []; 
+
+        // Range State
+        let isRangeMode = false;
+
+        // Dictation listener State
+        let isListeningSpeech = false;
+        let speechRecognition = null;
+
+        // Draggable range handles bindings
+        const rangeHandlesContainer = document.getElementById('range-handles-container');
+        const rangeDragHandleIn = document.getElementById('range-drag-handle-in');
+        const rangeDragHandleOut = document.getElementById('range-drag-handle-out');
+        const rangeDragHighlight = document.getElementById('range-drag-highlight');
+        let activeDragHandle = null;
+
+        // Authenticate anonymously before Firestore commands (RULE 3 compliance)
         async function authenticateUser() {
             if (!isFirebaseAvailable) return null;
             try {
@@ -500,29 +646,32 @@
                 }
                 return auth.currentUser;
             } catch (err) {
-                console.error("Auth error", err);
+                console.error("Auth pipeline connection error", err);
                 return null;
             }
         }
 
-        // Initialize App & Restore Saved State
+        // Initialize App & State Setup
         window.addEventListener('DOMContentLoaded', async () => {
             initLocalStorage();
             setupCanvasResizer();
             setupCanvasDrawing();
+            setupHoverTooltipSeeker();
+            setupTimelineRangeDragHandlers();
             renderComments();
             updateSeekbarProgress();
+            bindActionListeners();
 
             const user = await authenticateUser();
             
-            // Check if loading Shared Project via URL queries
+            // Check for Public Shared Project ID via URL queries
             const urlParams = new URLSearchParams(window.location.search);
             const shareId = urlParams.get('share');
             
             if (shareId && isFirebaseAvailable && user) {
-                showToast("กำลังดึงประวัติโปรเจกต์ที่แชร์...", "info");
+                showToast("กำลังดึงโครงงานร่วมแบ่งปันจากคลาวด์...", "info");
                 try {
-                    // Fetch share document from safe nested collection path (RULE 1)
+                    // Fetch document from secure collection layout (RULE 1 nested format)
                     const shareDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'shares', shareId);
                     const shareSnapshot = await getDoc(shareDocRef);
                     
@@ -538,40 +687,44 @@
                         }
                         renderComments();
                         renderTimelineMarkers();
-                        showToast("โหลดวิดีโอและคอมเมนต์จากลิงก์แชร์เรียบร้อยแล้ว!", "success");
+                        showToast("โหลดวิดีโอและรายการรีวิวที่แชร์เรียบร้อยแล้ว!", "success");
                     } else {
-                        showToast("ไม่พบโปรเจกต์แชร์ที่คุณเรียกใช้งาน", "danger");
+                        showToast("ไม่พบโครงการแบ่งปันนี้ในระบบ", "danger");
                     }
                 } catch (e) {
                     console.error("Fetch share fail", e);
-                    showToast("ไม่สามารถเชื่อมต่อคลาวด์เพื่อดึงข้อมูลได้", "danger");
+                    showToast("การโหลดข้อมูลจากคลาวด์ล้มเหลว", "danger");
                 }
             } else {
-                // Populate default mockup comments if state is clean
+                // Populate default demo values if local is clean
                 if (comments.length === 0) {
                     comments = [
                         {
                             id: 1,
                             avatar: '🎬',
-                            userName: 'กิตติพงษ์ (ผู้กำกับ)',
+                            userName: 'ณัฐพงศ์',
                             seconds: 2.12,
                             timeText: '00:00:02',
-                            text: 'โทนแสงตรงกองไฟนี้ดูจ้าเกินไปนิดนึง รบกวนดึงแสงเงา (Shadow) ลงเพื่อเพิ่มรายละเอียดหน่อยครับ',
+                            text: 'ช่วงคัตซีนตรงกองไฟนี้มีโทนแสงที่จ้าเกินไป รบกวนช่วยดึงเงา (Shadows) ลงเพิ่มรายละเอียดหน่อยครับ',
                             status: 'open',
                             drawing: null,
+                            isRange: false,
                             replies: []
                         },
                         {
                             id: 2,
                             avatar: '💼',
-                            userName: 'สิริพร (ตัวแทนลูกค้า)',
-                            seconds: 6.84,
-                            timeText: '00:00:06',
-                            text: 'ท่อนดับเพลิงช่วงนี้อยากให้ใส่เพลงตื่นเต้น ๆ เพิ่มระดับอารมณ์ขึ้นมาอีกระดับค่ะ',
+                            userName: 'สิรินทร์',
+                            seconds: 5.0,
+                            timeText: '00:00:05 - 00:00:08',
+                            text: 'ในช่วงนี้อยากให้ใส่ดนตรีประกอบที่ตื่นเต้นท้าทาย เพื่อกระตุ้นสติอารมณ์คนดู',
                             status: 'progress',
                             drawing: null,
+                            isRange: true,
+                            rangeStart: 5.0,
+                            rangeEnd: 8.2,
                             replies: [
-                                { userName: 'ชลสิทธิ์ (คนตัดต่อ)', text: 'กำลังเลือกเพลงดนตรีมาสวมเพิ่มทางเลือกให้เลือกฟิลลิ่งเพิ่มครับ', time: Date.now() - 3600000 }
+                                { userName: 'ธวัชชัย', text: 'กำลังจัดหาซาวด์เพิ่มเพื่อส่งตัวเลือกชุดที่สองบ่ายวันนี้ครับ', time: Date.now() - 3600000 }
                             ]
                         }
                     ];
@@ -579,13 +732,12 @@
                     renderComments();
                 }
             }
+
+            // Initiate web speech integration
+            setupSpeechRecognition();
         });
 
-        // ----------------------------------------------------
-        // UTILITIES & CUSTOM DIALOG POPUPS (No prompt/alerts)
-        // ----------------------------------------------------
-
-        // Custom Confirmation Dialog replacing window.confirm
+        // Custom Dialog overlay (Strict adherence to NO alert/confirm rule)
         let activeConfirmCallback = null;
         function showCustomConfirm(title, message, icon, onConfirm) {
             const modal = document.getElementById('custom-confirm-modal');
@@ -623,7 +775,7 @@
             closeCustomConfirm();
         });
 
-        // Time code helper (HH:MM:SS)
+        // Formatter (HH:MM:SS)
         function formatTimeCode(totalSeconds) {
             if (isNaN(totalSeconds) || totalSeconds === Infinity) return "00:00:00";
             const hrs = Math.floor(totalSeconds / 3600);
@@ -632,14 +784,14 @@
             return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // Elegant notification toast system
+        // Custom clean notification toast
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl shadow-2xl border text-xs font-semibold transition-all duration-300 transform translate-y-2 opacity-0 select-none pointer-events-auto max-w-xs ${
-                type === 'success' ? 'bg-indigo-950/95 text-indigo-300 border-indigo-500/20' : 
-                type === 'danger' ? 'bg-rose-950/95 text-rose-300 border-rose-500/20' : 
-                'bg-gray-900/95 text-gray-200 border-gray-800'
+                type === 'success' ? 'bg-[#0f1b2b] text-indigo-300 border-indigo-500/20' : 
+                type === 'danger' ? 'bg-[#2b0f19] text-rose-300 border-rose-500/20' : 
+                'bg-slate-900 text-slate-200 border-slate-800'
             }`;
             
             toast.innerHTML = `
@@ -658,11 +810,11 @@
             }, 3000);
         }
 
-        // Local Storage Utilities
+        // Local Storage triggers
         function saveToLocalStorage() {
             localStorage.setItem('reviewspace_mvp_comments', JSON.stringify(comments));
-            localStorage.setItem('reviewspace_reviewer_name', reviewerNameInput.value);
-            localStorage.setItem('reviewspace_reviewer_avatar', userAvatarSelect.value);
+            localStorage.setItem('reviewspace_reviewer_name_ultra', reviewerNameInput.value);
+            localStorage.setItem('reviewspace_reviewer_avatar_ultra', userAvatarSelect.value);
         }
 
         function initLocalStorage() {
@@ -674,8 +826,8 @@
                     comments = [];
                 }
             }
-            const savedName = localStorage.getItem('reviewspace_reviewer_name');
-            const savedAvatar = localStorage.getItem('reviewspace_reviewer_avatar');
+            const savedName = localStorage.getItem('reviewspace_reviewer_name_ultra');
+            const savedAvatar = localStorage.getItem('reviewspace_reviewer_avatar_ultra');
             if (savedName) reviewerNameInput.value = savedName;
             if (savedAvatar) userAvatarSelect.value = savedAvatar;
         }
@@ -684,22 +836,20 @@
             toggleExportMenu();
             showCustomConfirm(
                 "ต้องการล้างคอมเมนต์ทั้งหมด?", 
-                "การดำเนินการนี้จะลบประวัติการบรีฟและภาพสเก็ตช์ทั้งหมดในระบบอย่างถาวร ไม่สามารถกู้คืนได้", 
+                "ข้อมูลการสเก็ตช์ภาพวาดและสรุปรีวิวทั้งหมดจะถูกลบออกอย่างถาวรโดยไม่สามารถกู้คืนกลับมาได้อีกครั้ง", 
                 "🗑️", 
                 () => {
                     comments = [];
                     saveToLocalStorage();
                     renderComments();
                     clearCanvas();
-                    showToast("ล้างประวัติคอมเมนต์ในระบบทั้งหมดเรียบร้อยแล้ว", "danger");
+                    renderTimelineMarkers();
+                    showToast("ล้างประวัติคอมเมนต์และสเก็ตช์เรียบร้อยแล้ว", "danger");
                 }
             );
         }
 
-        // ----------------------------------------------------
-        // VIDEO EVENT HANDLING
-        // ----------------------------------------------------
-
+        // Play pause control engines
         function togglePlay() {
             if (video.paused) {
                 video.play();
@@ -728,6 +878,7 @@
             }
             showCenterIndicator('pause');
             
+            // Auto match annotation on pause timestamp
             const matchingComment = comments.find(c => Math.abs(c.seconds - video.currentTime) < 0.2 && c.drawing);
             if (matchingComment) {
                 loadSnapshot(matchingComment.drawing);
@@ -755,21 +906,29 @@
                 videoSource.src = fileURL;
                 video.load();
                 uploadPlaceholder.classList.add('hidden');
-                currentFileDisplay.textContent = `ไฟล์ปัจจุบัน: ${file.name}`;
-                showToast(`โหลดไฟล์วิดีโอ "${file.name}" เรียบร้อย`, "success");
+                currentFileDisplay.textContent = `ไฟล์: ${file.name}`;
+                showToast(`โหลดวิดีโอ "${file.name}" เรียบร้อย`, "success");
                 clearCanvas();
                 video.addEventListener('loadedmetadata', () => {
                     videoSeek.max = video.duration;
+                    rangeInInput.max = video.duration;
+                    rangeOutInput.max = video.duration;
+                    rangeOutInput.value = Math.min(video.duration, 5);
                     durationTimestamp.textContent = formatTimeCode(video.duration);
                     renderTimelineMarkers();
+                    updateRangeSelectionValues();
                 });
             }
         });
 
         video.addEventListener('loadedmetadata', () => {
             videoSeek.max = video.duration;
+            rangeInInput.max = video.duration;
+            rangeOutInput.max = video.duration;
+            rangeOutInput.value = Math.min(video.duration, 5);
             durationTimestamp.textContent = formatTimeCode(video.duration);
             renderTimelineMarkers();
+            updateRangeSelectionValues();
         });
 
         videoSeek.addEventListener('input', () => {
@@ -788,37 +947,56 @@
         function updateSeekbarProgress() {
             const formatted = formatTimeCode(video.currentTime);
             if (document.activeElement !== commentInput) {
-                stampIndicator.textContent = `📌 บรีฟที่ตำแหน่ง: ${formatted}`;
+                stampIndicator.textContent = `📌 แก้จุดเวลา: ${formatted}`;
                 stampIndicator.dataset.seconds = video.currentTime;
             }
         }
 
         videoSpeed.addEventListener('change', () => {
             video.playbackRate = parseFloat(videoSpeed.value);
-            showToast(`ปรับอัตราเร็ววิดีโอเป็น ${videoSpeed.value}x`, "info");
+            showToast(`ปรับความเร็ววิดีโอเป็น ${videoSpeed.value}x`, "info");
         });
 
         function stepFrame(direction) {
             video.pause();
-            const frameTime = 1 / 25; 
+            const frameTime = 1 / 24; 
             video.currentTime += direction * frameTime;
             videoSeek.value = video.currentTime;
             currentTimestamp.textContent = formatTimeCode(video.currentTime);
         }
 
-        // ----------------------------------------------------
-        // ANNOTATION CANVAS DRAWING ENGINE
-        // ----------------------------------------------------
-
+        // Advanced drawing markup systems with Undo and Shape creation
         function setupCanvasResizer() {
             const resizeObserver = new ResizeObserver(entries => {
                 for (let entry of entries) {
-                    canvas.width = entry.contentRect.width;
-                    canvas.height = entry.contentRect.height;
-                    clearCanvas(false);
+                    const nextWidth = Math.floor(entry.contentRect.width);
+                    const nextHeight = Math.floor(entry.contentRect.height);
+                    
+                    // CRITICAL FIX: Only resize coordinate system if CSS dimensions actually shifted.
+                    // This blocks ResizeObserver from firing and clearing our canvas drawings on micro-interactions.
+                    if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
+                        canvas.width = nextWidth;
+                        canvas.height = nextHeight;
+                        clearCanvas(false);
+                    }
                 }
             });
             resizeObserver.observe(canvas);
+        }
+
+        function setDrawingTool(toolName) {
+            activeDrawingTool = toolName;
+            
+            // Reset active styles of toolbar elements
+            const tools = ['brush', 'arrow', 'rect', 'circle'];
+            tools.forEach(t => {
+                const el = document.getElementById(`tool-${t}`);
+                if (t === toolName) {
+                    el.className = "p-1.5 rounded-lg text-indigo-400 bg-slate-900 border border-indigo-500/30 transition";
+                } else {
+                    el.className = "p-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition";
+                }
+            });
         }
 
         function setupCanvasDrawing() {
@@ -833,24 +1011,55 @@
             };
 
             const startDraw = (e) => {
-                if (!isDrawingModeEnabled) return; 
+                if (!isDrawingModeEnabled) return;
                 isDrawing = true;
                 const pos = getPos(e);
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
-                ctx.strokeStyle = brushColor;
-                ctx.lineWidth = brushSizeInput.value;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
+                startX = pos.x;
+                startY = pos.y;
+
+                // Push current canvas state to history before drawing new elements (for Undo)
+                savedCanvasDataUrl = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                undoStack.push(savedCanvasDataUrl);
+
+                if (activeDrawingTool === 'brush') {
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    ctx.strokeStyle = brushColor;
+                    ctx.lineWidth = brushSizeInput.value;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                }
                 e.preventDefault();
             };
 
             const draw = (e) => {
                 if (!isDrawing || !isDrawingModeEnabled) return;
                 const pos = getPos(e);
-                ctx.lineTo(pos.x, pos.y);
-                ctx.stroke();
-                
+                const currentX = pos.x;
+                const currentY = pos.y;
+
+                if (activeDrawingTool === 'brush') {
+                    ctx.lineTo(currentX, currentY);
+                    ctx.stroke();
+                } else {
+                    // Restore previous canvas state before drawing preview coordinates to support smooth dragging
+                    ctx.putImageData(savedCanvasDataUrl, 0, 0);
+                    ctx.strokeStyle = brushColor;
+                    ctx.lineWidth = brushSizeInput.value;
+                    ctx.lineCap = 'round';
+
+                    if (activeDrawingTool === 'arrow') {
+                        drawArrow(ctx, startX, startY, currentX, currentY);
+                    } else if (activeDrawingTool === 'rect') {
+                        ctx.strokeRect(startX, startY, currentX - startX, currentY - startY);
+                    } else if (activeDrawingTool === 'circle') {
+                        const radius = Math.sqrt(Math.pow(currentX - startX, 2) + Math.pow(currentY - startY, 2));
+                        ctx.beginPath();
+                        ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+                        ctx.stroke();
+                    }
+                }
+
                 canvasDrawingActive = true;
                 canvasAttachedTag.classList.remove('hidden');
                 discardDrawingBtn.classList.remove('hidden');
@@ -859,11 +1068,14 @@
 
             const stopDraw = () => {
                 if (isDrawing) {
-                    ctx.closePath();
+                    if (activeDrawingTool === 'brush') {
+                        ctx.closePath();
+                    }
                     isDrawing = false;
                 }
             };
 
+            // Canvas drawing handles for desktop & touch
             canvas.addEventListener('mousedown', startDraw);
             canvas.addEventListener('mousemove', draw);
             canvas.addEventListener('mouseup', stopDraw);
@@ -874,9 +1086,46 @@
             canvas.addEventListener('touchend', stopDraw);
         }
 
+        // Draw arrow assistant function
+        function drawArrow(context, fromX, fromY, toX, toY) {
+            const headLength = 12; // Length of head in pixels
+            const dx = toX - fromX;
+            const dy = toY - fromY;
+            const angle = Math.atan2(dy, dx);
+            
+            context.beginPath();
+            context.moveTo(fromX, fromY);
+            context.lineTo(toX, toY);
+            context.stroke();
+
+            // Arrow head
+            context.beginPath();
+            context.moveTo(toX, toY);
+            context.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6), toY - headLength * Math.sin(angle - Math.PI / 6));
+            context.lineTo(toX - headLength * Math.cos(angle + Math.PI / 6), toY - headLength * Math.sin(angle + Math.PI / 6));
+            context.closePath();
+            context.fillStyle = brushColor;
+            context.fill();
+        }
+
+        function undoLastStroke() {
+            if (undoStack.length > 0) {
+                const previousState = undoStack.pop();
+                ctx.putImageData(previousState, 0, 0);
+                if (undoStack.length === 0) {
+                    canvasDrawingActive = false;
+                    canvasAttachedTag.classList.add('hidden');
+                    discardDrawingBtn.classList.add('hidden');
+                }
+                showToast("ยกเลิกเส้นล่าสุดเรียบร้อย", "info");
+            } else {
+                showToast("ไม่มีเส้นย้อนกลับแล้วครับ", "info");
+            }
+        }
+
         function setBrushColor(color) {
             brushColor = color;
-            showToast(`เปลี่ยนพู่กันเขียนรีวิวเรียบร้อย`, "info");
+            showToast(`เปลี่ยนโทนสีแปรงเรียบร้อย`, "info");
         }
 
         function clearCanvas(resetDataState = true) {
@@ -885,6 +1134,7 @@
             
             if (resetDataState) {
                 canvasDrawingActive = false;
+                undoStack = [];
                 canvasAttachedTag.classList.add('hidden');
                 discardDrawingBtn.classList.add('hidden');
             }
@@ -898,46 +1148,281 @@
             
             if (isDrawingModeEnabled) {
                 canvasToolbar.classList.remove('hidden');
-                btn.className = "absolute top-4 right-4 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-3 py-2 rounded-xl transition duration-150 flex items-center gap-2 border border-indigo-500/30 shadow-xl backdrop-blur-sm z-30";
-                text.textContent = 'โหมดวาด: เปิดอยู่';
+                btn.className = "absolute top-4 right-4 bg-indigo-650 hover:bg-indigo-600 text-white text-[11px] font-bold px-3 py-2 rounded-xl transition duration-150 flex items-center gap-2 border border-indigo-500/40 shadow-xl z-30";
+                text.textContent = 'โหมดวาด: เปิด';
                 if (video.paused) {
                     canvas.style.opacity = '1';
                     canvas.style.pointerEvents = 'auto';
                 }
-                showToast("เปิดระบบสเก็ตช์บรีฟบนหน้าจอแล้ว", "success");
+                showToast("เปิดโหมดการวาดแก้ไขบนวิดีโอแล้ว", "success");
             } else {
                 canvasToolbar.classList.add('hidden');
-                btn.className = "absolute top-4 right-4 bg-gray-900/90 hover:bg-gray-800 text-gray-400 text-xs font-semibold px-3 py-2 rounded-xl transition duration-150 flex items-center gap-2 border border-gray-800 shadow-xl backdrop-blur-sm z-30";
-                text.textContent = 'โหมดวาด: ปิดอยู่';
+                btn.className = "absolute top-4 right-4 bg-slate-900/95 hover:bg-slate-800 text-slate-400 text-[11px] font-bold px-3 py-2 rounded-xl transition duration-150 flex items-center gap-2 border border-slate-800 shadow-xl z-30";
+                text.textContent = 'โหมดวาด: ปิด';
                 canvas.style.opacity = '0';
                 canvas.style.pointerEvents = 'none';
                 clearCanvas(true);
-                showToast("ซ่อนเครื่องมือวาดแล้ว (รับชมวิดีโอเต็มตา)", "info");
+                showToast("ซ่อนแถบสเก็ตช์ภาพวาดแล้ว", "info");
             }
         }
 
-        // ----------------------------------------------------
-        // COLLABORATIVE FEED & COMMENT FLOW MANAGEMENT
-        // ----------------------------------------------------
+        // Hover seeker timeline timecode preview
+        function setupHoverTooltipSeeker() {
+            const seekbarWrapper = document.getElementById('seekbar-wrapper');
+            
+            seekbarWrapper.addEventListener('mousemove', (e) => {
+                const rect = videoSeek.getBoundingClientRect();
+                const positionX = e.clientX - rect.left;
+                const percentage = Math.min(Math.max(0, positionX / rect.width), 1);
+                const secondsAtPosition = percentage * video.duration;
 
+                if (!isNaN(secondsAtPosition)) {
+                    timelineHoverTooltip.style.opacity = '1';
+                    timelineHoverTooltip.style.left = `calc(${percentage * 100}% - 24px)`;
+                    timelineHoverTooltip.textContent = formatTimeCode(secondsAtPosition);
+                }
+            });
+
+            seekbarWrapper.addEventListener('mouseleave', () => {
+                timelineHoverTooltip.style.opacity = '0';
+            });
+        }
+
+        // Speech Recognition Dictation (Vocal to text)
+        function setupSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRecognition) {
+                speechRecognition = new SpeechRecognition();
+                speechRecognition.continuous = false;
+                speechRecognition.interimResults = false;
+                speechRecognition.lang = 'th-TH'; // Thai language default
+
+                speechRecognition.onstart = () => {
+                    isListeningSpeech = true;
+                    document.getElementById('ai-mic-btn').innerHTML = '🔴';
+                    document.getElementById('ai-mic-btn').classList.add('bg-red-600', 'animate-pulse');
+                    showToast("เริ่มบันทึกเสียงพูดของคุณเพื่อถอดความ...", "info");
+                };
+
+                speechRecognition.onresult = (e) => {
+                    const resultText = e.results[0][0].transcript;
+                    commentInput.value += resultText;
+                    showToast("แปลงข้อความด้วยเสียงสำเร็จ!", "success");
+                };
+
+                speechRecognition.onerror = (e) => {
+                    console.error("Speech Recognition Error", e);
+                    showToast("การถอดเสียงผิดพลาดหรือไม่มีเสียงตรวจพบ", "danger");
+                    stopListening();
+                };
+
+                speechRecognition.onend = () => {
+                    stopListening();
+                };
+            } else {
+                document.getElementById('ai-mic-btn').classList.add('hidden');
+                console.warn("Speech recognition interface not supported on current browser version.");
+            }
+        }
+
+        function toggleSpeechRecognition() {
+            if (!speechRecognition) return;
+            if (isListeningSpeech) {
+                speechRecognition.stop();
+            } else {
+                speechRecognition.start();
+            }
+        }
+
+        function stopListening() {
+            isListeningSpeech = false;
+            document.getElementById('ai-mic-btn').innerHTML = '🎙️';
+            document.getElementById('ai-mic-btn').classList.remove('bg-red-600', 'animate-pulse');
+        }
+
+        // Range Commentary logic (In/Out selections)
+        function toggleRangeComment() {
+            isRangeMode = !isRangeMode;
+            if (isRangeMode) {
+                rangePickerContainer.classList.remove('hidden');
+                toggleRangeBtn.textContent = "⏱️ บรีฟแบบเป็นช่วงเวลา: เปิด";
+                toggleRangeBtn.className = "text-[10px] bg-indigo-600/20 text-indigo-400 font-semibold px-2 py-1 rounded-lg border border-indigo-500/30 transition";
+                
+                // Keep values inside video boundaries
+                if (parseFloat(rangeInInput.value) === 0 && parseFloat(rangeOutInput.value) === 5) {
+                    rangeInInput.value = video.currentTime;
+                    rangeOutInput.value = Math.min(video.duration, video.currentTime + 3);
+                }
+                updateRangeSelectionValues();
+            } else {
+                rangePickerContainer.classList.add('hidden');
+                toggleRangeBtn.textContent = "⏱️ บรีฟแบบเป็นช่วงเวลา: ปิดอยู่";
+                toggleRangeBtn.className = "text-[10px] bg-slate-900 hover:bg-slate-800 text-slate-400 font-semibold px-2 py-1 rounded-lg border border-slate-850 transition";
+                stampIndicator.textContent = `📌 แก้จุดเวลา: ${formatTimeCode(video.currentTime)}`;
+                rangeHandlesContainer.classList.add('hidden');
+            }
+        }
+
+        function updateRangeSelectionValues() {
+            let inVal = parseFloat(rangeInInput.value);
+            let outVal = parseFloat(rangeOutInput.value);
+
+            if (inVal > outVal) {
+                outVal = inVal;
+                rangeOutInput.value = outVal;
+            }
+
+            rangePreviewText.textContent = `${inVal.toFixed(2)}s - ${outVal.toFixed(2)}s`;
+            stampIndicator.textContent = `📌 ช่วงเวลาบรีฟ: ${formatTimeCode(inVal)} ถึง ${formatTimeCode(outVal)}`;
+            
+            // Sync draggable overlays on the seekbar
+            if (isRangeMode) {
+                updateRangeHandlesVisuals();
+            }
+        }
+
+        // Sync timeline range handle offsets
+        function updateRangeHandlesVisuals() {
+            const duration = video.duration;
+            if (!duration || !isRangeMode) {
+                rangeHandlesContainer.classList.add('hidden');
+                return;
+            }
+
+            rangeHandlesContainer.classList.remove('hidden');
+            const inPercent = (parseFloat(rangeInInput.value) / duration) * 100;
+            const outPercent = (parseFloat(rangeOutInput.value) / duration) * 100;
+
+            rangeDragHandleIn.style.left = `${inPercent}%`;
+            rangeDragHandleOut.style.left = `${outPercent}%`;
+            rangeDragHighlight.style.left = `${inPercent}%`;
+            rangeDragHighlight.style.width = `${outPercent - inPercent}%`;
+        }
+
+        function setupTimelineRangeDragHandlers() {
+            const getPercentFromX = (clientX) => {
+                const rect = videoSeek.getBoundingClientRect();
+                const x = clientX - rect.left;
+                return Math.min(Math.max(0, x / rect.width), 1);
+            };
+
+            const onDragMove = (clientX) => {
+                if (!activeDragHandle || !video.duration) return;
+                const percent = getPercentFromX(clientX);
+                const timeValue = percent * video.duration;
+
+                if (activeDragHandle === 'in') {
+                    const currentOut = parseFloat(rangeOutInput.value);
+                    if (timeValue < currentOut) {
+                        rangeInInput.value = timeValue;
+                    } else {
+                        rangeInInput.value = currentOut;
+                    }
+                    video.currentTime = parseFloat(rangeInInput.value);
+                } else if (activeDragHandle === 'out') {
+                    const currentIn = parseFloat(rangeInInput.value);
+                    if (timeValue > currentIn) {
+                        rangeOutInput.value = timeValue;
+                    } else {
+                        rangeOutInput.value = currentIn;
+                    }
+                    video.currentTime = parseFloat(rangeOutInput.value);
+                }
+
+                updateRangeSelectionValues();
+            };
+
+            // Mouse Event Listeners
+            rangeDragHandleIn.addEventListener('mousedown', (e) => {
+                activeDragHandle = 'in';
+                e.preventDefault();
+                e.stopPropagation();
+            });
+
+            rangeDragHandleOut.addEventListener('mousedown', (e) => {
+                activeDragHandle = 'out';
+                e.preventDefault();
+                e.stopPropagation();
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (activeDragHandle) {
+                    onDragMove(e.clientX);
+                }
+            });
+
+            window.addEventListener('mouseup', () => {
+                activeDragHandle = null;
+            });
+
+            // Mobile Touch Event Support
+            rangeDragHandleIn.addEventListener('touchstart', (e) => {
+                activeDragHandle = 'in';
+                e.stopPropagation();
+            });
+
+            rangeDragHandleOut.addEventListener('touchstart', (e) => {
+                activeDragHandle = 'out';
+                e.stopPropagation();
+            });
+
+            window.addEventListener('touchmove', (e) => {
+                if (activeDragHandle && e.touches.length > 0) {
+                    onDragMove(e.touches[0].clientX);
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchend', () => {
+                activeDragHandle = null;
+            });
+        }
+
+        function lockCurrentTime() {
+            if (isRangeMode) {
+                rangeInInput.value = video.currentTime;
+                rangeOutInput.value = Math.min(video.duration, video.currentTime + 3);
+                updateRangeSelectionValues();
+                showToast("ล็อกขอบเขตช่วงเริ่มต้น ณ เวลาปัจจุบัน", "info");
+            } else {
+                stampIndicator.textContent = `📌 แก้จุดเวลา: ${formatTimeCode(video.currentTime)}`;
+                stampIndicator.dataset.seconds = video.currentTime;
+                showToast("ล็อกตรายางแสตมป์เรียบร้อย", "info");
+            }
+        }
+
+        // Auto pause on edit target focusing
         commentInput.addEventListener('focus', () => {
             video.pause();
-            const formatted = formatTimeCode(video.currentTime);
-            stampIndicator.textContent = `📌 ล็อกตำแหน่งวินาทีแก้ที่: ${formatted}`;
-            stampIndicator.dataset.seconds = video.currentTime;
+            lockCurrentTime();
         });
 
+        // Submit comment workflow
         function submitComment() {
             const text = commentInput.value.trim();
             if (!text) {
-                showToast("กรุณาระบุรายละเอียดที่ต้องการให้แก้ไขก่อนส่งครับ", "danger");
+                showToast("ระบุคำอธิบายงานรีวิวที่ต้องการก่อนตกลงส่งครับ", "danger");
                 return;
             }
 
             const authorName = reviewerNameInput.value.trim() || 'ผู้รีวิวทั่วไป';
             const authorAvatar = userAvatarSelect.value || '👤';
-            const timestampSeconds = parseFloat(stampIndicator.dataset.seconds) || video.currentTime;
             
+            let isCommentRange = isRangeMode;
+            let finalSeconds = video.currentTime;
+            let rangeStartSec = 0;
+            let rangeEndSec = 0;
+            let timeTextRepresentation = "";
+
+            if (isCommentRange) {
+                rangeStartSec = parseFloat(rangeInInput.value);
+                rangeEndSec = parseFloat(rangeOutInput.value);
+                finalSeconds = rangeStartSec;
+                timeTextRepresentation = `${formatTimeCode(rangeStartSec)} - ${formatTimeCode(rangeEndSec)}`;
+            } else {
+                finalSeconds = parseFloat(stampIndicator.dataset.seconds) || video.currentTime;
+                timeTextRepresentation = formatTimeCode(finalSeconds);
+            }
+
             let drawingSnap = null;
             if (canvasDrawingActive) {
                 drawingSnap = canvas.toDataURL();
@@ -947,11 +1432,14 @@
                 id: Date.now(),
                 avatar: authorAvatar,
                 userName: authorName,
-                seconds: timestampSeconds,
-                timeText: formatTimeCode(timestampSeconds),
+                seconds: finalSeconds,
+                timeText: timeTextRepresentation,
                 text: text,
                 status: 'open',
                 drawing: drawingSnap,
+                isRange: isCommentRange,
+                rangeStart: rangeStartSec,
+                rangeEnd: rangeEndSec,
                 replies: []
             };
 
@@ -962,7 +1450,7 @@
             
             renderComments();
             renderTimelineMarkers();
-            showToast("ส่งบรีฟจุดแก้ไขเรียบร้อยแล้ว", "success");
+            showToast("ส่งบรีฟงานเสร็จสิ้น เข้าสู่คลาวด์บอร์ด", "success");
             video.play();
         }
 
@@ -981,14 +1469,15 @@
             filterBtns.forEach(btn => {
                 const el = document.getElementById(`filter-btn-${btn}`);
                 if (btn === status) {
-                    el.className = "text-[10px] px-2 py-1 rounded bg-indigo-600 text-white font-semibold transition";
+                    el.className = "text-[10px] px-2 py-1 rounded bg-indigo-650 text-white font-semibold transition";
                 } else {
-                    el.className = "text-[10px] px-2 py-1 rounded bg-gray-900 hover:bg-gray-800 text-gray-400 font-medium transition";
+                    el.className = "text-[10px] px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 font-medium transition";
                 }
             });
             renderComments();
         }
 
+        // Render Comment List Panel UI (Completely removed reactions system)
         function renderComments() {
             commentsContainer.innerHTML = '';
             let filtered = [...comments];
@@ -1012,9 +1501,9 @@
 
             if (filtered.length === 0) {
                 commentsContainer.innerHTML = `
-                    <div class="flex flex-col items-center justify-center p-8 text-center bg-gray-900/10 rounded-2xl border border-dashed border-gray-800/80">
-                        <span class="text-3xl mb-2">📥</span>
-                        <p class="text-xs text-gray-500">ไม่พบคอมเมนต์หรือรีวิวบรีฟตรงตามตัวกรองปัจจุบัน</p>
+                    <div class="flex flex-col items-center justify-center p-8 text-center bg-slate-950/20 rounded-2xl border border-dashed border-slate-900">
+                        <span class="text-2xl mb-2">📥</span>
+                        <p class="text-xs text-slate-500">ไม่มีรายการแก้ไขที่ตรงตามตัวกรองปัจจุบัน</p>
                     </div>
                 `;
                 return;
@@ -1023,26 +1512,16 @@
             filtered.forEach(comment => {
                 const isSelected = selectedCommentId === comment.id;
                 
-                let statusBadgeColor = 'bg-red-500/10 text-red-400 border-red-500/20';
-                let statusLabel = '🔴 ต้องแก้ไข';
-                if (comment.status === 'progress') {
-                    statusBadgeColor = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-                    statusLabel = '🟡 กำลังทำ';
-                } else if (comment.status === 'resolved') {
-                    statusBadgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-                    statusLabel = '🟢 เสร็จสิ้น';
-                }
-
                 let repliesHtml = '';
                 if (comment.replies && comment.replies.length > 0) {
                     repliesHtml = `
-                        <div class="mt-2.5 pl-3 border-l-2 border-gray-800 space-y-2">
+                        <div class="mt-2.5 pl-3 border-l-2 border-slate-800 space-y-2">
                             ${comment.replies.map(r => `
-                                <div class="bg-gray-950/40 p-2 rounded-lg text-[11px]">
+                                <div class="bg-slate-950/40 p-2 rounded-xl text-[11px] border border-slate-900/40">
                                     <div class="flex justify-between items-center mb-0.5">
-                                        <span class="font-bold text-gray-300">💬 ${r.userName}</span>
+                                        <span class="font-bold text-slate-300">💬 ${r.userName}</span>
                                     </div>
-                                    <p class="text-gray-400">${r.text}</p>
+                                    <p class="text-slate-400">${r.text}</p>
                                 </div>
                             `).join('')}
                         </div>
@@ -1050,8 +1529,8 @@
                 }
 
                 const commentEl = document.createElement('div');
-                commentEl.className = `p-3.5 rounded-xl border transition-all duration-200 cursor-pointer ${
-                    isSelected ? 'bg-indigo-950/20 border-indigo-500/60 shadow-lg shadow-indigo-900/10' : 'bg-gray-900/40 border-gray-800/80 hover:border-gray-700 hover:bg-gray-900/60'
+                commentEl.className = `p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer ${
+                    isSelected ? 'bg-indigo-950/25 border-indigo-500/50 shadow-xl' : 'bg-[#090d16]/90 border-slate-900 hover:border-slate-850 hover:bg-[#0b1122]'
                 }`;
 
                 commentEl.addEventListener('click', (e) => {
@@ -1061,19 +1540,25 @@
                     renderComments();
                 });
 
+                // Render replies and inputs (Reactions HTML completely removed for cleaner look)
                 commentEl.innerHTML = `
                     <div class="flex justify-between items-start gap-2 mb-2 interactive-control">
                         <div class="flex items-center gap-2">
-                            <span class="text-lg">${comment.avatar || '👤'}</span>
+                            <span class="text-base">${comment.avatar || '👤'}</span>
                             <div>
-                                <h4 class="text-xs font-bold text-gray-200">${comment.userName}</h4>
+                                <h4 class="text-xs font-bold text-slate-200">${comment.userName}</h4>
                                 <div class="flex items-center gap-1.5 mt-0.5">
                                     <span class="text-[10px] font-mono bg-indigo-950 text-indigo-400 font-bold px-1.5 py-0.5 rounded border border-indigo-900/50">
                                         ⏱️ ${comment.timeText}
                                     </span>
                                     ${comment.drawing ? `
                                         <span class="text-[9px] bg-emerald-950/40 text-emerald-400 font-medium px-1 rounded border border-emerald-500/10 flex items-center gap-1">
-                                            🖌️ Drawing
+                                            🎨 สเก็ตช์ภาพวาด
+                                        </span>
+                                    ` : ''}
+                                    ${comment.isRange ? `
+                                        <span class="text-[9px] bg-indigo-950/60 text-indigo-400 font-medium px-1 rounded border border-indigo-500/10 flex items-center gap-1">
+                                            ช่วงเวลา
                                         </span>
                                     ` : ''}
                                 </div>
@@ -1081,37 +1566,142 @@
                         </div>
 
                         <div class="flex items-center gap-1.5">
-                            <select onchange="updateCommentStatus(${comment.id}, this.value)" class="bg-gray-950 text-[10px] border border-gray-800 rounded px-1.5 py-0.5 text-gray-300 focus:outline-none focus:ring-0 cursor-pointer">
+                            <select class="comment-status-select bg-slate-950 text-[10px] border border-slate-850 rounded-lg px-2 py-0.5 text-slate-300 outline-none focus:ring-0 cursor-pointer" data-id="${comment.id}">
                                 <option value="open" ${comment.status === 'open' ? 'selected' : ''}>🔴 ต้องแก้ไข</option>
                                 <option value="progress" ${comment.status === 'progress' ? 'selected' : ''}>🟡 กำลังแก้</option>
                                 <option value="resolved" ${comment.status === 'resolved' ? 'selected' : ''}>🟢 เสร็จแล้ว</option>
                             </select>
 
-                            <button onclick="triggerDeleteComment(${comment.id})" class="text-gray-500 hover:text-red-400 transition p-1 rounded hover:bg-gray-800/80" title="ลบคอมเมนต์นี้">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            <button class="comment-delete-btn text-slate-500 hover:text-red-400 transition p-1 rounded hover:bg-slate-800" data-id="${comment.id}" title="ลบรายการบรีฟนี้">
+                                🗑️
                             </button>
                         </div>
                     </div>
 
-                    <p class="text-xs text-gray-300 leading-relaxed break-words">${comment.text}</p>
+                    <p class="text-xs text-slate-300 leading-relaxed break-words">${comment.text}</p>
+                    
                     ${repliesHtml}
 
-                    <div class="mt-3 pt-2.5 border-t border-gray-800/60 flex gap-2 interactive-control">
-                        <input type="text" placeholder="พิมพ์ข้อความตอบกลับ..." 
-                            onkeypress="submitReply(event, ${comment.id}, this)"
-                            class="flex-1 bg-gray-950 border border-gray-800/80 rounded-lg px-2.5 py-1 text-[11px] text-gray-200 focus:outline-none focus:border-indigo-600 focus:ring-0">
-                        <button onclick="submitReplyBtn(${comment.id}, this)" class="bg-gray-850 hover:bg-indigo-600 hover:text-white border border-gray-800 px-2.5 py-1 rounded-lg text-[10px] font-bold text-gray-400 transition">
-                            ตอบ
+                    <div class="mt-3 pt-2.5 border-t border-slate-900 flex gap-2 interactive-control">
+                        <input type="text" placeholder="พิมพ์คุยตอบกลับด่วน..." 
+                            class="reply-input-text flex-1 bg-slate-950 border border-slate-850 rounded-lg px-2.5 py-1 text-[11px] text-slate-300 focus:outline-none focus:border-indigo-600 focus:ring-0" data-id="${comment.id}">
+                        <button class="reply-submit-btn bg-slate-900 hover:bg-indigo-600 hover:text-white border border-slate-800 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-400 transition" data-id="${comment.id}">
+                            ส่ง
                         </button>
                     </div>
                 `;
                 commentsContainer.appendChild(commentEl);
             });
+
+            // Bind Event Listeners dynamically to newly rendered comment nodes to avoid global modular bugs
+            commentsContainer.querySelectorAll('.comment-status-select').forEach(sel => {
+                sel.addEventListener('change', (e) => {
+                    updateCommentStatus(parseInt(sel.getAttribute('data-id')), e.target.value);
+                });
+            });
+
+            commentsContainer.querySelectorAll('.comment-delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    triggerDeleteComment(parseInt(btn.getAttribute('data-id')));
+                });
+            });
+
+            commentsContainer.querySelectorAll('.reply-input-text').forEach(input => {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        submitReplyAndRefresh(parseInt(input.getAttribute('data-id')), input);
+                    }
+                });
+            });
+
+            commentsContainer.querySelectorAll('.reply-submit-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const input = btn.previousElementSibling;
+                    submitReplyAndRefresh(parseInt(btn.getAttribute('data-id')), input);
+                });
+            });
+
+            renderPrintReport();
         }
 
-        searchInput.addEventListener('input', renderComments);
-        reviewerNameInput.addEventListener('input', () => saveToLocalStorage());
-        userAvatarSelect.addEventListener('change', () => saveToLocalStorage());
+        // Bind dynamic JS listeners securely avoiding scoping gaps of modular code
+        function bindActionListeners() {
+            document.getElementById('toggle-drawing-mode-btn').addEventListener('click', toggleDrawingMode);
+            
+            // Tool selector toolbox buttons
+            document.getElementById('tool-brush').addEventListener('click', () => setDrawingTool('brush'));
+            document.getElementById('tool-arrow').addEventListener('click', () => setDrawingTool('arrow'));
+            document.getElementById('tool-rect').addEventListener('click', () => setDrawingTool('rect'));
+            document.getElementById('tool-circle').addEventListener('click', () => setDrawingTool('circle'));
+            
+            // Data attribute based brush color assignments
+            document.querySelectorAll('[data-brush-color]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const color = btn.getAttribute('data-brush-color');
+                    setBrushColor(color);
+                });
+            });
+
+            document.getElementById('canvas-undo-btn').addEventListener('click', undoLastStroke);
+            document.getElementById('canvas-clear-btn').addEventListener('click', () => clearCanvas(true));
+            document.getElementById('discard-drawing-btn').addEventListener('click', () => clearCanvas(true));
+            document.getElementById('upload-trigger-btn').addEventListener('click', () => document.getElementById('video-upload').click());
+            
+            // Seeker frame steppers
+            document.getElementById('step-back-btn').addEventListener('click', () => stepFrame(-1));
+            document.getElementById('step-forward-btn').addEventListener('click', () => stepFrame(1));
+
+            // Export events
+            document.getElementById('export-toggle-btn').addEventListener('click', toggleExportMenu);
+            document.getElementById('export-txt-btn').addEventListener('click', () => exportComments('txt'));
+            document.getElementById('export-json-btn').addEventListener('click', () => exportComments('json'));
+            document.getElementById('export-print-btn').addEventListener('click', () => window.print());
+            document.getElementById('clear-all-data-btn').addEventListener('click', triggerClearAllData);
+
+            // Filter button states
+            document.getElementById('filter-btn-all').addEventListener('click', () => setFilterStatus('all'));
+            document.getElementById('filter-btn-open').addEventListener('click', () => setFilterStatus('open'));
+            document.getElementById('filter-btn-progress').addEventListener('click', () => setFilterStatus('progress'));
+            document.getElementById('filter-btn-resolved').addEventListener('click', () => setFilterStatus('resolved'));
+            document.getElementById('sort-select').addEventListener('change', renderComments);
+
+            // Sub elements
+            document.getElementById('toggle-range-btn').addEventListener('click', toggleRangeComment);
+            document.getElementById('range-in').addEventListener('input', updateRangeSelectionValues);
+            document.getElementById('range-out').addEventListener('input', updateRangeSelectionValues);
+            document.getElementById('ai-mic-btn').addEventListener('click', toggleSpeechRecognition);
+            document.getElementById('stamp-indicator').addEventListener('click', lockCurrentTime);
+            
+            // File input name watcher
+            reviewerNameInput.addEventListener('input', saveToLocalStorage);
+            userAvatarSelect.addEventListener('change', saveToLocalStorage);
+
+            // Seeker mouse updates
+            videoSeek.addEventListener('input', () => {
+                video.currentTime = videoSeek.value;
+                currentTimestamp.textContent = formatTimeCode(video.currentTime);
+            });
+        }
+
+        // Render Print layout for offline audit
+        function renderPrintReport() {
+            const printList = document.getElementById('print-comments-list');
+            if (!printList) return;
+            printList.innerHTML = '';
+            comments.forEach((c, index) => {
+                const card = document.createElement('div');
+                card.className = "print-card";
+                card.innerHTML = `
+                    <div class="flex justify-between border-b pb-2 mb-2">
+                        <span class="font-bold text-base">${index + 1}. [${c.timeText}] บรีฟโดย ${c.userName}</span>
+                        <span class="uppercase font-bold text-xs">${c.status.toUpperCase()}</span>
+                    </div>
+                    <p class="text-sm mb-4">${c.text}</p>
+                    ${c.drawing ? `<div class="mt-2"><img src="${c.drawing}" class="max-w-md border rounded h-44 object-contain"></div>` : ''}
+                `;
+                printList.appendChild(card);
+            });
+        }
 
         function jumpToTimestamp(seconds, drawingBase64) {
             video.pause();
@@ -1132,30 +1722,8 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        function submitReply(e, commentId, inputEl) {
-            if (e.key === 'Enter') {
-                const val = inputEl.value.trim();
-                if (!val) return;
-                const authorName = reviewerNameInput.value.trim() || 'ผู้รีวิวทั่วไป';
-
-                const comment = comments.find(c => c.id === commentId);
-                if (comment) {
-                    if(!comment.replies) comment.replies = [];
-                    comment.replies.push({
-                        userName: authorName,
-                        text: val,
-                        time: Date.now()
-                    });
-                    saveToLocalStorage();
-                    renderComments();
-                    showToast("เพิ่มการตอบกลับบรีฟเรียบร้อย", "success");
-                }
-                inputEl.value = '';
-            }
-        }
-
-        function submitReplyBtn(commentId, btnEl) {
-            const inputEl = btnEl.previousElementSibling;
+        // Handle replies securely
+        function submitReplyAndRefresh(commentId, inputEl) {
             const val = inputEl.value.trim();
             if (!val) return;
             const authorName = reviewerNameInput.value.trim() || 'ผู้รีวิวทั่วไป';
@@ -1170,7 +1738,7 @@
                 });
                 saveToLocalStorage();
                 renderComments();
-                showToast("เพิ่มการตอบกลับบรีฟเรียบร้อย", "success");
+                showToast("เพิ่มความเห็นตอบกลับแล้ว", "success");
             }
             inputEl.value = '';
         }
@@ -1181,14 +1749,14 @@
                 comment.status = newStatus;
                 saveToLocalStorage();
                 renderComments();
-                showToast("อัปเดตสถานะจุดบรีฟเรียบร้อยแล้ว", "success");
+                showToast("อัปเดตสถานะการบรีฟเสร็จสิ้น", "success");
             }
         }
 
         function triggerDeleteComment(commentId) {
             showCustomConfirm(
                 "ต้องการลบคอมเมนต์นี้?",
-                "คุณต้องการลบคอมเมนต์และข้อมูลการบรีฟส่วนนี้ออกจากโครงการใช่หรือไม่?",
+                "คุณต้องการนำข้อมูลรีวิวและเส้นสเก็ตช์บนจอของจุดนี้ออกจากระบบใช่หรือไม่?",
                 "🗑️",
                 () => {
                     comments = comments.filter(c => c.id !== commentId);
@@ -1196,57 +1764,65 @@
                     renderComments();
                     renderTimelineMarkers();
                     clearCanvas();
-                    showToast("ลบคอมเมนต์รีวิวเสร็จสิ้น", "danger");
+                    showToast("ลบข้อมูลสำเร็จ", "danger");
                 }
             );
         }
 
+        // Dynamic seekbar Range overlays
         function renderTimelineMarkers() {
             timelineMarkersContainer.innerHTML = '';
+            timelineRangesContainer.innerHTML = '';
             const duration = video.duration;
             if (!duration) return;
 
             comments.forEach(comment => {
-                const percent = (comment.seconds / duration) * 100;
-                const marker = document.createElement('div');
-                marker.className = "absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-amber-500 border border-black cursor-pointer shadow-lg hover:scale-125 transition-transform z-20 hover:bg-white";
-                marker.style.left = `calc(${percent}% - 5px)`;
-                marker.title = `[⏱️ ${comment.timeText}] บรีฟโดย ${comment.userName}`;
+                if (comment.isRange) {
+                    const startPercent = (comment.rangeStart / duration) * 100;
+                    const endPercent = (comment.rangeEnd / duration) * 100;
+                    const rangeSpan = document.createElement('div');
+                    rangeSpan.className = "absolute top-0 h-2 bg-indigo-500/40 rounded transition-all z-0";
+                    rangeSpan.style.left = `${startPercent}%`;
+                    rangeSpan.style.width = `${endPercent - startPercent}%`;
+                    timelineRangesContainer.appendChild(rangeSpan);
+                } else {
+                    const percent = (comment.seconds / duration) * 100;
+                    const marker = document.createElement('div');
+                    marker.className = "absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-amber-500 border border-slate-950 cursor-pointer shadow-lg hover:scale-125 transition z-25 hover:bg-white";
+                    marker.style.left = `calc(${percent}% - 5px)`;
+                    marker.title = `[⏱️ ${comment.timeText}] บรีฟโดย ${comment.userName}`;
 
-                marker.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    jumpToTimestamp(comment.seconds, comment.drawing);
-                    selectedCommentId = comment.id;
-                    renderComments();
-                });
+                    marker.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        jumpToTimestamp(comment.seconds, comment.drawing);
+                        selectedCommentId = comment.id;
+                        renderComments();
+                    });
 
-                timelineMarkersContainer.appendChild(marker);
+                    timelineMarkersContainer.appendChild(marker);
+                }
             });
         }
 
-        // ----------------------------------------------------
-        // PUBLISH & SHARE PIPELINE (FIRESTORE)
-        // ----------------------------------------------------
-
+        // Publish to firestore sharing pipeline
         async function handleShareProject() {
             if (comments.length === 0) {
-                showToast("ไม่มีข้อความบรีฟที่แก้ไขกรุณาพิมพ์คอมเมนต์อย่างน้อย 1 รายการก่อนแชร์", "danger");
+                showToast("กรุณาสร้างคอมเมนต์หรือวาดภาพสเก็ตช์แก้ไขอย่างน้อย 1 จุดเพื่อทำการแชร์ครับ", "danger");
                 return;
             }
 
             if (!isFirebaseAvailable) {
-                // Generate a mockup hash share if Firebase config isn't supplied
-                const mockupId = "mock-" + Math.random().toString(36).substring(2, 9);
+                const mockupId = "RS-" + Math.random().toString(36).substring(2, 9).toUpperCase();
                 const mockupUrl = window.location.origin + window.location.pathname + "?share=" + mockupId;
                 openShareModal(mockupUrl);
-                showToast("จำลองลิงก์แชร์สำเร็จแล้ว (Firestore ยังไม่ได้เชื่อมต่อ)", "info");
+                showToast("จำลองลิงก์สาธารณะเรียบร้อย (เซิร์ฟเวอร์หลักไม่ได้เชื่อมต่อ)", "info");
                 return;
             }
 
-            showToast("กำลังสร้าง Publish Link โปรดรอสักครู่...", "info");
+            showToast("กำลังอัปโหลดและสร้าง Publish Link สาธารณะ...", "info");
 
             try {
-                // Strict nesting path to prevent Firebase rules failure (RULE 1)
+                // Nested collections safely (RULE 1 layout format)
                 const sharesColRef = collection(db, 'artifacts', appId, 'public', 'data', 'shares');
                 const docRef = await addDoc(sharesColRef, {
                     comments: comments,
@@ -1257,10 +1833,10 @@
 
                 const publishUrl = window.location.origin + window.location.pathname + "?share=" + docRef.id;
                 openShareModal(publishUrl);
-                showToast("สร้าง Publish Link สาธารณะเสร็จสมบูรณ์!", "success");
+                showToast("แชร์โครงการของคุณขึ้นระบบคลาวด์เสร็จสิ้น!", "success");
             } catch (err) {
-                console.error("Firestore Save Fail", err);
-                showToast("ไม่สามารถแชร์ไปยังคลาวด์ได้เนื่องจากข้อผิดพลาดระบบ", "danger");
+                console.error("Cloud upload error", err);
+                showToast("อัปโหลดโครงงานขึ้นคลาวด์ล้มเหลว", "danger");
             }
         }
 
@@ -1287,7 +1863,7 @@
                 document.execCommand('copy');
                 showToast("คัดลอกลิงก์แชร์ไปยังคลิปบอร์ดแล้ว!", "success");
             } catch (err) {
-                showToast("คัดลอกลิงก์ล้มเหลว กรุณาไฮไลต์คัดลอกด้วยตนเอง", "danger");
+                showToast("คัดลอกลิงก์ล้มเหลว กรุณาคัดลอกจากช่องโดยตรง", "danger");
             }
         }
 
@@ -1295,10 +1871,7 @@
         copyShareBtn.addEventListener('click', copyShareLink);
         shareModalClose.addEventListener('click', closeShareModal);
 
-        // ----------------------------------------------------
-        // ADVANCED PROFESSIONAL EXPORTER PIPELINES
-        // ----------------------------------------------------
-
+        // ExportersTXT / JSON format pipelines
         function toggleExportMenu() {
             exportMenu.classList.toggle('hidden');
         }
@@ -1318,7 +1891,7 @@
 
             let fileContent = '';
             let fileType = 'text/plain';
-            let fileName = 'reviewspace-comments';
+            let fileName = 'reviewspace-ultra-briefs';
 
             if (format === 'txt') {
                 fileContent += `===============================================\n`;
@@ -1327,10 +1900,10 @@
                 
                 comments.forEach((c, index) => {
                     fileContent += `${index + 1}. [${c.timeText}] (${c.userName}) - สถานะ: ${c.status.toUpperCase()}\n`;
-                    fileContent += `   ข้อความ: ${c.text}\n`;
-                    if (c.drawing) fileContent += `   (แนบรูปสเก็ตช์บรีฟบนจอวิดีโอ)\n`;
+                    fileContent += `   รายละเอียดบรีฟ: ${c.text}\n`;
+                    if (c.drawing) fileContent += `   (มีการสเก็ตช์ภาพวาดระบุตำแหน่งจุดเกิดปัญหาบนจอ)\n`;
                     if (c.replies && c.replies.length > 0) {
-                        fileContent += `   การพูดคุย:\n`;
+                        fileContent += `   กระทู้โต้ตอบตอบกลับ:\n`;
                         c.replies.forEach(r => {
                             fileContent += `      - [${r.userName}]: ${r.text}\n`;
                         });
@@ -1352,14 +1925,11 @@
             link.click();
             URL.revokeObjectURL(link.href);
 
-            showToast(`ส่งออกคอมเมนต์รูปแบบ ${format.toUpperCase()} เรียบร้อยแล้ว`, "success");
+            showToast(`ส่งออกข้อมูลในรูปแบบ ${format.toUpperCase()} เรียบร้อย`, "success");
             toggleExportMenu();
         }
 
-        // ----------------------------------------------------
-        // KEYBOARD ACCESSIBILITY AND SHORTCUTS
-        // ----------------------------------------------------
-
+        // Keyboard Hotkeys accessibility integration
         window.addEventListener('keydown', (e) => {
             const activeTag = document.activeElement.tagName.toLowerCase();
             if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
@@ -1382,23 +1952,31 @@
                     e.preventDefault();
                     commentInput.focus();
                     break;
+                case 'i':
+                case 'I':
+                    e.preventDefault();
+                    // Activate range mode if off
+                    if (!isRangeMode) toggleRangeComment();
+                    rangeInInput.value = video.currentTime;
+                    updateRangeSelectionValues();
+                    showToast(`ล็อกจุดเริ่มต้นช่วงเวลา (In) ที่: ${formatTimeCode(video.currentTime)}`, "info");
+                    break;
+                case 'o':
+                case 'O':
+                    e.preventDefault();
+                    // Activate range mode if off
+                    if (!isRangeMode) toggleRangeComment();
+                    rangeOutInput.value = video.currentTime;
+                    updateRangeSelectionValues();
+                    showToast(`ล็อกจุดสิ้นสุดช่วงเวลา (Out) ที่: ${formatTimeCode(video.currentTime)}`, "info");
+                    break;
+                case 'r':
+                case 'R':
+                    e.preventDefault();
+                    toggleRangeComment();
+                    break;
             }
         });
-
-        // Map globally declared onclick scopes to local functions
-        window.toggleDrawingMode = toggleDrawingMode;
-        window.setBrushColor = setBrushColor;
-        window.clearCanvas = clearCanvas;
-        window.stepFrame = stepFrame;
-        window.toggleExportMenu = toggleExportMenu;
-        window.exportComments = exportComments;
-        window.triggerClearAllData = triggerClearAllData;
-        window.setFilterStatus = setFilterStatus;
-        window.renderComments = renderComments;
-        window.updateCommentStatus = updateCommentStatus;
-        window.triggerDeleteComment = triggerDeleteComment;
-        window.submitReply = submitReply;
-        window.submitReplyBtn = submitReplyBtn;
     </script>
 </body>
 </html>
