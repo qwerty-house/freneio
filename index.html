@@ -2071,6 +2071,11 @@
 
             // Hotkeys Window keydown handler
             window.addEventListener('keydown', handleGlobalHotkeys);
+
+            // Bind Share Modal controls INSIDE bindActionListeners to prevent ESM initialization race conditions!
+            shareProjectBtn.addEventListener('click', handleShareProject);
+            copyShareBtn.addEventListener('click', copyShareLink);
+            shareModalClose.addEventListener('click', closeShareModal);
         }
 
         // Global hotkeys handler (Fixed 'i' and 'o' range bracket locking)
