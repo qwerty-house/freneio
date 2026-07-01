@@ -201,6 +201,9 @@
                         เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
                     </video>
 
+                    <!-- YouTube IFrame Player mount (used instead of <video> when a project links a YouTube URL) -->
+                    <div id="youtube-player-container" class="absolute inset-0 w-full h-full pointer-events-none hidden z-0"></div>
+
                     <!-- Smart Video Re-link UI overlay (Hidden by default) -->
                     <div id="video-error-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/95 text-slate-400 p-6 z-30 transition-all duration-300 hidden">
                         <div class="bg-slate-900/80 p-4 rounded-full border border-slate-800 mb-3 text-2xl text-amber-500">
@@ -566,8 +569,8 @@
                     <input type="text" id="url-project-title" placeholder="เช่น ตัวอย่างโฆษณาฉบับแก้ไข..." class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 outline-none focus:border-indigo-500 rounded-lg px-2.5 py-2">
                 </div>
                 <div>
-                    <label class="block text-[10px] text-slate-400 font-bold uppercase mb-1">ที่อยู่วิดีโอ Direct URL (.mp4)</label>
-                    <input type="text" id="url-project-src" placeholder="https://..." class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 outline-none focus:border-indigo-500 rounded-lg px-2.5 py-2">
+                    <label class="block text-[10px] text-slate-400 font-bold uppercase mb-1">ลิงก์วิดีโอ (YouTube หรือ Direct URL .mp4)</label>
+                    <input type="text" id="url-project-src" placeholder="https://youtube.com/watch?v=... หรือ https://.../video.mp4" class="w-full bg-slate-950 border border-slate-800 text-xs text-slate-200 outline-none focus:border-indigo-500 rounded-lg px-2.5 py-2">
                 </div>
             </div>
             <div class="flex justify-end gap-2.5">
@@ -690,6 +693,195 @@
         // Dictation listener State
         let isListeningSpeech = false;
         let speechRecognition = null;
+
+        // ---- YouTube playback support (free alternative to file/cloud video hosting) ----
+        let ytPlayer = null;
+        let isYouTubeActive = false;
+        let ytPollTimer = null;
+        let ytApiLoadingPromise = null;
+
+        // Unified player adapter: transparently controls either the native <video> element
+        // or an embedded YouTube IFrame Player, so the rest of the app (comments, timeline,
+        // frame-stepping, drawing) doesn't need to know which backend is active.
+        const player = {
+            get currentTime() {
+                if (isYouTubeActive) {
+                    return (ytPlayer && ytPlayer.getCurrentTime) ? ytPlayer.getCurrentTime() : 0;
+                }
+                return video.currentTime;
+            },
+            set currentTime(t) {
+                const seconds = parseFloat(t) || 0;
+                if (isYouTubeActive) {
+                    if (ytPlayer && ytPlayer.seekTo) ytPlayer.seekTo(seconds, true);
+                } else {
+                    video.currentTime = seconds;
+                }
+            },
+            get duration() {
+                if (isYouTubeActive) {
+                    return (ytPlayer && ytPlayer.getDuration) ? ytPlayer.getDuration() : 0;
+                }
+                return video.duration;
+            },
+            get paused() {
+                if (isYouTubeActive) {
+                    if (!ytPlayer || !ytPlayer.getPlayerState) return true;
+                    return ytPlayer.getPlayerState() !== 1; // 1 = YT.PlayerState.PLAYING
+                }
+                return video.paused;
+            },
+            get playbackRate() {
+                if (isYouTubeActive) {
+                    return (ytPlayer && ytPlayer.getPlaybackRate) ? ytPlayer.getPlaybackRate() : 1;
+                }
+                return video.playbackRate;
+            },
+            set playbackRate(r) {
+                if (isYouTubeActive) {
+                    if (ytPlayer && ytPlayer.setPlaybackRate) ytPlayer.setPlaybackRate(r);
+                } else {
+                    video.playbackRate = r;
+                }
+            },
+            play() {
+                if (isYouTubeActive) {
+                    if (ytPlayer && ytPlayer.playVideo) ytPlayer.playVideo();
+                } else {
+                    video.play();
+                }
+            },
+            pause() {
+                if (isYouTubeActive) {
+                    if (ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
+                } else {
+                    video.pause();
+                }
+            }
+        };
+
+        // Shared handlers reused by both native <video> events and YouTube callbacks
+        function handlePlayerPlay() {
+            playBtnIcon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>`;
+            playBtnText.textContent = 'หยุด';
+            canvas.style.opacity = '0';
+            canvas.style.pointerEvents = 'none';
+            snapshotOverlay.classList.add('hidden');
+            showCenterIndicator('play');
+            if (isYouTubeActive) startYoutubePolling();
+        }
+
+        function handlePlayerPause() {
+            playBtnIcon.innerHTML = `<path d="M8 5v14l11-7z"></path>`;
+            playBtnText.textContent = 'เล่น';
+            if (isDrawingModeEnabled) {
+                canvas.style.opacity = '1';
+                canvas.style.pointerEvents = 'auto';
+            }
+            showCenterIndicator('pause');
+            if (isYouTubeActive) stopYoutubePolling();
+
+            const matchingComment = comments.find(c => Math.abs(c.seconds - player.currentTime) < 0.2 && c.drawing);
+            if (matchingComment) {
+                loadSnapshot(matchingComment.drawing);
+            }
+        }
+
+        function handlePlayerTimeUpdate() {
+            if (!player.paused) {
+                videoSeek.value = player.currentTime;
+                currentTimestamp.textContent = formatTimeCode(player.currentTime);
+            }
+            updateSeekbarProgress();
+        }
+
+        function handlePlayerLoadedMetadata() {
+            videoSeek.max = player.duration;
+            rangeInInput.max = player.duration;
+            rangeOutInput.max = player.duration;
+            durationTimestamp.textContent = formatTimeCode(player.duration);
+            renderTimelineMarkers();
+        }
+
+        // Extract an 11-char YouTube video ID from watch/share/embed/shorts URLs
+        function extractYouTubeId(url) {
+            if (!url) return null;
+            const match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
+            return match ? match[1] : null;
+        }
+
+        function loadYouTubeApi() {
+            if (window.YT && window.YT.Player) return Promise.resolve();
+            if (ytApiLoadingPromise) return ytApiLoadingPromise;
+            ytApiLoadingPromise = new Promise((resolve) => {
+                const previousCallback = window.onYouTubeIframeAPIReady;
+                window.onYouTubeIframeAPIReady = () => {
+                    if (typeof previousCallback === 'function') previousCallback();
+                    resolve();
+                };
+                const tag = document.createElement('script');
+                tag.src = 'https://www.youtube.com/iframe_api';
+                document.head.appendChild(tag);
+            });
+            return ytApiLoadingPromise;
+        }
+
+        function startYoutubePolling() {
+            stopYoutubePolling();
+            ytPollTimer = setInterval(handlePlayerTimeUpdate, 200);
+        }
+
+        function stopYoutubePolling() {
+            if (ytPollTimer) {
+                clearInterval(ytPollTimer);
+                ytPollTimer = null;
+            }
+        }
+
+        function destroyYouTubePlayer() {
+            stopYoutubePolling();
+            if (ytPlayer && ytPlayer.destroy) {
+                try { ytPlayer.destroy(); } catch (e) { /* ignore */ }
+            }
+            ytPlayer = null;
+            isYouTubeActive = false;
+            const container = document.getElementById('youtube-player-container');
+            if (container) {
+                container.innerHTML = '';
+                container.classList.add('hidden');
+            }
+            video.style.display = '';
+        }
+
+        async function loadYouTubeVideo(videoId) {
+            await loadYouTubeApi();
+            const container = document.getElementById('youtube-player-container');
+            container.innerHTML = '<div id="youtube-player-target" class="w-full h-full"></div>';
+            container.classList.remove('hidden');
+            video.style.display = 'none';
+            isYouTubeActive = true;
+
+            return new Promise((resolve) => {
+                ytPlayer = new YT.Player('youtube-player-target', {
+                    videoId: videoId,
+                    playerVars: { rel: 0, modestbranding: 1, playsinline: 1 },
+                    events: {
+                        onReady: () => {
+                            handlePlayerLoadedMetadata();
+                            resolve();
+                        },
+                        onStateChange: (e) => {
+                            if (e.data === YT.PlayerState.PLAYING) handlePlayerPlay();
+                            else if (e.data === YT.PlayerState.PAUSED) handlePlayerPause();
+                            else if (e.data === YT.PlayerState.ENDED) handlePlayerPause();
+                        },
+                        onError: () => {
+                            showToast("ไม่สามารถโหลดวิดีโอ YouTube นี้ได้ (อาจถูกลบหรือตั้งเป็นส่วนตัว)", "danger");
+                        }
+                    }
+                });
+            });
+        }
 
         // Authenticate anonymously before Firestore commands
         async function authenticateUser() {
@@ -1103,9 +1295,18 @@
             // Reset video error state UI
             hideVideoErrorOverlay();
 
-            // Direct set source to video element for maximum cross-platform reliability
-            video.src = project.videoUrl;
-            video.load();
+            const youtubeId = extractYouTubeId(project.videoUrl);
+            if (youtubeId) {
+                // YouTube-hosted video: embed via the IFrame Player instead of the native <video>
+                player.pause();
+                video.removeAttribute('src');
+                loadYouTubeVideo(youtubeId);
+            } else {
+                // Direct set source to video element for maximum cross-platform reliability
+                destroyYouTubePlayer();
+                video.src = project.videoUrl;
+                video.load();
+            }
 
             // Set navigation meta title
             currentFileDisplay.textContent = `โครงการ: ${project.title}`;
@@ -1125,7 +1326,7 @@
 
         // Return to main Project list dashboard
         function closeWorkspaceAndReturn() {
-            video.pause();
+            player.pause();
             currentProjectId = null;
             comments = [];
 
@@ -1248,10 +1449,10 @@
 
         // Play pause control engines
         function togglePlay() {
-            if (video.paused) {
-                video.play();
+            if (player.paused) {
+                player.play();
             } else {
-                video.pause();
+                player.pause();
             }
         }
 
@@ -1272,19 +1473,19 @@
         function updateSeekbarProgress() {
             if (isRangeMode) return;
 
-            const formatted = formatTimeCode(video.currentTime);
+            const formatted = formatTimeCode(player.currentTime);
             if (document.activeElement !== commentInput) {
                 stampIndicator.textContent = `📌 แก้จุดเวลา: ${formatted}`;
-                stampIndicator.dataset.seconds = video.currentTime;
+                stampIndicator.dataset.seconds = player.currentTime;
             }
         }
 
         function stepFrame(direction) {
-            video.pause();
+            player.pause();
             const frameTime = 1 / 24; 
-            video.currentTime += direction * frameTime;
-            videoSeek.value = video.currentTime;
-            currentTimestamp.textContent = formatTimeCode(video.currentTime);
+            player.currentTime += direction * frameTime;
+            videoSeek.value = player.currentTime;
+            currentTimestamp.textContent = formatTimeCode(player.currentTime);
         }
 
         // Advanced drawing markup systems with Undo and Shape creation
@@ -1464,7 +1665,7 @@
                 canvasToolbar.classList.remove('hidden');
                 btn.className = "absolute top-4 right-4 bg-indigo-650 hover:bg-indigo-600 text-white text-[11px] font-bold px-3 py-2 rounded-xl transition duration-150 flex items-center gap-2 border border-indigo-500/40 shadow-xl z-30";
                 text.textContent = 'โหมดวาด: เปิด';
-                if (video.paused) {
+                if (player.paused) {
                     canvas.style.opacity = '1';
                     canvas.style.pointerEvents = 'auto';
                 }
@@ -1488,7 +1689,7 @@
                 const rect = videoSeek.getBoundingClientRect();
                 const positionX = e.clientX - rect.left;
                 const percentage = Math.min(Math.max(0, positionX / rect.width), 1);
-                const secondsAtPosition = percentage * video.duration;
+                const secondsAtPosition = percentage * player.duration;
 
                 if (!isNaN(secondsAtPosition)) {
                     timelineHoverTooltip.style.opacity = '1';
@@ -1562,15 +1763,15 @@
                 toggleRangeBtn.className = "text-[10px] bg-indigo-650/20 text-indigo-400 font-semibold px-2 py-1 rounded-lg border border-indigo-500/30 transition";
                 
                 if (parseFloat(rangeInInput.value) === 0 && parseFloat(rangeOutInput.value) === 5) {
-                    rangeInInput.value = video.currentTime;
-                    rangeOutInput.value = Math.min(video.duration, video.currentTime + 3);
+                    rangeInInput.value = player.currentTime;
+                    rangeOutInput.value = Math.min(player.duration, player.currentTime + 3);
                 }
                 updateRangeSelectionValues();
             } else {
                 rangePickerContainer.classList.add('hidden');
                 toggleRangeBtn.textContent = "⏱️ บรีฟแบบเป็นช่วงช่วงเวลา: ปิดอยู่";
                 toggleRangeBtn.className = "text-[10px] bg-slate-900 hover:bg-slate-850 text-slate-400 font-semibold px-2 py-1 rounded-lg border border-slate-850 transition";
-                stampIndicator.textContent = `📌 แก้จุดเวลา: ${formatTimeCode(video.currentTime)}`;
+                stampIndicator.textContent = `📌 แก้จุดเวลา: ${formatTimeCode(player.currentTime)}`;
                 rangeHandlesContainer.classList.add('hidden');
             }
         }
@@ -1594,7 +1795,7 @@
 
         // Sync timeline range handle offsets
         function updateRangeHandlesVisuals() {
-            const duration = video.duration;
+            const duration = player.duration;
             if (!duration || !isRangeMode) {
                 rangeHandlesContainer.classList.add('hidden');
                 return;
@@ -1618,9 +1819,9 @@
             };
 
             const onDragMove = (clientX) => {
-                if (!activeDragHandle || !video.duration) return;
+                if (!activeDragHandle || !player.duration) return;
                 const percent = getPercentFromX(clientX);
-                const timeValue = percent * video.duration;
+                const timeValue = percent * player.duration;
 
                 if (activeDragHandle === 'in') {
                     const currentOut = parseFloat(rangeOutInput.value);
@@ -1629,7 +1830,7 @@
                     } else {
                         rangeInInput.value = currentOut;
                     }
-                    video.currentTime = parseFloat(rangeInInput.value);
+                    player.currentTime = parseFloat(rangeInInput.value);
                 } else if (activeDragHandle === 'out') {
                     const currentIn = parseFloat(rangeInInput.value);
                     if (timeValue > currentIn) {
@@ -1637,7 +1838,7 @@
                     } else {
                         rangeOutInput.value = currentIn;
                     }
-                    video.currentTime = parseFloat(rangeOutInput.value);
+                    player.currentTime = parseFloat(rangeOutInput.value);
                 }
 
                 updateRangeSelectionValues();
@@ -1688,13 +1889,13 @@
 
         function lockCurrentTime() {
             if (isRangeMode) {
-                rangeInInput.value = video.currentTime;
-                rangeOutInput.value = Math.min(video.duration, video.currentTime + 3);
+                rangeInInput.value = player.currentTime;
+                rangeOutInput.value = Math.min(player.duration, player.currentTime + 3);
                 updateRangeSelectionValues();
                 showToast("ล็อกขอบเขตช่วงเริ่มต้น ณ เวลาปัจจุบัน", "info");
             } else {
-                stampIndicator.textContent = `📌 แก้จุดเวลา: ${formatTimeCode(video.currentTime)}`;
-                stampIndicator.dataset.seconds = video.currentTime;
+                stampIndicator.textContent = `📌 แก้จุดเวลา: ${formatTimeCode(player.currentTime)}`;
+                stampIndicator.dataset.seconds = player.currentTime;
                 showToast("ล็อกตรายางแสตมป์เรียบร้อย", "info");
             }
         }
@@ -1711,7 +1912,7 @@
             const authorAvatar = userAvatarSelect.value || '👤';
             
             let isCommentRange = isRangeMode;
-            let finalSeconds = video.currentTime;
+            let finalSeconds = player.currentTime;
             let rangeStartSec = 0;
             let rangeEndSec = 0;
             let timeTextRepresentation = "";
@@ -1722,7 +1923,7 @@
                 finalSeconds = rangeStartSec;
                 timeTextRepresentation = `${formatTimeCode(rangeStartSec)} - ${formatTimeCode(rangeEndSec)}`;
             } else {
-                finalSeconds = parseFloat(stampIndicator.dataset.seconds) || video.currentTime;
+                finalSeconds = parseFloat(stampIndicator.dataset.seconds) || player.currentTime;
                 timeTextRepresentation = formatTimeCode(finalSeconds);
             }
 
@@ -1760,7 +1961,7 @@
             renderComments();
             renderTimelineMarkers();
             showToast("ส่งบรีฟงานเสร็จสิ้น เข้าสู่คลาวด์บอร์ด", "success");
-            video.play();
+            player.play();
         }
 
         function setFilterStatus(status) {
@@ -1938,59 +2139,26 @@
             // Playback standard actions
             playPauseBtn.addEventListener('click', togglePlay);
 
-            video.addEventListener('play', () => {
-                playBtnIcon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>`;
-                playBtnText.textContent = 'หยุด';
-                canvas.style.opacity = '0';
-                canvas.style.pointerEvents = 'none';
-                snapshotOverlay.classList.add('hidden');
-                showCenterIndicator('play');
-            });
-
-            video.addEventListener('pause', () => {
-                playBtnIcon.innerHTML = `<path d="M8 5v14l11-7z"></path>`;
-                playBtnText.textContent = 'เล่น';
-                if (isDrawingModeEnabled) {
-                    canvas.style.opacity = '1';
-                    canvas.style.pointerEvents = 'auto';
-                }
-                showCenterIndicator('pause');
-                
-                const matchingComment = comments.find(c => Math.abs(c.seconds - video.currentTime) < 0.2 && c.drawing);
-                if (matchingComment) {
-                    loadSnapshot(matchingComment.drawing);
-                }
-            });
+            video.addEventListener('play', handlePlayerPlay);
+            video.addEventListener('pause', handlePlayerPause);
 
             videoSeek.addEventListener('input', () => {
-                video.currentTime = videoSeek.value;
-                currentTimestamp.textContent = formatTimeCode(video.currentTime);
+                player.currentTime = videoSeek.value;
+                currentTimestamp.textContent = formatTimeCode(player.currentTime);
             });
 
-            video.addEventListener('timeupdate', () => {
-                if (!video.paused) {
-                    videoSeek.value = video.currentTime;
-                    currentTimestamp.textContent = formatTimeCode(video.currentTime);
-                }
-                updateSeekbarProgress();
-            });
+            video.addEventListener('timeupdate', handlePlayerTimeUpdate);
 
             // Metadata updates range scales correctly (Crucial fix for Hotkeys & Brackets!)
-            video.addEventListener('loadedmetadata', () => {
-                videoSeek.max = video.duration;
-                rangeInInput.max = video.duration;
-                rangeOutInput.max = video.duration;
-                durationTimestamp.textContent = formatTimeCode(video.duration);
-                renderTimelineMarkers();
-            });
+            video.addEventListener('loadedmetadata', handlePlayerLoadedMetadata);
 
             videoSpeed.addEventListener('change', () => {
-                video.playbackRate = parseFloat(videoSpeed.value);
+                player.playbackRate = parseFloat(videoSpeed.value);
                 showToast(`ปรับความเร็ววิดีโอเป็น ${videoSpeed.value}x`, "info");
             });
 
             commentInput.addEventListener('focus', () => {
-                video.pause();
+                player.pause();
                 if (!isRangeMode) {
                     lockCurrentTime();
                 }
@@ -2007,7 +2175,7 @@
 
             video.addEventListener('error', (e) => {
                 console.warn("Video load error caught securely", e);
-                if (currentProjectId) {
+                if (currentProjectId && !isYouTubeActive) {
                     showVideoErrorOverlay();
                 }
             });
@@ -2118,17 +2286,17 @@
                 case 'I':
                     e.preventDefault();
                     if (!isRangeMode) toggleRangeComment();
-                    rangeInInput.value = video.currentTime;
+                    rangeInInput.value = player.currentTime;
                     updateRangeSelectionValues();
-                    showToast(`ล็อกจุดเริ่มต้นช่วงเวลา (In) ที่: ${formatTimeCode(video.currentTime)}`, "info");
+                    showToast(`ล็อกจุดเริ่มต้นช่วงเวลา (In) ที่: ${formatTimeCode(player.currentTime)}`, "info");
                     break;
                 case 'o':
                 case 'O':
                     e.preventDefault();
                     if (!isRangeMode) toggleRangeComment();
-                    rangeOutInput.value = video.currentTime;
+                    rangeOutInput.value = player.currentTime;
                     updateRangeSelectionValues();
-                    showToast(`ล็อกจุดสิ้นสุดช่วงเวลา (Out) ที่: ${formatTimeCode(video.currentTime)}`, "info");
+                    showToast(`ล็อกจุดสิ้นสุดช่วงเวลา (Out) ที่: ${formatTimeCode(player.currentTime)}`, "info");
                     break;
                 case 'r':
                 case 'R':
@@ -2166,8 +2334,8 @@
         }
 
         function jumpToTimestamp(seconds, drawingBase64) {
-            video.pause();
-            video.currentTime = seconds;
+            player.pause();
+            player.currentTime = seconds;
             videoSeek.value = seconds;
             currentTimestamp.textContent = formatTimeCode(seconds);
             
@@ -2276,7 +2444,7 @@
         function renderTimelineMarkers() {
             timelineMarkersContainer.innerHTML = '';
             timelineRangesContainer.innerHTML = '';
-            const duration = video.duration;
+            const duration = player.duration;
             if (!duration) return;
 
             comments.forEach(comment => {
@@ -2322,13 +2490,20 @@
                 return;
             }
 
+            const currentProject = projects.find(p => p.id === currentProjectId);
+            const canonicalVideoUrl = (currentProject && currentProject.videoUrl) || video.src;
+            const isLocalFile = canonicalVideoUrl.startsWith('blob:');
+
             showToast("กำลังอัปโหลดและสร้าง Publish Link สาธารณะ...", "info");
+            if (isLocalFile) {
+                showToast("หมายเหตุ: วิดีโอนี้เป็นไฟล์ในเครื่อง ผู้ที่เปิดลิงก์จะเห็นคอมเมนต์ครบ แต่จะไม่เห็นตัววิดีโอ (แนะนำใช้ลิงก์ YouTube เพื่อให้เห็นวิดีโอด้วย)", "info");
+            }
 
             try {
                 const sharesColRef = collection(db, 'artifacts', appId, 'public', 'data', 'shares');
                 const docRef = await addDoc(sharesColRef, {
                     comments: comments,
-                    videoSrc: video.src,
+                    videoSrc: canonicalVideoUrl,
                     fileName: currentFileDisplay.textContent,
                     createdAt: Date.now()
                 });
