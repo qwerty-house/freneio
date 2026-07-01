@@ -620,8 +620,19 @@
 
         // Global safe fallback configurations
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'reviewspace-studio';
-        const rawFirebaseConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
-        
+
+        // Real Firebase project config for ReviewSpace Studio Ultra's public sharing pipeline
+        // (Firebase web config values are safe to expose client-side; access is enforced by Firestore security rules)
+        const defaultFirebaseConfig = {
+            apiKey: "AIzaSyBKm2L11gRMsf7-cVAzQPF41HVr8YXyKCg",
+            authDomain: "freneio-reviewspace.firebaseapp.com",
+            projectId: "freneio-reviewspace",
+            storageBucket: "freneio-reviewspace.firebasestorage.app",
+            messagingSenderId: "563135974906",
+            appId: "1:563135974906:web:01a0353681f0351b21e843"
+        };
+        const rawFirebaseConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : JSON.stringify(defaultFirebaseConfig);
+
         let db, auth;
         let isFirebaseAvailable = false;
 
