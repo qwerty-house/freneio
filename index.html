@@ -14,7 +14,7 @@
         .font-mono {
             font-family: 'JetBrains Mono', 'IBM Plex Sans Thai', monospace;
         }
-        /* Custom scrollbar for cinema dark UI */
+        /* Custom scrollbar for premium dark UI */
         ::-webkit-scrollbar {
             width: 5px;
             height: 5px;
@@ -185,7 +185,7 @@
     </section>
 
     <!-- VIEW 2: Studio Video Annotation Workspace -->
-    <main id="studio-view" class="hidden flex-1 overflow-hidden">
+    <main id="studio-view" class="hidden flex-1 flex flex-row overflow-hidden h-full w-full">
         
         <!-- Left Side: Interactive Player & Annotation Workspace -->
         <section class="no-print flex-1 p-5 flex flex-col justify-between bg-[#04060e] overflow-y-auto">
@@ -198,9 +198,23 @@
                     
                     <!-- Standard Video Element -->
                     <video id="main-video" class="w-full h-full pointer-events-none" preload="auto">
-                        <source id="video-source" src="" type="video/mp4">
                         เบราว์เซอร์ของคุณไม่รองรับวิดีโอ
                     </video>
+
+                    <!-- Smart Video Re-link UI overlay (Hidden by default) -->
+                    <div id="video-error-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/95 text-slate-400 p-6 z-30 transition-all duration-300 hidden">
+                        <div class="bg-slate-900/80 p-4 rounded-full border border-slate-800 mb-3 text-2xl text-amber-500">
+                            ⚠️
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-100 mb-1">ไม่สามารถโหลดไฟล์วิดีโอต้นฉบับได้</h3>
+                        <p class="text-[11px] text-slate-500 mb-4 max-w-xs text-center leading-normal">
+                            ไฟล์วิดีโอแบบ Local (Blob) จะหมดอายุความปลอดภัยเมื่อคุณรีเฟรชหน้าเว็บ คุณสามารถนำไฟล์วิดีโอเดิมมาเชื่อมโยงใหม่เพื่อตรวจรีวิวต่อได้ทันที โดยที่คอมเมนต์เดิมจะไม่สูญหายครับ
+                        </p>
+                        <input type="file" id="relink-video-upload" accept="video/*" class="hidden">
+                        <button onclick="document.getElementById('relink-video-upload').click()" class="bg-indigo-650 hover:bg-indigo-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition duration-150 border border-indigo-500/20 shadow-lg shadow-indigo-650/15">
+                            🔗 เลือกไฟล์วิดีโอเดิมเพื่อเชื่อมโยงใหม่
+                        </button>
+                    </div>
 
                     <!-- Interactive Drawing Canvas Overlay -->
                     <canvas id="annotation-canvas" class="absolute top-0 left-0 w-full h-full cursor-crosshair opacity-0 pointer-events-none transition-opacity duration-200 z-20"></canvas>
@@ -214,9 +228,7 @@
                     <!-- Center Play/Pause Large Feedback Icon -->
                     <div id="center-play-indicator" class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 pointer-events-none transition-all duration-300 z-10 scale-75">
                         <div class="bg-indigo-600/90 text-white p-5 rounded-full shadow-xl shadow-indigo-600/30">
-                            <svg id="play-indicator-icon" class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8 5v14l11-7z"></path>
-                            </svg>
+                            <svg id="play-indicator-icon" class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
                         </div>
                     </div>
 
@@ -391,7 +403,7 @@
             </div>
         </section>
 
-        <!-- Right Side: Collaboration Sidebar (Filter, Comments & Exporting) -->
+        <!-- Right Side: Collaboration Sidebar (Perfected Column on Right) -->
         <section class="no-print w-[420px] bg-[#070b14] border-l border-slate-900/80 flex flex-col justify-between overflow-hidden">
             
             <!-- Collaborative panel and export engines -->
@@ -462,12 +474,12 @@
                 </div>
             </div>
 
-            <!-- Comments Container list -->
+            <!-- Comments Container list (Internal scroll locked) -->
             <div id="comments-container" class="flex-1 p-4 overflow-y-auto space-y-3 bg-gradient-to-b from-[#060a12] to-[#04060b]">
                 <!-- Injected via javascript dynamic modules -->
             </div>
 
-            <!-- Rich Collaboration comment editor with range & AI dictation features -->
+            <!-- Rich Collaboration comment editor -->
             <div class="p-4 border-t border-slate-900 bg-slate-950/90 backdrop-blur-md">
                 
                 <div class="flex items-center justify-between gap-2 mb-2 flex-wrap">
@@ -565,7 +577,7 @@
         </div>
     </div>
 
-    <!-- Premium custom alert/confirm Modal (Rule compliant replacement of standard alert/confirm) -->
+    <!-- Premium custom alert/confirm Modal -->
     <div id="custom-confirm-modal" class="no-print fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm">
         <div class="bg-[#0b0f19] border border-slate-850 p-6 rounded-2xl max-w-sm w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-4">
@@ -585,7 +597,7 @@
         <div class="bg-[#0b0f19] border border-slate-850 p-6 rounded-2xl max-w-md w-full mx-4 shadow-2xl transform scale-95 transition-transform duration-300">
             <div class="flex items-center gap-3 mb-3">
                 <span class="text-2xl">🌐</span>
-                <h3 class="text-sm font-bold text-slate-100">แชร์โครงการสรุปเสร็จสิ้น (Publish Link)</h3>
+                <h3 class="text-sm font-bold text-slate-100">แชร์โครงการสรุปเสสิ้น (Publish Link)</h3>
             </div>
             <p class="text-xs text-slate-400 mb-4 leading-relaxed">ลิงก์สาธารณะนี้เปิดโอกาสให้ผู้อื่นเข้ามาตรวจสอบสเตตัส หรือปรับความเห็นย้อนกลับเพื่อทำงานแบบไร้รอยต่อ</p>
             
@@ -624,69 +636,28 @@
                 console.log("Firebase/Firestore successfully loaded for Publish pipelines");
             }
         } catch(e) {
-            console.warn("Firebase config elements are not active in current session. Standard mockup link returns applied.");
+            console.warn("Firebase config elements are not active in current session.");
         }
 
-        // DOM Handles - View Switcher
-        const dashboardView = document.getElementById('dashboard-view');
-        const studioView = document.getElementById('studio-view');
-        const backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
-
-        // DOM Handles - Studio Elements
-        const video = document.getElementById('main-video');
-        const videoSource = document.getElementById('video-source');
-        const currentFileDisplay = document.getElementById('current-file-name');
-        
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        const playBtnIcon = document.getElementById('play-btn-icon');
-        const playBtnText = document.getElementById('play-btn-text');
-        
-        const videoSeek = document.getElementById('video-seek');
-        const currentTimestamp = document.getElementById('current-timestamp');
-        const durationTimestamp = document.getElementById('duration-timestamp');
-        const timelineMarkersContainer = document.getElementById('timeline-markers-container');
-        const timelineRangesContainer = document.getElementById('timeline-ranges-container');
-        const timelineHoverTooltip = document.getElementById('timeline-hover-tooltip');
-        const videoSpeed = document.getElementById('video-speed');
-        
-        const canvas = document.getElementById('annotation-canvas');
-        const ctx = canvas.getContext('2d');
-        const canvasToolbar = document.getElementById('canvas-toolbar');
-        const brushSizeInput = document.getElementById('brush-size');
-        const stampIndicator = document.getElementById('stamp-indicator');
-        const canvasAttachedTag = document.getElementById('canvas-attached-tag');
-        const discardDrawingBtn = document.getElementById('discard-drawing-btn');
-        const snapshotOverlay = document.getElementById('snapshot-overlay');
-        const snapshotImg = document.getElementById('snapshot-img');
-        
-        const commentInput = document.getElementById('comment-input');
-        const addCommentBtn = document.getElementById('add-comment-btn');
-        const commentsContainer = document.getElementById('comments-container');
-        const commentCountBadge = document.getElementById('comment-count-badge');
-        const searchInput = document.getElementById('search-comments');
-        const sortSelect = document.getElementById('sort-select');
-        const reviewerNameInput = document.getElementById('reviewer-name-input');
-        const userAvatarSelect = document.getElementById('user-avatar-select');
-        const exportMenu = document.getElementById('export-menu');
-        const centerPlayIndicator = document.getElementById('center-play-indicator');
-        const playIndicatorIcon = document.getElementById('play-indicator-icon');
-
-        const shareProjectBtn = document.getElementById('share-project-btn');
-        const shareLinkModal = document.getElementById('share-link-modal');
-        const shareLinkInput = document.getElementById('share-link-input');
-        const copyShareBtn = document.getElementById('copy-share-btn');
-        const shareModalClose = document.getElementById('share-modal-close');
-
-        // Range commentaries elements
-        const rangePickerContainer = document.getElementById('range-picker-container');
-        const rangeInInput = document.getElementById('range-in');
-        const rangeOutInput = document.getElementById('range-out');
-        const rangePreviewText = document.getElementById('range-preview-text');
-        const toggleRangeBtn = document.getElementById('toggle-range-btn');
+        // Global variables for DOM elements (declared globally to prevent ESM race condition errors)
+        let dashboardView, studioView, backToDashboardBtn;
+        let video, currentFileDisplay;
+        let playPauseBtn, playBtnIcon, playBtnText;
+        let videoSeek, currentTimestamp, durationTimestamp;
+        let timelineMarkersContainer, timelineRangesContainer, timelineHoverTooltip, videoSpeed;
+        let canvas, ctx;
+        let canvasToolbar, brushSizeInput, stampIndicator, canvasAttachedTag, discardDrawingBtn, snapshotOverlay, snapshotImg;
+        let commentInput, addCommentBtn, commentsContainer, commentCountBadge, searchInput, sortSelect;
+        let reviewerNameInput, userAvatarSelect, exportMenu, centerPlayIndicator, playIndicatorIcon;
+        let shareProjectBtn, shareLinkModal, shareLinkInput, copyShareBtn, shareModalClose;
+        let rangePickerContainer, rangeInInput, rangeOutInput, rangePreviewText, toggleRangeBtn;
+        let rangeHandlesContainer, rangeDragHandleIn, rangeDragHandleOut, rangeDragHighlight;
+        let activeDragHandle = null;
 
         // Advanced State Stores - Projects & Workspace Management
         let projects = [];
         let currentProjectId = null;
+        let comments = [];
 
         let canvasDrawingActive = false;
         let isDrawing = false;
@@ -709,14 +680,7 @@
         let isListeningSpeech = false;
         let speechRecognition = null;
 
-        // Draggable range handles bindings
-        const rangeHandlesContainer = document.getElementById('range-handles-container');
-        const rangeDragHandleIn = document.getElementById('range-drag-handle-in');
-        const rangeDragHandleOut = document.getElementById('range-drag-handle-out');
-        const rangeDragHighlight = document.getElementById('range-drag-highlight');
-        let activeDragHandle = null;
-
-        // Authenticate anonymously before Firestore commands (RULE 3 compliance)
+        // Authenticate anonymously before Firestore commands
         async function authenticateUser() {
             if (!isFirebaseAvailable) return null;
             try {
@@ -732,8 +696,67 @@
             }
         }
 
-        // Initialize App & State Setup
-        window.addEventListener('DOMContentLoaded', async () => {
+        // Initialize App & State Setup with robust ReadyState check to fix the race condition!
+        async function initApp() {
+            // Assign DOM elements safely
+            dashboardView = document.getElementById('dashboard-view');
+            studioView = document.getElementById('studio-view');
+            backToDashboardBtn = document.getElementById('back-to-dashboard-btn');
+            
+            video = document.getElementById('main-video');
+            currentFileDisplay = document.getElementById('current-file-name');
+            
+            playPauseBtn = document.getElementById('play-pause-btn');
+            playBtnIcon = document.getElementById('play-btn-icon');
+            playBtnText = document.getElementById('play-btn-text');
+            
+            videoSeek = document.getElementById('video-seek');
+            currentTimestamp = document.getElementById('current-timestamp');
+            durationTimestamp = document.getElementById('duration-timestamp');
+            timelineMarkersContainer = document.getElementById('timeline-markers-container');
+            timelineRangesContainer = document.getElementById('timeline-ranges-container');
+            timelineHoverTooltip = document.getElementById('timeline-hover-tooltip');
+            videoSpeed = document.getElementById('video-speed');
+            
+            canvas = document.getElementById('annotation-canvas');
+            ctx = canvas.getContext('2d');
+            canvasToolbar = document.getElementById('canvas-toolbar');
+            brushSizeInput = document.getElementById('brush-size');
+            stampIndicator = document.getElementById('stamp-indicator');
+            canvasAttachedTag = document.getElementById('canvas-attached-tag');
+            discardDrawingBtn = document.getElementById('discard-drawing-btn');
+            snapshotOverlay = document.getElementById('snapshot-overlay');
+            snapshotImg = document.getElementById('snapshot-img');
+            
+            commentInput = document.getElementById('comment-input');
+            addCommentBtn = document.getElementById('add-comment-btn');
+            commentsContainer = document.getElementById('comments-container');
+            commentCountBadge = document.getElementById('comment-count-badge');
+            searchInput = document.getElementById('search-comments');
+            sortSelect = document.getElementById('sort-select');
+            reviewerNameInput = document.getElementById('reviewer-name-input');
+            userAvatarSelect = document.getElementById('user-avatar-select');
+            exportMenu = document.getElementById('export-menu');
+            centerPlayIndicator = document.getElementById('center-play-indicator');
+            playIndicatorIcon = document.getElementById('play-indicator-icon');
+
+            shareProjectBtn = document.getElementById('share-project-btn');
+            shareLinkModal = document.getElementById('share-link-modal');
+            shareLinkInput = document.getElementById('share-link-input');
+            copyShareBtn = document.getElementById('copy-share-btn');
+            shareModalClose = document.getElementById('share-modal-close');
+
+            rangePickerContainer = document.getElementById('range-picker-container');
+            rangeInInput = document.getElementById('range-in');
+            rangeOutInput = document.getElementById('range-out');
+            rangePreviewText = document.getElementById('range-preview-text');
+            toggleRangeBtn = document.getElementById('toggle-range-btn');
+
+            rangeHandlesContainer = document.getElementById('range-handles-container');
+            rangeDragHandleIn = document.getElementById('range-drag-handle-in');
+            rangeDragHandleOut = document.getElementById('range-drag-handle-out');
+            rangeDragHighlight = document.getElementById('range-drag-highlight');
+
             initLocalStorage();
             setupCanvasResizer();
             setupCanvasDrawing();
@@ -751,14 +774,12 @@
             if (shareId && isFirebaseAvailable && user) {
                 showToast("กำลังดึงโครงงานร่วมแบ่งปันจากคลาวด์...", "info");
                 try {
-                    // Fetch document from secure collection layout (RULE 1 nested format)
                     const shareDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'shares', shareId);
                     const shareSnapshot = await getDoc(shareDocRef);
                     
                     if (shareSnapshot.exists()) {
                         const sharedData = shareSnapshot.data();
                         
-                        // Create a temporary project for the shared content
                         const sharedProj = {
                             id: 'shared-' + Date.now(),
                             title: sharedData.fileName || 'วิดีโอที่มีผู้แบ่งปันสิทธิ์การตรวจรีวิว',
@@ -773,7 +794,7 @@
                         openProject(sharedProj.id);
                         showToast("โหลดวิดีโอและรายการรีวิวที่แชร์เรียบร้อยแล้ว!", "success");
                     } else {
-                        showToast("ไม่พบโครงการแบ่งปันนี้ในระบบ คืนค่ากลับแดชบอร์ดโครงการปกติ", "danger");
+                        showToast("ไม่พบโครงการแบ่งปันนี้ในระบบ", "danger");
                     }
                 } catch (e) {
                     console.error("Fetch share fail", e);
@@ -781,9 +802,15 @@
                 }
             }
 
-            // Initiate web speech integration
             setupSpeechRecognition();
-        });
+        }
+
+        // Execute immediately if DOM already loaded (Crucial fix for ESM load sequence)
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
 
         // Custom Dialog overlay (Strict adherence to NO alert/confirm rule)
         let activeConfirmCallback = null;
@@ -880,7 +907,6 @@
                 }
             }
 
-            // Populate mock project data if the database is clean
             if (projects.length === 0) {
                 projects = [
                     {
@@ -888,7 +914,7 @@
                         title: 'วิดีโอโปรเจกต์กองไฟ (Cinematic Fire Teaser)',
                         videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
                         fileName: 'ForBiggerBlazes.mp4',
-                        createdAt: Date.now() - 86400000, // 1 day ago
+                        createdAt: Date.now() - 86400000, 
                         comments: [
                             {
                                 id: 1,
@@ -925,7 +951,7 @@
                         title: 'โฆษณาระดับพรีเมียม (For Bigger Escapes Commercial)',
                         videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
                         fileName: 'ForBiggerEscapes.mp4',
-                        createdAt: Date.now() - 172800000, // 2 days ago
+                        createdAt: Date.now() - 172800000, 
                         comments: [
                             {
                                 id: 3,
@@ -953,7 +979,6 @@
 
             projectsGrid.innerHTML = '';
 
-            // Calculate overall workspace stats
             let totalProjects = projects.length;
             let pendingCount = 0;
             let resolvedCount = 0;
@@ -971,7 +996,6 @@
             document.getElementById('stat-pending-comments').textContent = pendingCount;
             document.getElementById('stat-resolved-comments').textContent = resolvedCount;
 
-            // Search Filter
             let filteredProjects = [...projects];
             const searchQuery = document.getElementById('search-projects-input').value.toLowerCase().trim();
             if (searchQuery) {
@@ -981,14 +1005,12 @@
                 );
             }
 
-            // Sorter
             const sortVal = document.getElementById('sort-projects-select').value;
             if (sortVal === 'name') {
                 filteredProjects.sort((a, b) => a.title.localeCompare(b.title, 'th'));
             } else if (sortVal === 'comments') {
                 filteredProjects.sort((a, b) => (b.comments?.length || 0) - (a.comments?.length || 0));
             } else {
-                // Default: recent
                 filteredProjects.sort((a, b) => b.createdAt - a.createdAt);
             }
 
@@ -1016,18 +1038,15 @@
                 
                 projectCard.innerHTML = `
                     <div class="cursor-pointer" data-project-action-id="${proj.id}">
-                        <!-- Top header card -->
                         <div class="flex justify-between items-start gap-2 mb-3">
                             <span class="text-xs uppercase tracking-widest bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-0.5 rounded-full font-bold">VIDEO</span>
                             <span class="text-[10px] text-slate-500 font-mono font-medium">${formattedDate}</span>
                         </div>
                         
-                        <!-- Title -->
                         <h3 class="text-sm font-bold text-slate-200 group-hover:text-indigo-400 transition mb-1 leading-snug line-clamp-2">${proj.title}</h3>
                         <p class="text-[10px] text-slate-500 font-mono select-none break-all line-clamp-1 mb-4">📂 ${proj.fileName}</p>
                     </div>
 
-                    <!-- Footer Details -->
                     <div class="flex justify-between items-center border-t border-slate-900/60 pt-4 mt-2">
                         <div class="flex items-center gap-1.5 text-xs text-slate-400">
                             <span>💬 บรีฟทั้งหมด:</span>
@@ -1035,12 +1054,10 @@
                         </div>
                         
                         <div class="flex gap-2">
-                            <!-- Open Project Button -->
                             <button class="bg-indigo-650 hover:bg-indigo-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1" data-project-action-id="${proj.id}">
                                 รีวิวบรีฟ ➔
                             </button>
                             
-                            <!-- Delete Project button -->
                             <button class="bg-red-500/5 hover:bg-red-500/15 text-red-400 border border-red-500/10 p-1.5 rounded-xl transition" data-project-delete-id="${proj.id}" title="ลบโครงการนี้">
                                 🗑️
                             </button>
@@ -1048,7 +1065,7 @@
                     </div>
                 `;
 
-                // Bind custom workspace load triggers
+                // Bind custom workspace load triggers securely
                 projectCard.querySelectorAll('[data-project-action-id]').forEach(trigger => {
                     trigger.addEventListener('click', () => {
                         openProject(proj.id);
@@ -1072,8 +1089,11 @@
             currentProjectId = projId;
             comments = project.comments || [];
 
-            // Set source and load
-            videoSource.src = project.videoUrl;
+            // Reset video error state UI
+            hideVideoErrorOverlay();
+
+            // Direct set source to video element for maximum cross-platform reliability
+            video.src = project.videoUrl;
             video.load();
 
             // Set navigation meta title
@@ -1155,7 +1175,6 @@
                 return;
             }
 
-            // Simple URL checking
             if (!src.startsWith('http://') && !src.startsWith('https://')) {
                 showToast("Direct URL วิดีโอจะต้องขึ้นต้นด้วย http:// หรือ https://", "danger");
                 return;
@@ -1202,9 +1221,18 @@
                 renderDashboard();
                 showToast(`โหลดวิดีโอโครงการ "${file.name}" เรียบร้อย`, "success");
                 
-                // Open workspace automatically
                 openProject(newProj.id);
             }
+        }
+
+        function showVideoErrorOverlay() {
+            const overlay = document.getElementById('video-error-overlay');
+            if (overlay) overlay.classList.remove('hidden');
+        }
+
+        function hideVideoErrorOverlay() {
+            const overlay = document.getElementById('video-error-overlay');
+            if (overlay) overlay.classList.add('hidden');
         }
 
         // Play pause control engines
@@ -1215,33 +1243,6 @@
                 video.pause();
             }
         }
-
-        playPauseBtn.addEventListener('click', togglePlay);
-
-        video.addEventListener('play', () => {
-            playBtnIcon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>`;
-            playBtnText.textContent = 'หยุด';
-            canvas.style.opacity = '0';
-            canvas.style.pointerEvents = 'none';
-            snapshotOverlay.classList.add('hidden');
-            showCenterIndicator('play');
-        });
-
-        video.addEventListener('pause', () => {
-            playBtnIcon.innerHTML = `<path d="M8 5v14l11-7z"></path>`;
-            playBtnText.textContent = 'เล่น';
-            if (isDrawingModeEnabled) {
-                canvas.style.opacity = '1';
-                canvas.style.pointerEvents = 'auto';
-            }
-            showCenterIndicator('pause');
-            
-            // Auto match annotation on pause timestamp
-            const matchingComment = comments.find(c => Math.abs(c.seconds - video.currentTime) < 0.2 && c.drawing);
-            if (matchingComment) {
-                loadSnapshot(matchingComment.drawing);
-            }
-        });
 
         function showCenterIndicator(state) {
             if (state === 'play') {
@@ -1257,21 +1258,7 @@
             }, 500);
         }
 
-        videoSeek.addEventListener('input', () => {
-            video.currentTime = videoSeek.value;
-            currentTimestamp.textContent = formatTimeCode(video.currentTime);
-        });
-
-        video.addEventListener('timeupdate', () => {
-            if (!video.paused) {
-                videoSeek.value = video.currentTime;
-                currentTimestamp.textContent = formatTimeCode(video.currentTime);
-            }
-            updateSeekbarProgress();
-        });
-
         function updateSeekbarProgress() {
-            // หากเปิดใช้งานโหมดระบุช่วงเวลาอยู่ จะไม่เขียนข้อความแสดงแสตมป์เวลาทับค่า Brackets ที่ผู้ใช้เซ็ตไว้
             if (isRangeMode) return;
 
             const formatted = formatTimeCode(video.currentTime);
@@ -1280,11 +1267,6 @@
                 stampIndicator.dataset.seconds = video.currentTime;
             }
         }
-
-        videoSpeed.addEventListener('change', () => {
-            video.playbackRate = parseFloat(videoSpeed.value);
-            showToast(`ปรับความเร็ววิดีโอเป็น ${videoSpeed.value}x`, "info");
-        });
 
         function stepFrame(direction) {
             video.pause();
@@ -1301,7 +1283,6 @@
                     const nextWidth = Math.floor(entry.contentRect.width);
                     const nextHeight = Math.floor(entry.contentRect.height);
                     
-                    // CRITICAL FIX: Only resize coordinate system if CSS dimensions actually shifted.
                     if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
                         canvas.width = nextWidth;
                         canvas.height = nextHeight;
@@ -1315,7 +1296,6 @@
         function setDrawingTool(toolName) {
             activeDrawingTool = toolName;
             
-            // Reset active styles of toolbar elements
             const tools = ['brush', 'arrow', 'rect', 'circle'];
             tools.forEach(t => {
                 const el = document.getElementById(`tool-${t}`);
@@ -1345,7 +1325,6 @@
                 startX = pos.x;
                 startY = pos.y;
 
-                // Push current canvas state to history before drawing new elements (for Undo)
                 savedCanvasDataUrl = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 undoStack.push(savedCanvasDataUrl);
 
@@ -1370,7 +1349,6 @@
                     ctx.lineTo(currentX, currentY);
                     ctx.stroke();
                 } else {
-                    // Restore previous canvas state before drawing preview coordinates to support smooth dragging
                     ctx.putImageData(savedCanvasDataUrl, 0, 0);
                     ctx.strokeStyle = brushColor;
                     ctx.lineWidth = brushSizeInput.value;
@@ -1403,7 +1381,6 @@
                 }
             };
 
-            // Canvas drawing handles for desktop & touch
             canvas.addEventListener('mousedown', startDraw);
             canvas.addEventListener('mousemove', draw);
             canvas.addEventListener('mouseup', stopDraw);
@@ -1414,9 +1391,8 @@
             canvas.addEventListener('touchend', stopDraw);
         }
 
-        // Draw arrow assistant function
         function drawArrow(context, fromX, fromY, toX, toY) {
-            const headLength = 12; // Length of head in pixels
+            const headLength = 12; 
             const dx = toX - fromX;
             const dy = toY - fromY;
             const angle = Math.atan2(dy, dx);
@@ -1426,7 +1402,6 @@
             context.lineTo(toX, toY);
             context.stroke();
 
-            // Arrow head
             context.beginPath();
             context.moveTo(toX, toY);
             context.lineTo(toX - headLength * Math.cos(angle - Math.PI / 6), toY - headLength * Math.sin(angle - Math.PI / 6));
@@ -1523,7 +1498,7 @@
                 speechRecognition = new SpeechRecognition();
                 speechRecognition.continuous = false;
                 speechRecognition.interimResults = false;
-                speechRecognition.lang = 'th-TH'; // Thai language default
+                speechRecognition.lang = 'th-TH'; 
 
                 speechRecognition.onstart = () => {
                     isListeningSpeech = true;
@@ -1549,7 +1524,6 @@
                 };
             } else {
                 document.getElementById('ai-mic-btn').classList.add('hidden');
-                console.warn("Speech recognition interface not supported on current browser version.");
             }
         }
 
@@ -1574,9 +1548,8 @@
             if (isRangeMode) {
                 rangePickerContainer.classList.remove('hidden');
                 toggleRangeBtn.textContent = "⏱️ บรีฟแบบเป็นช่วงเวลา: เปิด";
-                toggleRangeBtn.className = "text-[10px] bg-indigo-600/20 text-indigo-400 font-semibold px-2 py-1 rounded-lg border border-indigo-500/30 transition";
+                toggleRangeBtn.className = "text-[10px] bg-indigo-650/20 text-indigo-400 font-semibold px-2 py-1 rounded-lg border border-indigo-500/30 transition";
                 
-                // Keep values inside video boundaries
                 if (parseFloat(rangeInInput.value) === 0 && parseFloat(rangeOutInput.value) === 5) {
                     rangeInInput.value = video.currentTime;
                     rangeOutInput.value = Math.min(video.duration, video.currentTime + 3);
@@ -1585,7 +1558,7 @@
             } else {
                 rangePickerContainer.classList.add('hidden');
                 toggleRangeBtn.textContent = "⏱️ บรีฟแบบเป็นช่วงช่วงเวลา: ปิดอยู่";
-                toggleRangeBtn.className = "text-[10px] bg-slate-900 hover:bg-slate-800 text-slate-400 font-semibold px-2 py-1 rounded-lg border border-slate-850 transition";
+                toggleRangeBtn.className = "text-[10px] bg-slate-900 hover:bg-slate-850 text-slate-400 font-semibold px-2 py-1 rounded-lg border border-slate-850 transition";
                 stampIndicator.textContent = `📌 แก้จุดเวลา: ${formatTimeCode(video.currentTime)}`;
                 rangeHandlesContainer.classList.add('hidden');
             }
@@ -1603,7 +1576,6 @@
             rangePreviewText.textContent = `${inVal.toFixed(2)}s - ${outVal.toFixed(2)}s`;
             stampIndicator.textContent = `📌 ช่วงเวลาบรีฟ: ${formatTimeCode(inVal)} ถึง ${formatTimeCode(outVal)}`;
             
-            // Sync draggable overlays on the seekbar
             if (isRangeMode) {
                 updateRangeHandlesVisuals();
             }
@@ -1660,7 +1632,6 @@
                 updateRangeSelectionValues();
             };
 
-            // Mouse Event Listeners
             rangeDragHandleIn.addEventListener('mousedown', (e) => {
                 activeDragHandle = 'in';
                 e.preventDefault();
@@ -1683,7 +1654,6 @@
                 activeDragHandle = null;
             });
 
-            // Mobile Touch Event Support
             rangeDragHandleIn.addEventListener('touchstart', (e) => {
                 activeDragHandle = 'in';
                 e.stopPropagation();
@@ -1717,15 +1687,6 @@
                 showToast("ล็อกตรายางแสตมป์เรียบร้อย", "info");
             }
         }
-
-        // Auto pause on edit target focusing
-        commentInput.addEventListener('focus', () => {
-            video.pause();
-            // ป้องกันการเขียนพิกัดทับในกรณีที่ผู้ใช้กำลังระบุช่วงเวลา (Range Mode)
-            if (!isRangeMode) {
-                lockCurrentTime();
-            }
-        });
 
         // Submit comment workflow
         function submitComment() {
@@ -1776,7 +1737,6 @@
 
             comments.push(newComment);
             
-            // Sync with parent project
             const project = projects.find(p => p.id === currentProjectId);
             if (project) {
                 project.comments = comments;
@@ -1792,15 +1752,6 @@
             video.play();
         }
 
-        addCommentBtn.addEventListener('click', submitComment);
-
-        commentInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                submitComment();
-            }
-        });
-
         function setFilterStatus(status) {
             filterStatus = status;
             const filterBtns = ['all', 'open', 'progress', 'resolved'];
@@ -1809,7 +1760,7 @@
                 if (btn === status) {
                     el.className = "text-[10px] px-2 py-1 rounded bg-indigo-650 text-white font-semibold transition";
                 } else {
-                    el.className = "text-[10px] px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 font-medium transition";
+                    el.className = "text-[10px] px-2 py-1 rounded bg-slate-900 hover:bg-slate-850 text-slate-400 font-medium transition";
                 }
             });
             renderComments();
@@ -1922,7 +1873,7 @@
                     <div class="mt-3 pt-2.5 border-t border-slate-900 flex gap-2 interactive-control">
                         <input type="text" placeholder="พิมพ์คุยตอบกลับด่วน..." 
                             class="reply-input-text flex-1 bg-slate-950 border border-slate-850 rounded-lg px-2.5 py-1 text-[11px] text-slate-300 focus:outline-none focus:border-indigo-600 focus:ring-0" data-id="${comment.id}">
-                        <button class="reply-submit-btn bg-slate-900 hover:bg-indigo-600 hover:text-white border border-slate-800 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-400 transition" data-id="${comment.id}">
+                        <button class="reply-submit-btn bg-slate-900 hover:bg-indigo-650 hover:text-white border border-slate-800 px-2.5 py-1 rounded-lg text-[10px] font-bold text-slate-400 transition" data-id="${comment.id}">
                             ส่ง
                         </button>
                     </div>
@@ -1930,7 +1881,6 @@
                 commentsContainer.appendChild(commentEl);
             });
 
-            // Bind Event Listeners dynamically to newly rendered comment nodes
             commentsContainer.querySelectorAll('.comment-status-select').forEach(sel => {
                 sel.addEventListener('change', (e) => {
                     updateCommentStatus(parseInt(sel.getAttribute('data-id')), e.target.value);
@@ -1961,7 +1911,7 @@
             renderPrintReport();
         }
 
-        // Bind dynamic JS listeners securely
+        // Bind dynamic JS listeners securely (All listeners declared safely within ESM module stack)
         function bindActionListeners() {
             // Dashboard Events
             document.getElementById('dashboard-video-upload').addEventListener('change', handleDashboardVideoUpload);
@@ -1971,8 +1921,85 @@
             document.getElementById('search-projects-input').addEventListener('input', renderDashboard);
             document.getElementById('sort-projects-select').addEventListener('change', renderDashboard);
 
-            // Workspace Back Toggle
+            // Workspace Back Toggle (Fixed Back button to Dashboard)
             backToDashboardBtn.addEventListener('click', closeWorkspaceAndReturn);
+
+            // Playback standard actions
+            playPauseBtn.addEventListener('click', togglePlay);
+
+            video.addEventListener('play', () => {
+                playBtnIcon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>`;
+                playBtnText.textContent = 'หยุด';
+                canvas.style.opacity = '0';
+                canvas.style.pointerEvents = 'none';
+                snapshotOverlay.classList.add('hidden');
+                showCenterIndicator('play');
+            });
+
+            video.addEventListener('pause', () => {
+                playBtnIcon.innerHTML = `<path d="M8 5v14l11-7z"></path>`;
+                playBtnText.textContent = 'เล่น';
+                if (isDrawingModeEnabled) {
+                    canvas.style.opacity = '1';
+                    canvas.style.pointerEvents = 'auto';
+                }
+                showCenterIndicator('pause');
+                
+                const matchingComment = comments.find(c => Math.abs(c.seconds - video.currentTime) < 0.2 && c.drawing);
+                if (matchingComment) {
+                    loadSnapshot(matchingComment.drawing);
+                }
+            });
+
+            videoSeek.addEventListener('input', () => {
+                video.currentTime = videoSeek.value;
+                currentTimestamp.textContent = formatTimeCode(video.currentTime);
+            });
+
+            video.addEventListener('timeupdate', () => {
+                if (!video.paused) {
+                    videoSeek.value = video.currentTime;
+                    currentTimestamp.textContent = formatTimeCode(video.currentTime);
+                }
+                updateSeekbarProgress();
+            });
+
+            // Metadata updates range scales correctly (Crucial fix for Hotkeys & Brackets!)
+            video.addEventListener('loadedmetadata', () => {
+                videoSeek.max = video.duration;
+                rangeInInput.max = video.duration;
+                rangeOutInput.max = video.duration;
+                durationTimestamp.textContent = formatTimeCode(video.duration);
+                renderTimelineMarkers();
+            });
+
+            videoSpeed.addEventListener('change', () => {
+                video.playbackRate = parseFloat(videoSpeed.value);
+                showToast(`ปรับความเร็ววิดีโอเป็น ${videoSpeed.value}x`, "info");
+            });
+
+            commentInput.addEventListener('focus', () => {
+                video.pause();
+                if (!isRangeMode) {
+                    lockCurrentTime();
+                }
+            });
+
+            addCommentBtn.addEventListener('click', submitComment);
+
+            commentInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    submitComment();
+                }
+            });
+
+            video.addEventListener('error', (e) => {
+                console.warn("Video load error caught securely", e);
+                if (currentProjectId) {
+                    showVideoErrorOverlay();
+                }
+            });
 
             // Canvas Toolbar Actions
             document.getElementById('toggle-drawing-mode-btn').addEventListener('click', toggleDrawingMode);
@@ -2018,9 +2045,81 @@
             document.getElementById('ai-mic-btn').addEventListener('click', toggleSpeechRecognition);
             document.getElementById('stamp-indicator').addEventListener('click', lockCurrentTime);
             
+            // Relink local video file events
+            document.getElementById('relink-video-upload').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file && currentProjectId) {
+                    const fileURL = URL.createObjectURL(file);
+                    const project = projects.find(p => p.id === currentProjectId);
+                    if (project) {
+                        project.videoUrl = fileURL;
+                        project.fileName = file.name;
+                        saveToLocalStorage();
+                        
+                        video.src = fileURL;
+                        video.load();
+                        
+                        hideVideoErrorOverlay();
+                        showToast("เชื่อมโยงไฟล์วิดีโอโครงการสำเร็จ คอมเมนต์เดิมปลอดภัยครบถ้วน!", "success");
+                    }
+                }
+            });
+
             // Name Identity storage watchers
             reviewerNameInput.addEventListener('input', saveToLocalStorage);
             userAvatarSelect.addEventListener('change', saveToLocalStorage);
+
+            // Hotkeys Window keydown handler
+            window.addEventListener('keydown', handleGlobalHotkeys);
+        }
+
+        // Global hotkeys handler (Fixed 'i' and 'o' range bracket locking)
+        function handleGlobalHotkeys(e) {
+            const activeTag = document.activeElement.tagName.toLowerCase();
+            if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
+                return;
+            }
+
+            if (currentProjectId === null) return;
+
+            switch (e.key) {
+                case ' ': 
+                    e.preventDefault();
+                    togglePlay();
+                    break;
+                case ',': 
+                    stepFrame(-1);
+                    break;
+                case '.': 
+                    stepFrame(1);
+                    break;
+                case 'c': 
+                case 'C':
+                    e.preventDefault();
+                    commentInput.focus();
+                    break;
+                case 'i':
+                case 'I':
+                    e.preventDefault();
+                    if (!isRangeMode) toggleRangeComment();
+                    rangeInInput.value = video.currentTime;
+                    updateRangeSelectionValues();
+                    showToast(`ล็อกจุดเริ่มต้นช่วงเวลา (In) ที่: ${formatTimeCode(video.currentTime)}`, "info");
+                    break;
+                case 'o':
+                case 'O':
+                    e.preventDefault();
+                    if (!isRangeMode) toggleRangeComment();
+                    rangeOutInput.value = video.currentTime;
+                    updateRangeSelectionValues();
+                    showToast(`ล็อกจุดสิ้นสุดช่วงเวลา (Out) ที่: ${formatTimeCode(video.currentTime)}`, "info");
+                    break;
+                case 'r':
+                case 'R':
+                    e.preventDefault();
+                    toggleRangeComment();
+                    break;
+            }
         }
 
         // Render Print layout for offline audit
@@ -2084,7 +2183,6 @@
                     time: Date.now()
                 });
                 
-                // Sync to parent project
                 const project = projects.find(p => p.id === currentProjectId);
                 if (project) {
                     project.comments = comments;
@@ -2102,7 +2200,6 @@
             if (comment) {
                 comment.status = newStatus;
 
-                // Sync to parent project
                 const project = projects.find(p => p.id === currentProjectId);
                 if (project) {
                     project.comments = comments;
@@ -2122,7 +2219,6 @@
                 () => {
                     comments = comments.filter(c => c.id !== commentId);
 
-                    // Sync to parent project
                     const project = projects.find(p => p.id === currentProjectId);
                     if (project) {
                         project.comments = comments;
@@ -2146,7 +2242,6 @@
                 () => {
                     comments = [];
 
-                    // Sync to parent project
                     const project = projects.find(p => p.id === currentProjectId);
                     if (project) {
                         project.comments = [];
@@ -2207,18 +2302,17 @@
                 const mockupId = "RS-" + Math.random().toString(36).substring(2, 9).toUpperCase();
                 const mockupUrl = window.location.origin + window.location.pathname + "?share=" + mockupId;
                 openShareModal(mockupUrl);
-                showToast("จำลองลิงก์สาธารณะเรียบร้อย (เซิร์ฟเวอร์หลักไม่ได้เชื่อมต่อ)", "info");
+                showToast("จำลองลิงก์สาธารณะเรียบร้อย (เซิร์ฟเวอร์ไม่ได้เชื่อมต่อ)", "info");
                 return;
             }
 
             showToast("กำลังอัปโหลดและสร้าง Publish Link สาธารณะ...", "info");
 
             try {
-                // Nested collections safely (RULE 1 layout format)
                 const sharesColRef = collection(db, 'artifacts', appId, 'public', 'data', 'shares');
                 const docRef = await addDoc(sharesColRef, {
                     comments: comments,
-                    videoSrc: videoSource.src,
+                    videoSrc: video.src,
                     fileName: currentFileDisplay.textContent,
                     createdAt: Date.now()
                 });
@@ -2259,11 +2353,6 @@
             }
         }
 
-        shareProjectBtn.addEventListener('click', handleShareProject);
-        copyShareBtn.addEventListener('click', copyShareLink);
-        shareModalClose.addEventListener('click', closeShareModal);
-
-        // ExportersTXT / JSON format pipelines
         function toggleExportMenu() {
             exportMenu.classList.toggle('hidden');
         }
@@ -2272,104 +2361,6 @@
             const wrapper = document.getElementById('export-dropdown-wrapper');
             if (wrapper && !wrapper.contains(e.target)) {
                 exportMenu.classList.add('hidden');
-            }
-        });
-
-        function exportComments(format) {
-            if (comments.length === 0) {
-                showToast("ยังไม่มีคอมเมนต์รีวิวที่จะส่งออกครับ", "danger");
-                return;
-            }
-
-            let fileContent = '';
-            let fileType = 'text/plain';
-            let fileName = 'reviewspace-ultra-briefs';
-
-            if (format === 'txt') {
-                fileContent += `===============================================\n`;
-                fileContent += `📄 REVIEWSPACE EDIT DECISION LIST (EDL)\n`;
-                fileContent += `===============================================\n\n`;
-                
-                comments.forEach((c, index) => {
-                    fileContent += `${index + 1}. [${c.timeText}] (${c.userName}) - สถานะ: ${c.status.toUpperCase()}\n`;
-                    fileContent += `   รายละเอียดบรีฟ: ${c.text}\n`;
-                    if (c.drawing) fileContent += `   (มีการสเก็ตช์ภาพวาดระบุตำแหน่งจุดเกิดปัญหาบนจอ)\n`;
-                    if (c.replies && c.replies.length > 0) {
-                        fileContent += `   กระทู้โต้ตอบตอบกลับ:\n`;
-                        c.replies.forEach(r => {
-                            fileContent += `      - [${r.userName}]: ${r.text}\n`;
-                        });
-                    }
-                    fileContent += `\n`;
-                });
-                
-                fileName += '.txt';
-            } else if (format === 'json') {
-                fileContent = JSON.stringify(comments, null, 2);
-                fileType = 'application/json';
-                fileName += '.json';
-            }
-
-            const blob = new Blob([fileContent], { type: fileType });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = fileName;
-            link.click();
-            URL.revokeObjectURL(link.href);
-
-            showToast(`ส่งออกข้อมูลในรูปแบบ ${format.toUpperCase()} เรียบร้อย`, "success");
-            toggleExportMenu();
-        }
-
-        // Keyboard Hotkeys accessibility integration
-        window.addEventListener('keydown', (e) => {
-            const activeTag = document.activeElement.tagName.toLowerCase();
-            if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
-                return;
-            }
-
-            // Only run workspace keyboard hotkeys if workspace is currently active
-            if (currentProjectId === null) return;
-
-            switch (e.key) {
-                case ' ': 
-                    e.preventDefault();
-                    togglePlay();
-                    break;
-                case ',': 
-                    stepFrame(-1);
-                    break;
-                case '.': 
-                    stepFrame(1);
-                    break;
-                case 'c': 
-                case 'C':
-                    e.preventDefault();
-                    commentInput.focus();
-                    break;
-                case 'i':
-                case 'I':
-                    e.preventDefault();
-                    // Activate range mode if off
-                    if (!isRangeMode) toggleRangeComment();
-                    rangeInInput.value = video.currentTime;
-                    updateRangeSelectionValues();
-                    showToast(`ล็อกจุดเริ่มต้นช่วงเวลา (In) ที่: ${formatTimeCode(video.currentTime)}`, "info");
-                    break;
-                case 'o':
-                case 'O':
-                    e.preventDefault();
-                    // Activate range mode if off
-                    if (!isRangeMode) toggleRangeComment();
-                    rangeOutInput.value = video.currentTime;
-                    updateRangeSelectionValues();
-                    showToast(`ล็อกจุดสิ้นสุดช่วงเวลา (Out) ที่: ${formatTimeCode(video.currentTime)}`, "info");
-                    break;
-                case 'r':
-                case 'R':
-                    e.preventDefault();
-                    toggleRangeComment();
-                    break;
             }
         });
     </script>
